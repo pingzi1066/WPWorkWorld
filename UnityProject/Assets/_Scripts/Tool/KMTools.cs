@@ -1,14 +1,14 @@
 ﻿/******************************************************************************
  *
  * Maintaince Logs:
- * 2012-11-??   Waigo   Initial version. 
+ * 2012-11-11   WP      Initial version. 
  * 2012-12-02   WP      Added methods of AddChild
  * 2012-12-15   WP      Added methods.(RoundToDecimal,RoundToDecByObj)
  * 2013-03-07   WP      Added methods.（FindInParents,FindActive)
  * 2013-03-29   Waigo   Added Decrypt.Encrypt
  * 2013-08-27   WP      Fixed Verison To U_4.2.0f
  * 2013-09-05   WP      Added AddItemToList^^^^^^^^^^^ ,two 
- * 2013-12-10		WP		Added isEditorPlatform....
+ * 2014-11-14   WP      Added string convert to Vector3
  * 
  * *****************************************************************************/
 
@@ -23,19 +23,6 @@ using System.IO;
 
 static public class KMTools
 {
-	/// <summary>
-	/// Gets a value indicating whether this <see cref="KMTools"/> is editor platform.
-	/// </summary>
-	/// <value>
-	/// <c>true</c> if is editor platform; otherwise, <c>false</c>.
-	/// </value>
-	public static bool isEditorPlatform
-    {
-        get
-        {
-            return (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor);
-        }
-    }
 
     /// <summary>
     /// Determines whether the 'parent' contains a 'child' in its hierarchy.
@@ -189,6 +176,7 @@ static public class KMTools
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
             if (!isPreSize) t.localScale = Vector3.one;
+            else t.localScale = prefab.transform.localScale;
             //else t.localScale = prefab.transform.localScale;
             if (isChangeLayer) SetLayer(go.gameObject, parent.layer);
         }
@@ -251,7 +239,7 @@ static public class KMTools
     /// <summary>
     /// 添加一个新的GameObject
     /// </summary>
-    static public GameObject AddGameObj(GameObject parent, bool isChangeLayer = false)
+    static public GameObject AddGameObj(GameObject parent)
     {
         GameObject go = new GameObject();
 
@@ -262,26 +250,26 @@ static public class KMTools
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
             t.localScale = Vector3.one;
-            if (isChangeLayer) SetLayer(go.gameObject, parent.layer);
+            SetLayer(go.gameObject, parent.layer);
         }
         return go;
     }
 
-    static public T AddChild<T>(GameObject parent, bool isChangeLayer) where T : Component
-    {
-        GameObject go = new GameObject();
-        if (parent != null)
-        {
-            Transform t = go.transform;
-            t.parent = parent.transform;
-            t.localPosition = Vector3.zero;
-            t.localRotation = Quaternion.identity;
-            t.localScale = Vector3.one;
-            if (isChangeLayer) SetLayer(go.gameObject, parent.layer);
-        }
-        T self = go.AddComponent<T>();
-        return self;
-    }
+    //static public T AddChild<T>(GameObject parent, bool isChangeLayer) where T : Component
+    //{
+    //    GameObject go = new GameObject();
+    //    if (parent != null)
+    //    {
+    //        Transform t = go.transform;
+    //        t.parent = parent.transform;
+    //        t.localPosition = Vector3.zero;
+    //        t.localRotation = Quaternion.identity;
+    //        t.localScale = Vector3.one;
+    //        if (isChangeLayer) SetLayer(go.gameObject, parent.layer);
+    //    }
+    //    T self = go.AddComponent<T>();
+    //    return self;
+    //}
 
     #endregion
 
@@ -382,7 +370,7 @@ static public class KMTools
     public static bool OddsByInt(int odds)
     {
         if (odds > 100 || odds < 0) return false;
-        if (UnityEngine.Random.Range(0, 100) < odds)
+        if (UnityEngine.Random.Range(0, 10000) < odds * 100)
         {
             return true;
         }
@@ -496,77 +484,30 @@ static public class KMTools
     }
 
     /// <summary>
-    /// 如果不包含名字为 dontContain的 item 就 从[]数组往List数组里面添加。不会重复添加
+    /// 设置3D的音效
     /// </summary>
-    public static List<T> AddItemToListByDontContainsNameOfGameObject<T>(List<T> list, T[] all, string dontContain) where T : MonoBehaviour
+    /// <param name="audio"></param>
+    public static void SetAudioTo3D(AudioSource audio)
     {
-        for (int i = 0; i < all.Length; i++)
-        {
-            if (!all[i].name.Contains("pnl_") && !list.Contains(all[i]))
-            {
-                list.Add(all[i]);
-            }
-        }
-        return list;
+        audio.playOnAwake = false;
+        audio.minDistance = 0.5f;
+        audio.maxDistance = 10f;
+        audio.bypassEffects = true;
+        audio.rolloffMode = AudioRolloffMode.Linear;
     }
 
     /// <summary>
-    /// 如果名字包含 contain 的 item 就 从[]数组往List数组里面添加,不会重复添加
+    /// vector3.ToString() convert to vector3;
     /// </summary>
-    public static List<T> AddItemToListByContainsNameOfGameObject<T>(List<T> list, T[] all, string contain) where T : MonoBehaviour
+    /// <param name="rString"></param>
+    /// <returns></returns>
+    public static Vector3 StringToVector3(string rString)
     {
-        foreach (T t in all)
-        {
-            if (t.name.Contains(contain) && !list.Contains(t))
-            {
-                list.Add(t);
-            }
-        }
-        return list;
-    }
-
-    /// <summary>
-    /// 移除数组中的元素，在另一个数组里如果有这个数组里相同的元素，则移除之
-    /// </summary>
-    public static List<T> RemoveItemOfListByOtherArray<T>(List<T> list, T[] others) where T : MonoBehaviour
-    {
-        foreach (T t in others)
-        {
-            if (list.Contains(t))
-            {
-                list.Remove(t);
-            }
-        }
-        return list;
-    }
-
-    /// <summary>
-    /// 给物品的名字加个前缀，如果有这个前缀刚不用加
-    /// </summary>
-    public static void AddPreFixBeforeName(GameObject go, string preFix, bool isDebug = true)
-    {
-        if (!go.name.Contains(preFix))
-        {
-            go.name = preFix + go.name;
-            if (isDebug)
-                Debug.Log("Added Prefix to " + preFix, go);
-        }
-    }
-
-    /// <summary>
-    /// 同一等级之下的精灵对象，而不是子对象下所有的
-    /// </summary>
-    public static List<T> GetComponentsByGameObjectOnlyOneLevelChildren<T>(Transform t) where T : MonoBehaviour
-    {
-        List<T> list = new List<T>();
-        foreach (Transform child in t)
-        {
-            T s = child.GetComponent<T>();
-            if (s != null)
-            {
-                list.Add(s);
-            }
-        }
-        return list;
+        string[] temp = rString.Substring(1, rString.Length - 2).Split(',');
+        float x = float.Parse(temp[0]);
+        float y = float.Parse(temp[1]);
+        float z = float.Parse(temp[2]);
+        Vector3 rValue = new Vector3(x, y, z);
+        return rValue;
     }
 }
