@@ -30,5 +30,8 @@
 	添加背景方框
 	EditorGUILayout.BeginVertical("Box"); EditorGUILayout.EndVertical();
 	
+	一个符号 + 注释
+	GUILayout.Button(new GUIContent("+", "Click to add"), EditorStyles.toolbarButton)
+	
 图形渲染相关
 	(Texture2D)AssetDatabase.LoadAssetAtPath("Path + .Png", typeof(Texture2D));
