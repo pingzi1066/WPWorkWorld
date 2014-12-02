@@ -6,7 +6,7 @@ using UnityEditor;
 /// 提供 Prefab 的读取、保存、移动 
 /// 
 /// Maintaince Logs:
-/// 2014=11-01      WP      Initial version
+/// 2014-11-01      WP      Initial version
 /// </summary>
 public class KMPrefabEditor
 {

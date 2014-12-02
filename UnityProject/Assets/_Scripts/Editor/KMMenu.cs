@@ -19,11 +19,11 @@ public class KMMenu : MonoBehaviour
 
     static Vector3 objPos = Vector3.zero;
     static Quaternion objRot = Quaternion.identity;
-    
+
     /// <summary>
     /// copy Position and rotation of the selected gameobject
     /// </summary>
-    [MenuItem("Tools/变换/复制世界坐标与旋转 %#c")]
+    [MenuItem(StrsEditor.MENU_COPY_POS_ROT)]
     public static void CopyPosAndRot()
     {
         GameObject go = Selection.activeGameObject;
@@ -41,7 +41,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// paste Position and rotation of the selected gameobject
     /// </summary>
-    [MenuItem("Tools/变换/粘贴世界坐标与旋转 %#d")]
+    [MenuItem(StrsEditor.MENU_PASTE_POS_ROT)]
     public static void PastePosAndRot()
     {
         GameObject go = Selection.activeGameObject;
