@@ -56,8 +56,8 @@ public class KMMenu : MonoBehaviour
         }
     }
 
-    [MenuItem("Tools/变换/使自身PRS变为整数，pos.z为小数点后两位 %#r")]
-    public static void RoundPosAndRot()
+    [MenuItem(StrsEditor.MENU_RoundPRS)]
+    public static void RoundPRS()
     {
         GameObject go = Selection.activeGameObject;
         if (go != null)
@@ -70,8 +70,8 @@ public class KMMenu : MonoBehaviour
         }
     }
 
-    [MenuItem("Tools/变换/子对象下所有物品的PRS坐标精确到整数，pos.z为小数点后两位 ")]
-    public static void RoundLocal()
+    [MenuItem(StrsEditor.MENU_RoundPRSNChildren)]
+    public static void RoundLocalNChildren()
     {
         GameObject go = Selection.activeGameObject;
         Transform[] gos = go.GetComponentsInChildren<Transform>();
@@ -85,8 +85,8 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// 使子对象下所有物品的Z绽放到整数
     /// </summary>
-    [MenuItem("Tools/变换/子对象下所有物品的大小精确到整数 ")]
-    public static void RoundLocalscaleOfObjs()
+    [MenuItem(StrsEditor.MENU_RoundScaleNChildren)]
+    public static void RoundScaleNChildren()
     {
         GameObject go = Selection.activeGameObject;
         Transform[] gos = go.GetComponentsInChildren<Transform>();
@@ -97,7 +97,7 @@ public class KMMenu : MonoBehaviour
     }
 
     private static Vector3 localPos;
-    [MenuItem("Tools/变换/复制局部坐标 ")]
+    [MenuItem(StrsEditor.MENU_CopyLocalPosition)]
     public static void CopyLocalPosition()
     {
         GameObject go = Selection.activeGameObject;
@@ -106,8 +106,8 @@ public class KMMenu : MonoBehaviour
             localPos = go.transform.localPosition;
         }
     }
-    [MenuItem("Tools/变换/粘贴局部坐标 ")]
-    public static void Paste()
+    [MenuItem(StrsEditor.MENU_PasteLocalPosition)]
+    public static void PasteLocalPosition()
     {
         GameObject go = Selection.activeGameObject;
         if (go != null)
@@ -123,7 +123,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// 这个专用于调试
     /// </summary>
-    [MenuItem("Tools/测试/SendMessage方法KMDebug到对象 %#l")]
+    [MenuItem(StrsEditor.MENU_KMDebug)]
     public static void KMDebug()
     {
         GameObject go = Selection.activeGameObject;
@@ -136,7 +136,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// KM的游戏开发者快捷键，用这个可以在游戏没运行的时候运行代码段，覆盖了上面的方法 
     /// </summary>
-    [MenuItem("Tools/测试/SendMessage方法KMEditor到对象 %#k")]
+    [MenuItem(StrsEditor.MENU_KMEditor)]
     public static void KMEditor()
     {
         GameObject go = Selection.activeGameObject;
@@ -150,7 +150,7 @@ public class KMMenu : MonoBehaviour
 
     #region 寻路 Navigation
 
-    [MenuItem("Tools/寻路/所选->静态寻路对象(包括OffMeshLinkGeneration)")]
+    [MenuItem(StrsEditor.MENU_SetToNavigationStatic)]
     public static void SetToNavigationStatic()
     {
         GameObject[] gos = Selection.gameObjects;
@@ -169,7 +169,7 @@ public class KMMenu : MonoBehaviour
         }
     }
 
-    [MenuItem("Tools/寻路/所选->静态寻路对象(不包括OffMeshLinkGeneration)")]
+    [MenuItem(StrsEditor.MENU_SetToNavigationStaticAndWithOutOffMeshLinkGeneration)]
     public static void SetToNavigationStaticAndWithOutOffMeshLinkGeneration()
     {
         GameObject[] gos = Selection.gameObjects;
@@ -187,7 +187,7 @@ public class KMMenu : MonoBehaviour
         }
     }
 
-    [MenuItem("Tools/寻路/所选->静态非寻路对象(不包括OffMeshLinkGeneration)")]
+    [MenuItem(StrsEditor.MENU_SetToWithOutNavigationStatic)]
     public static void SetToWithOutNavigationStatic()
     {
         GameObject[] gos = Selection.gameObjects;
@@ -203,74 +203,6 @@ public class KMMenu : MonoBehaviour
             Debug.Log("静态非寻路对象  :  " + go.name, go);
             //StaticEditorFlags.BatchingStatic
         }
-    }
-
-    #endregion
-
-    #region 标签 Label
-
-    [MenuItem("Tools/标签/所选->_Ground")]
-    public static void AddLabelForGround()
-    {
-        string[] labels = new string[] { "_Ground" };
-        AddLabelToPrefab(labels);
-    }
-
-    [MenuItem("Tools/标签/所选->_Obstacle")]
-    public static void AddLabelForObstacle()
-    {
-        string[] labels = new string[] { "_Obstacle" };
-        AddLabelToPrefab(labels);
-    }
-
-    [MenuItem("Tools/标签/所选->_Deco")]
-    public static void AddLabelForDeco()
-    {
-        string[] labels = new string[] { "_Deco" };
-        AddLabelToPrefab(labels);
-    }
-
-    [MenuItem("Tools/标签/所选->_Wall")]
-    public static void AddLabelForWall()
-    {
-        string[] labels = new string[] { "_Wall" };
-        AddLabelToPrefab(labels);
-    }
-
-    [MenuItem("Tools/标签/所选->_Particles")]
-    public static void AddLabelForParticles()
-    {
-        string[] labels = new string[] { "_Particles" };
-        AddLabelToPrefab(labels);
-        //_Particles
-    }
-
-    [MenuItem("Tools/标签/所选->_Group")]
-    public static void AddLabelForGroup()
-    {
-        string[] labels = new string[] { "_Group" };
-        AddLabelToPrefab(labels);
-    }
-
-    [MenuItem("Tools/标签/所选->清空所有Labels")]
-    public static void ClearLabelsForPrefab()
-    {
-        GameObject[] gos = Selection.gameObjects;
-        foreach (GameObject go in gos)
-        {
-            AssetDatabase.ClearLabels(go);
-        }
-        AssetDatabase.Refresh();
-    }
-
-    static void AddLabelToPrefab(string[] labels)
-    {
-        GameObject[] gos = Selection.gameObjects;
-        foreach (GameObject go in gos)
-        {
-            AssetDatabase.SetLabels(go, labels);
-        }
-        AssetDatabase.Refresh();
     }
 
     #endregion

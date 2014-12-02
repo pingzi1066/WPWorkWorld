@@ -33,5 +33,8 @@
 	一个符号 + 注释
 	GUILayout.Button(new GUIContent("+", "Click to add"), EditorStyles.toolbarButton)
 	
+	Unity 自带绘制组件图形： 可以是GameObject
+	EditorGUIUtility.ObjectContent(null,Transform).image)
+	
 图形渲染相关
 	(Texture2D)AssetDatabase.LoadAssetAtPath("Path + .Png", typeof(Texture2D));

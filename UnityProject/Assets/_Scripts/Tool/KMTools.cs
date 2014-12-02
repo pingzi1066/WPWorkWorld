@@ -306,7 +306,7 @@ static public class KMTools
 
     /// <summary>
     /// Round position and rotation and localScale of one GameObject!
-    /// 使对象局部坐标（除Z轴），自身旋转，自身缩放都四舍五入到整数
+    /// 使对象局部坐标，自身旋转，自身缩放都四舍五入到整数
     /// </summary>
     public static void RoundToDecByObj(GameObject go)
     {
@@ -316,7 +316,7 @@ static public class KMTools
     }
 
     /// <summary>
-    /// 使对象的自身坐标精确到整数。（Z精确到小数点后2位）
+    /// 使对象的自身坐标精确到整数
     /// </summary>
     /// <param name="go"></param>
     public static void RoundLocalPosition(GameObject go)
@@ -324,7 +324,7 @@ static public class KMTools
         Vector3 pos = go.transform.localPosition;
         pos.x = Mathf.RoundToInt(pos.x);
         pos.y = Mathf.RoundToInt(pos.y);
-        pos.z = RoundToDecimal(pos.z, 2);
+        pos.z = Mathf.RoundToInt(pos.z);
         go.transform.localPosition = pos;
     }
 
