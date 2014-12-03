@@ -1,36 +1,36 @@
+ï»¿
+åå°„ using System.Reflection;
 
-·´Éä using System.Reflection;
-
-	-----------------------·½·¨----------------------
+	-----------------------æ–¹æ³•----------------------
 	
-	//·½·¨·´Éä
+	//æ–¹æ³•åå°„
 	 MethodInfo methodInfo;
-	//³ÉÔ±·ÃÎÊÀàĞÍ
-	BindingFlags.Public ¹«¿ªµÄ  || BindingFlags.Instance ÊµÀıµÄ  || BindingFlags.NonPublic Ë½ÓĞµÄ
-	//È¡¶ÔÏó·½·¨ÏêÇé
-	methodInfo = ¶ÔÏó.GetType().GetMethod( "·½·¨Ãû", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+	//æˆå‘˜è®¿é—®ç±»å‹
+	BindingFlags.Public å…¬å¼€çš„  || BindingFlags.Instance å®ä¾‹çš„  || BindingFlags.NonPublic ç§æœ‰çš„
+	//å–å¯¹è±¡æ–¹æ³•è¯¦æƒ…
+	methodInfo = å¯¹è±¡.GetType().GetMethod( "æ–¹æ³•å", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 	
-	//È¡²ÎÊı
+	//å–å‚æ•°
 	ParameterInfo[] info = methodInfo.GetParameters();
 	
-	//Ö´ĞĞ
-	methodInfo.Invoke(¶ÔÏó,²ÎÊı[]);
+	//æ‰§è¡Œ
+	methodInfo.Invoke(å¯¹è±¡,å‚æ•°[]);
 	
-	-----------------------·½·¨----------------------
+	-----------------------æ–¹æ³•----------------------
 	
 	
 	
-	-----------------------¶ÔÏó----------------------
+	-----------------------å¯¹è±¡----------------------
 	
-	//È¡¶ÔÏó×Ö¶ÎÏêÇé
-	FieldInfo[] infos = ¶ÔÏó.GetType().GetFields();
-	//ÅĞ¶Ï×Ö¶ÎÀàĞÍ
+	//å–å¯¹è±¡å­—æ®µè¯¦æƒ…
+	FieldInfo[] infos = å¯¹è±¡.GetType().GetFields();
+	//åˆ¤æ–­å­—æ®µç±»å‹
 	fieldInfo.FieldType == typeof(string)  ---- fieldInfo.FieldType == typeof(GameObject)
-	//È¡×Ö¶ÎÖµ
-	(int)fieldInfo.GetValue(¶ÔÏó)
-	//¸³Öµ
-	fieldInfo.SetValue(¶ÔÏó, Öµ);
+	//å–å­—æ®µå€¼
+	(int)fieldInfo.GetValue(å¯¹è±¡)
+	//èµ‹å€¼
+	fieldInfo.SetValue(å¯¹è±¡, å€¼);
 	
-	-----------------------¶ÔÏó----------------------
+	-----------------------å¯¹è±¡----------------------
 	
 	
