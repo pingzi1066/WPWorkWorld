@@ -313,7 +313,7 @@ public class KMMenu : MonoBehaviour
 
     #region 音效 audio
 
-    [MenuItem("Tools/音效/将所选设置为Tools默认3D音效")]
+    [MenuItem(StrsEditor.MENU_AUDIO_SET3D)]
     public static void SetAudioTo3D()
     {
         GameObject[] gos = Selection.gameObjects;
@@ -330,7 +330,7 @@ public class KMMenu : MonoBehaviour
 
     #region 时间 TimeScale
 
-    [MenuItem("Tools/时间/游戏时间递增 %#=")]
+    [MenuItem(StrsEditor.MENU_Time_Plus)]
     public static void TimeScalePlus()
     {
         Time.timeScale += 0.5f;
@@ -338,14 +338,14 @@ public class KMMenu : MonoBehaviour
     }
 
 
-    [MenuItem("Tools/时间/游戏时间递减 %#-")]
+    [MenuItem(StrsEditor.MENU_Time_Minus)]
     public static void TimeScaleMinus()
     {
         Time.timeScale -= 0.5f;
         Debug.Log("timeScale:" + Time.timeScale);
     }
 
-    [MenuItem("Tools/时间/游戏时间默认")]
+    [MenuItem(StrsEditor.MENU_Time_Default)]
     public static void TimeScaleDefault()
     {
         Time.timeScale = 1;
@@ -355,16 +355,16 @@ public class KMMenu : MonoBehaviour
 
     #region 粒子 particle
 
-    [MenuItem("Tools/粒子/TODO改变粒子的数量最大值为60个")]
-    public static void SetParticleCountFormParent()
-    {
-        GameObject go = Selection.activeGameObject;
-        ParticleSystem[] ps = go.GetComponentsInChildren<ParticleSystem>();
-        foreach (ParticleSystem p in ps)
-        {
-            Debug.Log(p.name, p.gameObject);
-        }
-    }
+    //[MenuItem("Tools/粒子/TODO改变粒子的数量最大值为60个")]
+    //public static void SetParticleCountFormParent()
+    //{
+    //    GameObject go = Selection.activeGameObject;
+    //    ParticleSystem[] ps = go.GetComponentsInChildren<ParticleSystem>();
+    //    foreach (ParticleSystem p in ps)
+    //    {
+    //        Debug.Log(p.name, p.gameObject);
+    //    }
+    //}
 
     #endregion
 }

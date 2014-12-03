@@ -32,10 +32,21 @@ public class DeleteEmptyFolders : AssetPostprocessor
         isDelete = true;
     }
 
-    [MenuItem("Tools/Delete Empty Folders")]// add item to menu
+    [MenuItem("Tools/其它/Delete Empty Folders")]// add item to menu
     static void DeleteFolders()
     {
-        if (numFoldersDeleted > 0)
+        numFoldersChecked = 0;
+        string[] dirs = Directory.GetDirectories("Assets");
+
+        foreach (string dirPath in dirs)
+        {
+            if (Directory.GetFiles(dirPath).Length == 0 && Directory.GetDirectories(dirPath).Length == 0)
+            {
+                numFoldersChecked++;
+            }
+        }
+
+        if (numFoldersChecked > 0)
             if (EditorUtility.DisplayDialog
                     (StrsEditor.TITLE_AREYOUSURE,
                     StrsEditor.DESC_DELETE_FOLDERS, "Yes", "No"))
@@ -53,7 +64,6 @@ public class DeleteEmptyFolders : AssetPostprocessor
 
         foreach (string dirPath in dirs)
         {
-            numFoldersChecked++;
             RemoveFolders(dirPath);					// recursive call, performing depth-first search
 
             // check if no files or folders inside the current path, to see if it's empty

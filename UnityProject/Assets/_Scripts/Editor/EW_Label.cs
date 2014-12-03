@@ -3,12 +3,12 @@ using UnityEditor;
 using System.Collections;
 
 /// <summary>
-/// 提供 编辑器 unity gameobject label 
+/// 提供  窗口编辑器 unity gameobject label 
 /// 
 /// Maintaince Logs:
 /// 2014-12-02  WP      Initial version
 /// </summary>
-public class LabelEditorWindow : EditorWindow
+public class EW_Label : EditorWindow
 {
 
     private const string saveKey = "KMLabel";
@@ -65,7 +65,7 @@ public class LabelEditorWindow : EditorWindow
     [MenuItem(StrsEditor.MENU_LABEL)]
     static void OpenWindow()
     {
-        EditorWindow.GetWindow<LabelEditorWindow>(false, "Label Editor", true).Show();
+        EditorWindow.GetWindow<EW_Label>(false, "Label Editor", true).Show();
         Load();
     }
 

@@ -38,6 +38,14 @@ public static class StrsEditor
     public const string BTN_SetLabel = "设置到物品";
     public const string BTN_ClearLabel = "清空物品标签";
 
+    private const string MENU_AUDIO = MENU_HEAD + "音效/";
+    public const string MENU_AUDIO_SET3D = MENU_AUDIO + "默认3D音效";
+
+    private const string MENU_Time = "时间/";
+    public const string MENU_Time_Plus = MENU_HEAD + MENU_Time + "游戏时间递增 %#=";
+    public const string MENU_Time_Minus = MENU_HEAD + MENU_Time + "游戏时间递减 %#-";
+    public const string MENU_Time_Default = MENU_HEAD + MENU_Time + "游戏时间默认";
+
     public const string TITLE_AREYOUSURE = "你确定吗";
     public const string DESC_DELETE_FOLDERS = "是否删除所有的空文件夹";
 }

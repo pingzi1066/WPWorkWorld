@@ -1,0 +1,36 @@
+
+反射 using System.Reflection;
+
+	-----------------------方法----------------------
+	
+	//方法反射
+	 MethodInfo methodInfo;
+	//成员访问类型
+	BindingFlags.Public 公开的  || BindingFlags.Instance 实例的  || BindingFlags.NonPublic 私有的
+	//取对象方法详情
+	methodInfo = 对象.GetType().GetMethod( "方法名", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+	
+	//取参数
+	ParameterInfo[] info = methodInfo.GetParameters();
+	
+	//执行
+	methodInfo.Invoke(对象,参数[]);
+	
+	-----------------------方法----------------------
+	
+	
+	
+	-----------------------对象----------------------
+	
+	//取对象字段详情
+	FieldInfo[] infos = 对象.GetType().GetFields();
+	//判断字段类型
+	fieldInfo.FieldType == typeof(string)  ---- fieldInfo.FieldType == typeof(GameObject)
+	//取字段值
+	(int)fieldInfo.GetValue(对象)
+	//赋值
+	fieldInfo.SetValue(对象, 值);
+	
+	-----------------------对象----------------------
+	
+	
