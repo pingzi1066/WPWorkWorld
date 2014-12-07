@@ -28,7 +28,7 @@ public class WayPoint : MonoBehaviour
     //the control point for this point - modifies the curve value for this end of the curve
     public Vector3 controlPoint = Vector3.zero;
     //a link ot the bezier curve class
-    public WayPointBezier bezier;
+    public WayBezier bezier;
     //the animation mode to modify the curve time
     [SerializeField]
     private animationEase _ease = animationEase.flat;
@@ -163,12 +163,11 @@ public class WayPoint : MonoBehaviour
 
     void OnDrawGizmos()
     {
-
-        Gizmos.DrawIcon(transform.position, "pathpoint");
+        Gizmos.DrawIcon(transform.position, "");
 
         switch (bezier.mode)
         {
-            case WayPointBezier.viewmodes.usercontrolled:
+            case WayBezier.viewmodes.usercontrolled:
 
                 Vector3 directionTL = transform.TransformDirection(new Vector3(-focusBoxLength, -focusBoxLength, 1.0f) * directionLineLength) + transform.position;
                 Vector3 directionTR = transform.TransformDirection(new Vector3(focusBoxLength, -focusBoxLength, 1.0f) * directionLineLength) + transform.position;
@@ -188,7 +187,7 @@ public class WayPoint : MonoBehaviour
                 Gizmos.DrawLine(directionBR, directionBL);
                 break;
 
-            case WayPointBezier.viewmodes.target:
+            case WayBezier.viewmodes.target:
 
                 Transform target = bezier.target;
                 if (target != null)
@@ -201,9 +200,9 @@ public class WayPoint : MonoBehaviour
             //no need to show anything for the following
             //case WayPointBezier.viewmodes.mouselook:
             //    break;
-            case WayPointBezier.viewmodes.followpath:
+            case WayBezier.viewmodes.followpath:
                 break;
-            case WayPointBezier.viewmodes.reverseFollowpath:
+            case WayBezier.viewmodes.reverseFollowpath:
                 break;
         }
     }

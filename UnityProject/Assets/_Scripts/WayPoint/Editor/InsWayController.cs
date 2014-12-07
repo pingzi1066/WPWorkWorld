@@ -12,21 +12,20 @@ public class InsWayController : Editor
 {
 
     private WayController animator;
-    private WayPointBezier bezier;
+    private WayBezier bezier;
 
     private RenderTexture pointPreviewTexture = null;
     private float aspect = 1.7777f;
     private Camera sceneCamera = null;
     private Skybox sceneCameraSkybox = null;
 
-    private Vector3 previewCamPos;
-    private Quaternion previewCamRot;
-    //private float previewCamFOV;
+    private Vector3 inScenePos;
+    private Quaternion inSceneRot;
 
     void OnEnable()
     {
         animator = (WayController)target;
-        bezier = animator.GetComponent<WayPointBezier>();
+        bezier = animator.GetComponent<WayBezier>();
     }
 
     public void OnSceneGUI()
@@ -34,17 +33,17 @@ public class InsWayController : Editor
 
         if (animator.showScenePreview)
         {
-            float handleSize = HandleUtility.GetHandleSize(previewCamPos * 0.5f);
+            float handleSize = HandleUtility.GetHandleSize(inScenePos * 0.5f);
             Handles.color = (Color.white - bezier.lineColour) + new Color(0, 0, 0, 1);
-            Handles.DrawLine(previewCamPos, previewCamPos + Vector3.up * 0.5f);
-            Handles.DrawLine(previewCamPos, previewCamPos + Vector3.down * 0.5f);
-            Handles.DrawLine(previewCamPos, previewCamPos + Vector3.left * 0.5f);
-            Handles.DrawLine(previewCamPos, previewCamPos + Vector3.right * 0.5f);
-            Handles.DrawLine(previewCamPos, previewCamPos + Vector3.forward * 0.5f);
-            Handles.DrawLine(previewCamPos, previewCamPos + Vector3.back * 0.5f);
+            Handles.DrawLine(inScenePos, inScenePos + Vector3.up * 0.5f);
+            Handles.DrawLine(inScenePos, inScenePos + Vector3.down * 0.5f);
+            Handles.DrawLine(inScenePos, inScenePos + Vector3.left * 0.5f);
+            Handles.DrawLine(inScenePos, inScenePos + Vector3.right * 0.5f);
+            Handles.DrawLine(inScenePos, inScenePos + Vector3.forward * 0.5f);
+            Handles.DrawLine(inScenePos, inScenePos + Vector3.back * 0.5f);
 
-            Handles.ArrowCap(0, previewCamPos, previewCamRot, handleSize);
-            Handles.Label(previewCamPos, "Preview\nCamera\nPosition");
+            Handles.ArrowCap(0, inScenePos, inSceneRot, handleSize);
+            Handles.Label(inScenePos, "LookAt");
         }
 
         if (GUI.changed)
@@ -75,130 +74,114 @@ public class InsWayController : Editor
         if (pointPreviewTexture == null)
             pointPreviewTexture = new RenderTexture(400, Mathf.RoundToInt(400 / aspect), 24);
 
-        //if (animator.animationTarget == null)
-        //{
-        //    EditorGUILayout.HelpBox("No animation target has been specified so there is nothing to animate. Select an animation target in the Camera Path Bezier Animator Component in the parent clip", MessageType.Warning);
-        //}
-        //else
+        if (bezier.numberOfCurves > 0 && pointPreviewTexture != null)
         {
-            //Fix:(EditorGUIUtility.isProSkin) &&
-            if (bezier.numberOfCurves > 0 && pointPreviewTexture != null)
+
+            bool cameraPreview = EditorPrefs.GetBool("CameraPreview");
+            GUILayout.Space(7);
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Animation Preview");
+            if (cameraPreview)
             {
+                if (GUILayout.Button("Hide Look Preview", GUILayout.Width(150)))
+                    EditorPrefs.SetBool("CameraPreview", false);
+            }
+            else
+            {
+                if (GUILayout.Button("Show Look Preview", GUILayout.Width(150)))
+                    EditorPrefs.SetBool("CameraPreview", true);
+            }
+            EditorGUILayout.Space();
+            EditorGUILayout.EndHorizontal();
 
-                bool cameraPathPreview = EditorPrefs.GetBool("CameraPathPreview");
-                GUILayout.Space(7);
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Animation Preview");
-                if (cameraPathPreview)
+            if (!Application.isPlaying && cameraPreview)
+            {
+                float usePercentage = animator.normalised ? animator.RecalculatePercentage(animator.editorTime) : animator.editorTime;
+
+                //Get animation values and apply them to the preview camera
+                inScenePos = bezier.GetPathPosition(usePercentage);
+                inSceneRot = Quaternion.identity;
+
+                //Assign rotation to preview camera
+                Vector3 plusPoint, minusPoint;
+                switch (bezier.mode)
                 {
-                    if (GUILayout.Button("Hide", GUILayout.Width(50)))
-                        EditorPrefs.SetBool("CameraPathPreview", false);
-                }
-                else
-                {
-                    if (GUILayout.Button("Show", GUILayout.Width(50)))
-                        EditorPrefs.SetBool("CameraPathPreview", true);
-                }
-                EditorGUILayout.Space();
-                EditorGUILayout.EndHorizontal();
+                    case WayBezier.viewmodes.usercontrolled:
+                        inSceneRot = bezier.GetPathRotation(usePercentage);
+                        break;
 
-                if (!Application.isPlaying && cameraPathPreview)
-                {
-                    float usePercentage = animator.normalised ? animator.RecalculatePercentage(animator.editorTime) : animator.editorTime;
+                    case WayBezier.viewmodes.target:
 
-                    //Get animation values and apply them to the preview camera
-                    previewCamPos = bezier.GetPathPosition(usePercentage);
-                    previewCamRot = Quaternion.identity;
-                    //previewCamFOV = bezier.GetPathFOV(usePercentage);
-
-                    //Assign rotation to preview camera
-                    Vector3 plusPoint, minusPoint;
-                    switch (bezier.mode)
-                    {
-                        case WayPointBezier.viewmodes.usercontrolled:
-                            previewCamRot = bezier.GetPathRotation(usePercentage);
-                            break;
-
-                        case WayPointBezier.viewmodes.target:
-
-                            if (bezier.target != null)
-                            {
-                                previewCamRot = Quaternion.LookRotation(bezier.target.transform.position - previewCamPos);
-                            }
-                            else
-                            {
-                                EditorGUILayout.HelpBox("No target has been specified in the bezier path", MessageType.Warning);
-                                previewCamRot = Quaternion.identity;
-                            }
-                            break;
-
-                        case WayPointBezier.viewmodes.followpath:
-
-                            minusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage - 0.05f));
-                            plusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage + 0.05f));
-                            previewCamRot = Quaternion.LookRotation(plusPoint - minusPoint);
-                            break;
-
-                        case WayPointBezier.viewmodes.reverseFollowpath:
-
-                            minusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage - 0.05f));
-                            plusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage + 0.05f));
-                            previewCamRot = Quaternion.LookRotation(minusPoint - plusPoint);
-                            break;
-
-                        //case WayPointBezier.viewmodes.mouselook:
-
-                        //    Vector3 minusPointb = bezier.GetPathPosition(Mathf.Clamp01(usePercentage - 0.05f));
-                        //    Vector3 plusPointb = bezier.GetPathPosition(Mathf.Clamp01(usePercentage + 0.05f));
-                        //    previewCamRot = Quaternion.LookRotation(plusPointb - minusPointb);
-                        //    break;
-                    }
-
-                    //Render the camera preview
-                    GameObject cam = new GameObject("Point Preview");
-                    cam.transform.parent = bezier.transform;
-                    cam.AddComponent<Camera>();
-                    //Retreive camera settings from the main camera
-                    if (sceneCamera != null)
-                    {
-                        cam.camera.backgroundColor = sceneCamera.backgroundColor;
-                        if (sceneCameraSkybox != null)
-                            cam.AddComponent<Skybox>().material = sceneCameraSkybox.material;
+                        if (bezier.target != null)
+                        {
+                            inSceneRot = Quaternion.LookRotation(bezier.target.transform.position - inScenePos);
+                        }
                         else
-                            if (RenderSettings.skybox != null)
-                                cam.AddComponent<Skybox>().material = RenderSettings.skybox;
-                    }
-                    cam.transform.position = previewCamPos;
-                    cam.transform.rotation = previewCamRot;
-                    //cam.camera.fieldOfView = previewCamFOV;
-                    cam.camera.targetTexture = pointPreviewTexture;
-                    cam.camera.Render();
-                    cam.camera.targetTexture = null;
-                    DestroyImmediate(cam);
+                        {
+                            EditorGUILayout.HelpBox("No target has been specified in the bezier path", MessageType.Warning);
+                            inSceneRot = Quaternion.identity;
+                        }
+                        break;
 
-                    //Display the camera preview
+                    case WayBezier.viewmodes.followpath:
 
-                    Rect previewRect = new Rect(0, 0, Screen.width, Screen.width / aspect);
-                    Rect layoutRect = EditorGUILayout.BeginVertical();
-                    previewRect.x = layoutRect.x;
-                    previewRect.y = layoutRect.y + 5;
-                    EditorGUI.DrawPreviewTexture(previewRect, pointPreviewTexture);
-                    GUILayout.Space(previewRect.height + 10);
-                    pointPreviewTexture.Release();
+                        minusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage - 0.05f));
+                        plusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage + 0.05f));
+                        inSceneRot = Quaternion.LookRotation(plusPoint - minusPoint);
+                        break;
 
-                    EditorGUILayout.BeginHorizontal();
-                    float time = EditorGUILayout.Slider(animator.editorTime * animator.pathTime, 0, animator.pathTime);
-                    animator.editorTime = time / animator.pathTime;
-                    EditorGUILayout.LabelField("sec", GUILayout.Width(25));
-                    EditorGUILayout.EndHorizontal();
-                    EditorGUILayout.EndVertical();
+                    case WayBezier.viewmodes.reverseFollowpath:
+
+                        minusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage - 0.05f));
+                        plusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage + 0.05f));
+                        inSceneRot = Quaternion.LookRotation(minusPoint - plusPoint);
+                        break;
+
                 }
+
+                //Render the camera preview
+                GameObject go = new GameObject("Point Preview");
+                go.transform.parent = bezier.transform;
+                go.AddComponent<Camera>();
+                //Retreive camera settings from the main camera
+                if (sceneCamera != null)
+                {
+                    go.camera.backgroundColor = sceneCamera.backgroundColor;
+                    if (sceneCameraSkybox != null)
+                        go.AddComponent<Skybox>().material = sceneCameraSkybox.material;
+                    else
+                        if (RenderSettings.skybox != null)
+                            go.AddComponent<Skybox>().material = RenderSettings.skybox;
+                }
+                go.transform.position = inScenePos;
+                go.transform.rotation = inSceneRot;
+
+                go.camera.targetTexture = pointPreviewTexture;
+                go.camera.Render();
+                go.camera.targetTexture = null;
+                DestroyImmediate(go);
+
+                //Display the camera preview
+
+                Rect previewRect = new Rect(0, 0, Screen.width, Screen.width / aspect);
+                Rect layoutRect = EditorGUILayout.BeginVertical();
+                previewRect.x = layoutRect.x;
+                previewRect.y = layoutRect.y + 5;
+                EditorGUI.DrawPreviewTexture(previewRect, pointPreviewTexture);
+                GUILayout.Space(previewRect.height + 10);
+                pointPreviewTexture.Release();
+
+                EditorGUILayout.BeginHorizontal();
+                float time = EditorGUILayout.Slider(animator.editorTime * animator.pathTime, 0, animator.pathTime);
+                animator.editorTime = time / animator.pathTime;
+                EditorGUILayout.LabelField("sec", GUILayout.Width(25));
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
             }
         }
 
-        animator.showScenePreview = EditorGUILayout.Toggle("Show Scene Preview Info", animator.showScenePreview);
 
-        //animator.playOnStart = EditorGUILayout.Toggle("Play on start", animator.playOnStart);
+        animator.showScenePreview = EditorGUILayout.Toggle("Show Scene Preview Info", animator.showScenePreview);
 
         EditorGUILayout.BeginHorizontal();
         animator.pathTime = EditorGUILayout.FloatField("Animation Time", animator.pathTime);
@@ -217,29 +200,7 @@ public class InsWayController : Editor
 
         animator.pathTime = Mathf.Max(animator.pathTime, 0.001f);//ensure it's a real number
 
-        //animator.animationTarget = (Transform)EditorGUILayout.ObjectField("Animate Object", animator.animationTarget, typeof(Transform), true);
-        EditorGUILayout.HelpBox("This toggle can be used to specify what kind of object you are animating. If it isn't a camera, we recommend you uncheck this box", MessageType.Info);
-        //animator.isCamera = EditorGUILayout.Toggle("Is Camera", animator.isCamera);
-
-        //animator.mode = (WayController.modes)EditorGUILayout.EnumPopup("Animation Mode", animator.mode);
-
         animator.normalised = EditorGUILayout.Toggle("Normalised Path", animator.normalised);
-
-        EditorGUILayout.HelpBox("Set this if you want to start another camera path animation once this has completed", MessageType.Info);
-        animator.nextAnimation = (WayController)EditorGUILayout.ObjectField("Next Camera Path", animator.nextAnimation, typeof(WayController), true);
-
-        //if (bezier.mode == WayPointBezier.viewmodes.mouselook)
-        //{
-        //    EditorGUILayout.HelpBox("Alter the mouse sensitivity here", MessageType.Info);
-        //    animator.sensitivity = EditorGUILayout.Slider("Mouse Sensitivity", animator.sensitivity, 0.1f, 2.0f);
-        //    EditorGUILayout.HelpBox("Restrict the vertical viewable area here.", MessageType.Info);
-        //    EditorGUILayout.LabelField("Mouse Y Restriction");
-        //    EditorGUILayout.BeginHorizontal();
-        //    EditorGUILayout.LabelField(((int)animator.minX).ToString(), GUILayout.Width(30));
-        //    EditorGUILayout.MinMaxSlider(ref animator.minX, ref animator.maxX, -180, 180);
-        //    EditorGUILayout.LabelField(((int)animator.maxX).ToString(), GUILayout.Width(30));
-        //    EditorGUILayout.EndHorizontal();
-        //}
 
         if (GUI.changed)
         {

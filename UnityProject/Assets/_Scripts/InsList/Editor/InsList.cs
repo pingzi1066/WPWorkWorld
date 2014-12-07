@@ -6,9 +6,16 @@ using System.Collections.Generic;
 
 
 /// <summary>
+/// 
+/// 
+/// 目前存在的漏洞（具体的可以看Demo）
+/// 1.不支持List<this>，及类中 的List 里是自己
+/// 2.外部类需要加入[System.Serializable]
+/// 3.不支持Collider
+/// 
 ///	Functions to help with custom editors
 /// </summary>
-public static class InspectorList
+public static class InsList
 {
     // Constants for major settings
     public const int CONTROLS_DEFAULT_LABEL_WIDTH = 140;
@@ -585,7 +592,7 @@ public static class InspectorList
                 EditorGUI.indentLevel = indent + 3;
 
                 // Display Fields for the list instance
-                SerializedObjectFields<T>(item, collapseBools);
+                InsList.SerializedObjectFields<T>(item, collapseBools);
                 GUILayout.Space(2);
             }
 
@@ -879,7 +886,7 @@ public static class InspectorList
         int buttonSpacer = 6;
 
         EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
-        expanded = Foldout(expanded, label);
+        expanded = InsList.Foldout(expanded, label);
         if (!expanded)
         {
             // Don't add the '+' button when the contents are collapsed. Just quit.
@@ -1014,6 +1021,7 @@ public static class InspectorList
     }
     #endregion Foldout Fields and Utilities
 
+
     /// <summary>
     /// Converts a string from camel-case to seperate words that start with 
     /// capital letters. Also removes leading underscores.
@@ -1074,4 +1082,5 @@ public static class InspectorList
 
         return newStr.ToString();
     }
+
 }

@@ -4,16 +4,15 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Maintaince Logs:
-/// 2014-12-05  WP      Initial version. 
+/// 2014-12-05  WP      Initial version.
 /// </summary>
-public class WayPointBezier : MonoBehaviour
+public class WayBezier : MonoBehaviour
 {
 
     public enum viewmodes
     {
         usercontrolled,//rotations will be decided by the rotation of the contorl points
         target,//camera will always target a defined transform
-        //mouselook,//camera will have a mouse free look
         followpath,//camera will use the path to determine where to face - maintaining world up as up
         reverseFollowpath//camera will use the path to determine where to face, looking back on the path
     }
@@ -133,11 +132,6 @@ public class WayPointBezier : MonoBehaviour
             _storedArcLengthsFull[i + 1] = calculatedTotalArcLength;
         }
         _storedTotalArcLength = calculatedTotalArcLength;
-    }
-
-    public void Awake()
-    {
-        //Debug.Log("Control points "+controlPoints);
     }
 
     //This will delete all the data in the path.
@@ -329,19 +323,6 @@ public class WayPointBezier : MonoBehaviour
 
         return ret;
     }
-
-    //Sample the FOV on the entire curve based on time (0-1)
-    //public float GetPathFOV(float t)
-    //{
-    //    float curveT = 1.0f / (float)numberOfUseablePoints;
-    //    int point = Mathf.FloorToInt(t / curveT);
-    //    float ct = Mathf.Clamp01((t - point * curveT) * numberOfUseablePoints);
-
-    //    //float FOVA = GetPoint(point).FOV;
-    //    //float FOVB = GetPoint(point + 1).FOV;
-
-    //    return Mathf.Lerp(FOVA, FOVB, CalculateHermite(ct));
-    //}
 
     //Sample the Tilt on the entire curve based on time (0-1) - only for followpath mode
     public float GetPathTilt(float t)

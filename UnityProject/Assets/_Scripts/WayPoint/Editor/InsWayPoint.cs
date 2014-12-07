@@ -13,16 +13,10 @@ public class InsWayPoint : Editor
 
     private WayPoint bezierControlPoint;
     private WayController animator;
-    private WayPointBezier bezier;
-
-    //private RenderTexture pointPreviewTexture = null;
-    //private float aspect = 1.7777f;
-    //private Camera sceneCamera = null;
-    //private Skybox sceneCameraSkybox = null;
+    private WayBezier bezier;
 
     private Vector3 previewCamPos;
     private Quaternion previewCamRot;
-    //private float previewCamFOV;
 
     void OnEnable()
     {
@@ -45,7 +39,7 @@ public class InsWayPoint : Editor
         newPosition = Handles.Slider(newPosition, Vector3.up, handlesize, Handles.ArrowCap, 1);
 
         //Tilting draw function for follow path
-        if (bezier.mode == WayPointBezier.viewmodes.followpath || bezier.mode == WayPointBezier.viewmodes.reverseFollowpath)
+        if (bezier.mode == WayBezier.viewmodes.followpath || bezier.mode == WayBezier.viewmodes.reverseFollowpath)
         {
             Handles.color = Color.yellow;
             float tiltScale = HandleUtility.GetHandleSize(bezierControlPoint.transform.position) * 1.25f;
@@ -66,7 +60,10 @@ public class InsWayPoint : Editor
             bezierControlPoint.worldControlPoint = newPosition;
         }
 
-        Handles.Label(bezierControlPoint.transform.position + Vector3.up * HandleUtility.GetHandleSize(newPosition) * 2f, bezierControlPoint.name);
+        string handleName = bezierControlPoint.name;
+        float center = HandleUtility.GetHandleSize(newPosition) * 1.25f;
+        Handles.Label(bezierControlPoint.transform.position + Vector3.up * center
+            , handleName);
 
         Handles.color = (Color.white - bezier.lineColour) + new Color(0, 0, 0, 1);
         Handles.ArrowCap(0, previewCamPos, previewCamRot, handlesize * 1.5f);
@@ -83,145 +80,55 @@ public class InsWayPoint : Editor
 
     public override void OnInspectorGUI()
     {
-        //Camera[] cams = Camera.allCameras;
-        //bool sceneHasCamera = cams.Length > 0;
-        //if (Camera.main)
-        //{
-        //    sceneCamera = Camera.main;
-        //}
-        //else if (sceneHasCamera)
-        //{
-        //    sceneCamera = cams[0];
-        //}
 
-        //if (sceneCamera != null)
-        //    if (sceneCameraSkybox == null)
-        //        sceneCameraSkybox = sceneCamera.GetComponent<Skybox>();
+        EditorGUIUtility.labelWidth = 50;
 
-        //if (pointPreviewTexture == null)
-        //    pointPreviewTexture = new RenderTexture(400, Mathf.RoundToInt(400 / aspect), 24);
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Name:", GUILayout.Width(50));
-        bezierControlPoint.name = EditorGUILayout.TextField(bezierControlPoint.name);
-        EditorGUILayout.EndHorizontal();
+        previewCamPos = bezierControlPoint.transform.position;
+        previewCamRot = Quaternion.identity;
 
-        //(EditorGUIUtility.isProSkin) &&
-        //if (bezier.numberOfCurves > 0 && pointPreviewTexture != null)
-        //{
-
-            //bool cameraPathPreview = EditorPrefs.GetBool("CameraPathPreview");
-            //GUILayout.Space(7);
-            //EditorGUILayout.BeginHorizontal();
-            //GUILayout.Label("Point Preview");
-            //if (cameraPathPreview)
-            //{
-            //    if (GUILayout.Button("Hide", GUILayout.Width(50)))
-            //        EditorPrefs.SetBool("CameraPathPreview", false);
-            //}
-            //else
-            //{
-            //    if (GUILayout.Button("Show", GUILayout.Width(50)))
-            //        EditorPrefs.SetBool("CameraPathPreview", true);
-            //}
-            //EditorGUILayout.Space();
-            //EditorGUILayout.EndHorizontal();
-
-            //if (!Application.isPlaying && EditorPrefs.GetBool("CameraPathPreview"))
-            //{
-                //if (animator.animationTarget == null)
-                //{
-                //    EditorGUILayout.HelpBox("No animation target has been specified so there is nothing to animate. Select an animation target in the Camera Path Bezier Animator Component in the parent clip", MessageType.Warning);
-                //    return;
-                //}
-
-                previewCamPos = bezierControlPoint.transform.position;
-                previewCamRot = Quaternion.identity;
-                ////previewCamFOV = bezierControlPoint.FOV;
-
-                Vector3 plusPoint, minusPoint;
-                float pointPercentage = bezier.GetPathPercentageAtPoint(bezierControlPoint);
-                switch (bezier.mode)
-                {
-                    case WayPointBezier.viewmodes.usercontrolled:
-                        previewCamRot = bezierControlPoint.transform.rotation;
-                        break;
-
-                    case WayPointBezier.viewmodes.target:
-
-                        if (bezier.target != null)
-                        {
-                            previewCamRot = Quaternion.LookRotation(bezier.target.transform.position - bezierControlPoint.transform.position);
-                        }
-                        else
-                        {
-                            EditorGUILayout.HelpBox("No target has been specified in the bezier path", MessageType.Warning);
-                            previewCamRot = Quaternion.identity;
-                        }
-                        break;
-
-                    case WayPointBezier.viewmodes.followpath:
-
-                        minusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage - 0.05f));
-                        plusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage + 0.05f));
-                        previewCamRot = Quaternion.LookRotation(plusPoint - minusPoint);
-                        break;
-
-                    case WayPointBezier.viewmodes.reverseFollowpath:
-
-                        minusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage - 0.05f));
-                        plusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage + 0.05f));
-                        previewCamRot = Quaternion.LookRotation(minusPoint - plusPoint);
-                        break;
-
-                }
-
-                //GameObject cam = new GameObject("Point Preview");
-                //cam.AddComponent<Camera>();
-                //if (sceneCamera != null)
-                //{
-                //    cam.camera.backgroundColor = sceneCamera.backgroundColor;
-                //    if (sceneCameraSkybox != null)
-                //        cam.AddComponent<Skybox>().material = sceneCameraSkybox.material;
-                //    else
-                //        if (RenderSettings.skybox != null)
-                //            cam.AddComponent<Skybox>().material = RenderSettings.skybox;
-                //}
-                //cam.transform.position = previewCamPos;
-                //cam.transform.rotation = previewCamRot;
-                ////cam.camera.fieldOfView = previewCamFOV;
-                //cam.camera.targetTexture = pointPreviewTexture;
-                //cam.camera.Render();
-                //cam.camera.targetTexture = null;
-
-                //DestroyImmediate(cam);
-
-                //Rect previewRect = new Rect(0, 0, Screen.width, Screen.width / aspect);
-                //Rect layoutRect = EditorGUILayout.BeginVertical();
-                //previewRect.x = layoutRect.x;
-                //previewRect.y = layoutRect.y + 5;
-                //EditorGUI.DrawPreviewTexture(previewRect, pointPreviewTexture);
-                //GUILayout.Space(previewRect.height + 10);
-                //EditorGUILayout.EndVertical();
-            //}
-        //}
-
-        GUILayout.Space(10);
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.HelpBox("Make the rotation of the Control Point face the direction the path is going in at this point", MessageType.Info);
-        if (GUILayout.Button("Face Path Direction"))
+        Vector3 plusPoint, minusPoint;
+        float pointPercentage = bezier.GetPathPercentageAtPoint(bezierControlPoint);
+        switch (bezier.mode)
         {
-            Undo.RecordObject(bezierControlPoint.gameObject.transform, "Set Control Point Rotation to Path Direction");
-            bezierControlPoint.SetRotationToCurve();
-            EditorUtility.SetDirty(bezierControlPoint);
+            case WayBezier.viewmodes.usercontrolled:
+                previewCamRot = bezierControlPoint.transform.rotation;
+                break;
+
+            case WayBezier.viewmodes.target:
+
+                if (bezier.target != null)
+                {
+                    previewCamRot = Quaternion.LookRotation(bezier.target.transform.position - bezierControlPoint.transform.position);
+                }
+                else
+                {
+                    EditorGUILayout.HelpBox("No target has been specified in the bezier path", MessageType.Warning);
+                    previewCamRot = Quaternion.identity;
+                }
+                break;
+
+            case WayBezier.viewmodes.followpath:
+
+                minusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage - 0.05f));
+                plusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage + 0.05f));
+                previewCamRot = Quaternion.LookRotation(plusPoint - minusPoint);
+                break;
+
+            case WayBezier.viewmodes.reverseFollowpath:
+
+                minusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage - 0.05f));
+                plusPoint = bezier.GetPathPosition(Mathf.Clamp01(pointPercentage + 0.05f));
+                previewCamRot = Quaternion.LookRotation(minusPoint - plusPoint);
+                break;
         }
-        EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(10);
         if (!bezierControlPoint.isLastPoint || bezier.loop)
         {
-            EditorGUILayout.HelpBox("This controls the easing applied from this point to the next.", MessageType.Info);
+            //EditorGUILayout.HelpBox(, MessageType.Info);
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Animation Ease");
+            EditorGUILayout.LabelField(new GUIContent("Animation Ease",
+                "This controls the easing applied from this point to the next."), EditorStyles.boldLabel);
             bezierControlPoint.ease = (WayPoint.animationEase)EditorGUILayout.EnumPopup(bezierControlPoint.ease);
             EditorGUILayout.EndHorizontal();
         }
@@ -231,24 +138,35 @@ public class InsWayPoint : Editor
         }
 
         GUILayout.Space(10);
-
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button(new GUIContent("Reset", 
-            "The control point modifies the curve. Resetting it will centre it and there will be no curve. Useful if you don't want there to be a curve at this point"), GUILayout.Width(50)))
+        if (GUILayout.Button(new GUIContent("Smooth",
+            EditorGUIUtility.ObjectContent(null, typeof(Vector3)).image,
+            "Make the rotation of the Control Point face the direction the path is going in at this point")
+            , GUILayout.Width(60)))
+        {
+            Undo.RecordObject(bezierControlPoint.gameObject.transform, "Set Control Point Rotation to Path Direction");
+            bezierControlPoint.SetRotationToCurve();
+            EditorUtility.SetDirty(bezierControlPoint);
+        }
+        Vector3 locaEuler = EditorGUILayout.Vector3Field("Rotate", bezierControlPoint.transform.localEulerAngles);
+        if(locaEuler != bezierControlPoint.transform.localEulerAngles)
+            bezierControlPoint.transform.localEulerAngles = locaEuler;
+        EditorGUILayout.EndHorizontal();
+
+
+
+        GUILayout.Space(10);
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button(new GUIContent("Reset",
+            "The control point modifies the curve. Resetting it will centre it and there will be no curve. Useful if you don't want there to be a curve at this point"), GUILayout.Width(60)))
         {
             Undo.RecordObject(bezierControlPoint.gameObject, "Reset Control Point");
             bezierControlPoint.controlPoint = Vector3.zero;
             EditorUtility.SetDirty(bezierControlPoint);
         }
-        bezierControlPoint.controlPoint = EditorGUILayout.Vector3Field("Control Point Location", bezierControlPoint.controlPoint);
+        bezierControlPoint.controlPoint = EditorGUILayout.Vector3Field("Bezier", bezierControlPoint.controlPoint);
         EditorGUILayout.EndHorizontal();
 
-        //
-        //GUILayout.Space(7);
-        //EditorGUILayout.BeginHorizontal();
-        //EditorGUILayout.LabelField("Field of View");
-        //bezierControlPoint.FOV = EditorGUILayout.Slider(bezierControlPoint.FOV, 1, 180);
-        //EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(7);
         EditorGUILayout.BeginHorizontal();
@@ -266,7 +184,7 @@ public class InsWayPoint : Editor
             EditorGUILayout.EndHorizontal();
         }
 
-        if (bezier.mode == WayPointBezier.viewmodes.followpath || bezier.mode == WayPointBezier.viewmodes.reverseFollowpath)
+        if (bezier.mode == WayBezier.viewmodes.followpath || bezier.mode == WayBezier.viewmodes.reverseFollowpath)
         {
             GUILayout.Space(7);
             EditorGUILayout.BeginHorizontal();

@@ -15,6 +15,6 @@ public class WayPointMenu : EditorWindow
     {
         GameObject newPath = new GameObject("New Way");
         newPath.AddComponent<WayController>();
-        newPath.AddComponent<WayPointBezier>();
+        newPath.AddComponent<WayBezier>();
     }
 }

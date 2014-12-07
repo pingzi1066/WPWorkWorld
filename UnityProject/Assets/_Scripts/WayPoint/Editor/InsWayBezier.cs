@@ -5,10 +5,10 @@ using System.Collections;
 /// <summary>
 /// Maintaince Logs:
 /// 2014-12-05  WP      Initial version. 
+///         07  WP      加入Smooth All，修改一些注释
 /// </summary>
-[CanEditMultipleObjects]
-[CustomEditor(typeof(WayPointBezier))]
-public class InsWayPointBezier : Editor
+[CustomEditor(typeof(WayBezier))]
+public class InsWayBezier : Editor
 {
 
     Vector2 scrollPosition;
@@ -16,7 +16,7 @@ public class InsWayPointBezier : Editor
 
     public void OnSceneGUI()
     {
-        WayPointBezier bezier = (WayPointBezier)target;
+        WayBezier bezier = (WayBezier)target;
 
         if (GUI.changed)
         {
@@ -27,7 +27,9 @@ public class InsWayPointBezier : Editor
 
     public override void OnInspectorGUI()
     {
-        WayPointBezier bezier = (WayPointBezier)target;
+        EditorGUI.indentLevel = 0;
+
+        WayBezier bezier = (WayBezier)target;
         int numberOfControlPoints = bezier.numberOfControlPoints;
 
         if (numberOfControlPoints > 0)
@@ -38,10 +40,10 @@ public class InsWayPointBezier : Editor
                 bezier.lineColour = EditorGUILayout.ColorField("Line Colour", bezier.lineColour);
                 GUILayout.Space(5);
 
-                bezier.mode = (WayPointBezier.viewmodes)EditorGUILayout.EnumPopup("Camera Mode", bezier.mode);
+                bezier.mode = (WayBezier.viewmodes)EditorGUILayout.EnumPopup("Mode:", bezier.mode);
                 GUILayout.Space(5);
 
-                if (bezier.mode == WayPointBezier.viewmodes.target)
+                if (bezier.mode == WayBezier.viewmodes.target)
                 {
                     if (bezier.target == null)
                         EditorGUILayout.HelpBox("No target has been specified in the bezier path", MessageType.Warning);
@@ -68,22 +70,38 @@ public class InsWayPointBezier : Editor
             }
 
             GUILayout.Space(5);
+
+            GUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("Smooth All"))
+            {
+                if (EditorUtility.DisplayDialog("圆滑处理？", "圆滑所有的点的旋转", "确定", "取消"))
+                {
+                    foreach (WayPoint wp in bezier.GetPoints())
+                    {
+                        wp.SetRotationToCurve();
+                    }
+
+                    Undo.RegisterCompleteObjectUndo(bezier.GetPoints(), "Smooth Path");
+                }
+            }
+
             if (GUILayout.Button("Reset Path"))
             {
                 if (EditorUtility.DisplayDialog("Resetting path?", "Are you sure you want to delete all control points?", "Delete", "Cancel"))
                 {
-                    Undo.RecordObjects(bezier.GetPoints(), "Reset Camera Path");
-                    //
+                    Undo.RegisterCompleteObjectUndo(bezier.GetPoints(), "Reset Path");
                     bezier.ResetPath();
                     return;
                 }
             }
 
+            GUILayout.EndHorizontal();
+
             GUILayout.Space(10);
             GUILayout.Box(EditorGUIUtility.whiteTexture, GUILayout.Height(2), GUILayout.Width(Screen.width - 20));
             GUILayout.Space(3);
 
-            //scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             for (int i = 0; i < numberOfControlPoints; i++)
             {
                 WayPoint go = bezier.controlPoints[i];
@@ -96,7 +114,7 @@ public class InsWayPointBezier : Editor
                 EditorGUILayout.BeginHorizontal();
                 if (GUILayout.Button("Delete"))
                 {
-                    Undo.RecordObject(bezier.GetPoints()[i], "Delete Camera Path point");
+                    Undo.RecordObject(bezier.GetPoints()[i], "Delete way point");
                     bezier.DeletePoint(i, true);
                     numberOfControlPoints = bezier.numberOfControlPoints;
                     EditorUtility.SetDirty(bezier);
@@ -107,7 +125,7 @@ public class InsWayPointBezier : Editor
                 {
                     if (GUILayout.Button("Add New Point At End"))
                     {
-                        Undo.RecordObject(bezier.AddNewPoint(i + 1), "Create a new Camera Path point");
+                        Undo.RecordObject(bezier.AddNewPoint(i + 1), "Create a new way point");
 
                         EditorUtility.SetDirty(bezier);
                     }
@@ -116,7 +134,7 @@ public class InsWayPointBezier : Editor
                 {
                     if (GUILayout.Button("Add New Point Between"))
                     {
-                        Undo.RecordObject(bezier.AddNewPoint(i + 1), "Create a new Camera Path point");
+                        Undo.RecordObject(bezier.AddNewPoint(i + 1), "Create a new way point");
                         //bezier.AddNewPoint(i + 1);
                         EditorUtility.SetDirty(bezier);
                     }
@@ -133,7 +151,7 @@ public class InsWayPointBezier : Editor
         {
             if (GUILayout.Button("Add New Point At End"))
             {
-                Undo.RecordObject(bezier.AddNewPoint(), "Create a new Camera Path point");
+                Undo.RecordObject(bezier.AddNewPoint(), "Create a way point");
 
                 EditorUtility.SetDirty(bezier);
             }

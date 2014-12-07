@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class WayController : MonoBehaviour
 {
 
-    public WayPointBezier _bezier;
+    public WayBezier _bezier;
   
     public bool normalised = true;
 
@@ -27,10 +27,6 @@ public class WayController : MonoBehaviour
 
     public bool showPreview = true;
     public bool showScenePreview = true;
-
-    public WayController nextAnimation = null;
-
-    //Script based controls - hook up your scripts to these to control your
 
     /// <summary>
     /// Gets or sets the path speed.
@@ -64,12 +60,12 @@ public class WayController : MonoBehaviour
         //playing = p;
     }
 
-    public WayPointBezier bezier
+    public WayBezier bezier
     {
         get
         {
             if (!_bezier)
-                _bezier = GetComponent<WayPointBezier>();
+                _bezier = GetComponent<WayBezier>();
             return _bezier;
         }
     }
@@ -110,7 +106,7 @@ public class WayController : MonoBehaviour
         {
             if (anims[i] == null) { anims.RemoveAt(i); continue; }
 
-            anims[i].UpdateEvent(bezier, pathTime);
+            anims[i].UpdateEvent(pathTime);
 
             i++;
         }

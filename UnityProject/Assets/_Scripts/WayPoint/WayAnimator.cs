@@ -6,14 +6,10 @@ using System.Collections.Generic;
 /// 
 /// Maintaince Logs:
 /// 2014-12-05  WP      Initial version. 
+///         07  WP      加入递归注册事件：PingPong 事件 为单独一个PingPong然后随后，或许可以把所有Anims走完后再倒回来走一次
 /// </summary>
 public class WayAnimator : MonoBehaviour
 {
-    /// <summary>
-    /// 路线
-    /// </summary>
-    public List<WayController> wayList = new List<WayController>();
-
     public enum modes
     {
         once,
@@ -23,9 +19,16 @@ public class WayAnimator : MonoBehaviour
         pingPong
     }
 
+    public bool playOnStart = true;
+
     public modes mode = modes.once;
 
-    public bool playOnStart = true;
+    public bool normalised = true;
+
+    /// <summary>
+    /// 路线
+    /// </summary>
+    public List<WayController> wayList = new List<WayController>();
 
     /// <summary>
     /// 当前注册位置
@@ -35,20 +38,18 @@ public class WayAnimator : MonoBehaviour
     //用于判断Pingpong时 来与回
     private float pingPongDirection = 1;
     private bool playing = false;
-    private bool normalised = true;
 
     private int atPointNumber = 0;
 
     private float _percentage = 0;
     private float usePercentage;
 
-    //private float rotationX = 0;
-    //private float rotationY = 0;
-
     /// <summary>
     /// 当前路线
     /// </summary>
     private WayController curWay;
+
+    private WayBezier bezier { get { return curWay.bezier; } }
 
     //Events
     public delegate void AnimationEvent();
@@ -66,7 +67,7 @@ public class WayAnimator : MonoBehaviour
 
     void Start()
     {
-        Login();
+        LoginoutRecursion();
     }
 
     //play the animation as runtime
@@ -135,19 +136,20 @@ public class WayAnimator : MonoBehaviour
         {
             _percentage = 1;
             atPointNumber = reversedIndex;
+            //Debug.Log("Init for reversed and index is : " + reversedIndex);
         }
 
         if (playOnStart)
             Play();
     }
 
-    public void UpdateEvent(WayPointBezier bezier, float pathTime)
+    public void UpdateEvent(float pathTime)
     {
         if (playing)
         {
-            UpdateAnimationTime(bezier, pathTime);
-            UpdateAnimation(bezier);
-            UpdatePointReached(bezier);
+            UpdateAnimationTime(pathTime);
+            UpdateAnimation();
+            UpdatePointReached();
         }
     }
 
@@ -156,7 +158,7 @@ public class WayAnimator : MonoBehaviour
         get { return (mode == modes.reverse || mode == modes.reverseLoop || pingPongDirection < 0); }
     }
 
-    private void UpdateAnimation(WayPointBezier bezier)
+    private void UpdateAnimation()
     {
 
         if (!playing)
@@ -167,16 +169,16 @@ public class WayAnimator : MonoBehaviour
         Vector3 minusPoint, plusPoint;
         switch (bezier.mode)
         {
-            case WayPointBezier.viewmodes.usercontrolled:
+            case WayBezier.viewmodes.usercontrolled:
                 transform.rotation = bezier.GetPathRotation(usePercentage);
                 break;
 
-            case WayPointBezier.viewmodes.target:
+            case WayBezier.viewmodes.target:
 
                 transform.LookAt(bezier.target.transform.position);
                 break;
 
-            case WayPointBezier.viewmodes.followpath:
+            case WayBezier.viewmodes.followpath:
                 if (!bezier.loop)
                 {
                     minusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage - 0.05f));
@@ -198,7 +200,7 @@ public class WayAnimator : MonoBehaviour
                 transform.eulerAngles += transform.forward * -bezier.GetPathTilt(usePercentage);
                 break;
 
-            case WayPointBezier.viewmodes.reverseFollowpath:
+            case WayBezier.viewmodes.reverseFollowpath:
                 if (!bezier.loop)
                 {
                     minusPoint = bezier.GetPathPosition(Mathf.Clamp01(usePercentage - 0.05f));
@@ -221,7 +223,7 @@ public class WayAnimator : MonoBehaviour
         }
     }
 
-    private void UpdateAnimationTime(WayPointBezier bezier, float pathTime)
+    private void UpdateAnimationTime(float pathTime)
     {
 
         switch (mode)
@@ -302,7 +304,7 @@ public class WayAnimator : MonoBehaviour
         usePercentage = normalised ? curWay.RecalculatePercentage(_percentage) : _percentage;//this is the percentage used by everything but the rotation
     }
 
-    private void UpdatePointReached(WayPointBezier bezier)
+    private void UpdatePointReached()
     {
         int currentPointNumber = bezier.GetPointNumber(usePercentage);
 
@@ -313,7 +315,10 @@ public class WayAnimator : MonoBehaviour
             if (!isReversed)
                 atPoint = bezier.controlPoints[currentPointNumber];
             else
+            {
+                //Debug.Log(bezier.controlPoints.Length + "  ------ number " + atPointNumber, curWay);
                 atPoint = bezier.controlPoints[atPointNumber];
+            }
 
             if (AnimPointReached != null) AnimPointReached();
             if (!isReversed)
@@ -340,40 +345,94 @@ public class WayAnimator : MonoBehaviour
     }
 
     /// <summary>
-    /// 注册事件
+    /// 注册事件注销递归
     /// </summary>
-    private void Login()
+    private void LoginoutRecursion()
     {
         //无路可选
         if (wayList.Count < 1 || curIndex > (wayList.Count - 1))
         {
-            Debug.Log("way list Finished----------------");
+            Debug.Log("way list Finished----------------", gameObject);
             return;
         }
 
         //登出
         if (curWay != null)
         {
+            //注销事件
+            switch (mode)
+            {
+                case modes.once:
+                case modes.reverse:
+                    AnimFinished -= LoginoutRecursion;
+                    break;
+                case modes.loop:
+                case modes.reverseLoop:
+                    AnimLooped -= LoginoutRecursion;
+                    break;
+                //case modes.reverseLoop:
+                //    break;
+                case modes.pingPong:
+                    if (pingPongDirection == 1)
+                    {
+                        AnimPingPong -= LoginoutRecursion;
+                    }
+                    else
+                    {
+                        return; //完成ping
+                    }
+                    break;
+            }
+            //Debug.Log("Logout event ", curWay);
             curWay.Logout(this);
             curWay = null;
         }
 
         //设置
         curWay = wayList[curIndex];
+        //Debug.Log("login index is : " + curIndex, curWay);
 
         if (curWay != null) //注册
         {
             curWay.Login(this);
+            //下一事件
+            curIndex++;
             //下一动画
-            AnimFinished += Login;
+            switch (mode)
+            {
+                case modes.once:
+                case modes.reverse:
+                    AnimFinished += LoginoutRecursion;
+                    break;
+                case modes.loop:
+                case modes.reverseLoop:
+                    AnimLooped += LoginoutRecursion;
+                    //重复
+                    if (curIndex == (wayList.Count))
+                    {
+                        curIndex = 0;
+                    }
+                    break;
+
+
+                case modes.pingPong:
+                    AnimPingPong += LoginoutRecursion;
+                    //重复
+                    if (curIndex == (wayList.Count))
+                    {
+                        curIndex = 0;
+                    }
+                    break;
+            }
+
+            //Debug.Log("Login event ", curWay);
+            //Debug.Log("next index is : " + curIndex);
         }
         else
         {
             curIndex++;
-            Login();
+            LoginoutRecursion();
             return;
         }
-        curIndex++;
     }
-
 }
