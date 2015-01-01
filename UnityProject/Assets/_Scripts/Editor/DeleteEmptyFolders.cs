@@ -11,6 +11,9 @@ using System.IO;
 /// </summary>
 public class DeleteEmptyFolders : AssetPostprocessor
 {
+    public const string TITLE_AREYOUSURE = "你确定吗";
+    public const string DESC_DELETE_FOLDERS = "是否删除所有的空文件夹";
+
     static int numFoldersDeleted = 0;
     static int numFoldersChecked = 0;
 
@@ -48,8 +51,8 @@ public class DeleteEmptyFolders : AssetPostprocessor
 
         if (numFoldersChecked > 0)
             if (EditorUtility.DisplayDialog
-                    (StrsEditor.TITLE_AREYOUSURE,
-                    StrsEditor.DESC_DELETE_FOLDERS, "Yes", "No"))
+                    (TITLE_AREYOUSURE,
+                    DESC_DELETE_FOLDERS, "Yes", "No"))
             {
                 //Debug.Log("Running DeleteEmptyFolders editor script...");	
                 RemoveFolders("Assets");					// start recursive call from root of Assets folder

@@ -11,6 +11,14 @@ using System.Collections;
 public class EW_Label : EditorWindow
 {
 
+    private const string TIP_SELECT_OBJ = "请选择一个对象";
+    private const string TIP_SELECT_PROJECT_OBJ = "请选择工程里面的游戏对象";
+    private const string BTN_SetLabel = "设置到物品";
+    private const string BTN_ClearLabel = "清空物品标签";
+
+    private const string MENU_LABEL = "Tools/" + "标签";
+    private const string DESC_LABEL = "标签名字：";
+
     private const string saveKey = "KMLabel";
 
     /// <summary>
@@ -21,32 +29,32 @@ public class EW_Label : EditorWindow
     void OnGUI()
     {
         Object[] selects = Selection.objects;
-        
+
 
         if (selects.Length == 0)
         {
-            GUILayout.Label(StrsEditor.TIP_SELECT_OBJ);
+            GUILayout.Label(TIP_SELECT_OBJ);
             return;
         }
-        else if (!AssetDatabase.Contains(selects[0])) 
+        else if (!AssetDatabase.Contains(selects[0]))
         {
-            GUILayout.Label(StrsEditor.TIP_SELECT_PROJECT_OBJ);
+            GUILayout.Label(TIP_SELECT_PROJECT_OBJ);
             return;
         }
 
-        GUILayout.Label(StrsEditor.DESC_LABEL);
+        GUILayout.Label(DESC_LABEL);
         value = GUILayout.TextField(value);
 
         GUILayout.Space(10f);
 
-        if (GUILayout.Button(StrsEditor.BTN_SetLabel) && !string.IsNullOrEmpty(value))
+        if (GUILayout.Button(BTN_SetLabel) && !string.IsNullOrEmpty(value))
         {
             string[] labels = new string[] { value };
             AddLabelToPrefab(labels);
             Save();
         }
 
-        if (GUILayout.Button(StrsEditor.BTN_ClearLabel))
+        if (GUILayout.Button(BTN_ClearLabel))
         {
             ClearLabelsForPrefab();
         }
@@ -62,7 +70,7 @@ public class EW_Label : EditorWindow
         value = EditorPrefs.GetString(saveKey, "");
     }
 
-    [MenuItem(StrsEditor.MENU_LABEL)]
+    [MenuItem(MENU_LABEL)]
     static void OpenWindow()
     {
         EditorWindow.GetWindow<EW_Label>(false, "Label Editor", true).Show();

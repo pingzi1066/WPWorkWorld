@@ -23,20 +23,11 @@ public static class StrsEditor
     public const string MENU_KMDebug = MENU_HEAD + MENU_TEST + "SendMessage方法KMDebug到对象 %#l";
     public const string MENU_KMEditor = MENU_HEAD + MENU_TEST + "SendMessage方法KMEditor到对象 %#k";
 
-    private const string MENU_Navigation = "寻路/";
+    //private const string MENU_Navigation = "寻路/";
 
-    public const string MENU_SetToNavigationStatic = MENU_HEAD + MENU_Navigation + "静态寻路对象(包括OffMeshLinkGeneration)";
-    public const string MENU_SetToNavigationStaticAndWithOutOffMeshLinkGeneration = MENU_HEAD + MENU_Navigation + "所选->静态寻路对象(不包括OffMeshLinkGeneration)";
-    public const string MENU_SetToWithOutNavigationStatic = MENU_HEAD + MENU_Navigation + "所选->静态非寻路对象(不包括OffMeshLinkGeneration)";
-
-    private const string MENU_Label = "标签";
-    public const string MENU_LABEL = MENU_HEAD + MENU_Label;
-    public const string DESC_LABEL = "标签名字：";
-
-    public const string TIP_SELECT_OBJ = "请选择一个对象";
-    public const string TIP_SELECT_PROJECT_OBJ = "请选择工程里面的游戏对象";
-    public const string BTN_SetLabel = "设置到物品";
-    public const string BTN_ClearLabel = "清空物品标签";
+    //public const string MENU_SetToNavigationStatic = MENU_HEAD + MENU_Navigation + "静态寻路对象(包括OffMeshLinkGeneration)";
+    //public const string MENU_SetToNavigationStaticAndWithOutOffMeshLinkGeneration = MENU_HEAD + MENU_Navigation + "所选->静态寻路对象(不包括OffMeshLinkGeneration)";
+    //public const string MENU_SetToWithOutNavigationStatic = MENU_HEAD + MENU_Navigation + "所选->静态非寻路对象(不包括OffMeshLinkGeneration)";
 
     private const string MENU_AUDIO = MENU_HEAD + "音效/";
     public const string MENU_AUDIO_SET3D = MENU_AUDIO + "默认3D音效";
@@ -45,7 +36,4 @@ public static class StrsEditor
     public const string MENU_Time_Plus = MENU_HEAD + MENU_Time + "游戏时间递增 %#=";
     public const string MENU_Time_Minus = MENU_HEAD + MENU_Time + "游戏时间递减 %#-";
     public const string MENU_Time_Default = MENU_HEAD + MENU_Time + "游戏时间默认";
-
-    public const string TITLE_AREYOUSURE = "你确定吗";
-    public const string DESC_DELETE_FOLDERS = "是否删除所有的空文件夹";
 }

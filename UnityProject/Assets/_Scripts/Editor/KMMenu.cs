@@ -148,65 +148,6 @@ public class KMMenu : MonoBehaviour
 
     #endregion
 
-    #region 寻路 Navigation
-
-    [MenuItem(StrsEditor.MENU_SetToNavigationStatic)]
-    public static void SetToNavigationStatic()
-    {
-        GameObject[] gos = Selection.gameObjects;
-
-        foreach (GameObject go in gos)
-        {
-            go.isStatic = true;
-            var newFlags = StaticEditorFlags.BatchingStatic |
-                StaticEditorFlags.LightmapStatic |
-                    StaticEditorFlags.NavigationStatic |
-                     StaticEditorFlags.OccluderStatic |
-                      StaticEditorFlags.OccludeeStatic |
-                       StaticEditorFlags.OffMeshLinkGeneration;
-            GameObjectUtility.SetStaticEditorFlags(go, newFlags);
-            Debug.Log("静态寻路对象  :  " + go.name, go);
-        }
-    }
-
-    [MenuItem(StrsEditor.MENU_SetToNavigationStaticAndWithOutOffMeshLinkGeneration)]
-    public static void SetToNavigationStaticAndWithOutOffMeshLinkGeneration()
-    {
-        GameObject[] gos = Selection.gameObjects;
-
-        foreach (GameObject go in gos)
-        {
-            go.isStatic = true;
-            var newFlags = StaticEditorFlags.BatchingStatic |
-                StaticEditorFlags.LightmapStatic |
-                    StaticEditorFlags.NavigationStatic |
-                     StaticEditorFlags.OccluderStatic |
-                      StaticEditorFlags.OccludeeStatic;
-            GameObjectUtility.SetStaticEditorFlags(go, newFlags);
-            Debug.Log("静态寻路对象  :  " + go.name, go);
-        }
-    }
-
-    [MenuItem(StrsEditor.MENU_SetToWithOutNavigationStatic)]
-    public static void SetToWithOutNavigationStatic()
-    {
-        GameObject[] gos = Selection.gameObjects;
-
-        foreach (GameObject go in gos)
-        {
-            go.isStatic = true;
-            var newFlags = StaticEditorFlags.BatchingStatic |
-                StaticEditorFlags.LightmapStatic |
-                     StaticEditorFlags.OccluderStatic |
-                      StaticEditorFlags.OccludeeStatic;
-            GameObjectUtility.SetStaticEditorFlags(go, newFlags);
-            Debug.Log("静态非寻路对象  :  " + go.name, go);
-            //StaticEditorFlags.BatchingStatic
-        }
-    }
-
-    #endregion
-
     #region Prefabs
 
     const string prefabPath = "Assets/_Prefabs/_SceneObject/";
