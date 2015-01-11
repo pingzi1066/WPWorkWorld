@@ -6,9 +6,10 @@ using System.Collections;
 /// 提供一些Inspector 或 window 绘制工具
 /// 
 /// Maintaince Logs:
-/// 2014=11-01      WP      Initial version
+/// 2014-11-01      WP      Initial version
+/// 2015-01-10      WP      加入有色按钮,类改名为KMGUI
 /// </summary>
-public class KMInspectorEditor
+public static class KMGUI
 {
 
     /// <summary>
@@ -90,28 +91,6 @@ public class KMInspectorEditor
     }
 
     /// <summary>
-    /// Draws the tiled texture. Like GUI.DrawTexture() but tiled instead of stretched.
-    /// </summary>
-
-    static public void DrawTiledTexture(Rect rect, Texture tex)
-    {
-        GUI.BeginGroup(rect);
-        {
-            int width = Mathf.RoundToInt(rect.width);
-            int height = Mathf.RoundToInt(rect.height);
-
-            for (int y = 0; y < height; y += tex.height)
-            {
-                for (int x = 0; x < width; x += tex.width)
-                {
-                    GUI.DrawTexture(new Rect(x, y, tex.width, tex.height), tex);
-                }
-            }
-        }
-        GUI.EndGroup();
-    }
-
-    /// <summary>
     /// Draw a visible separator in addition to adding some padding.
     /// </summary>
 
@@ -131,5 +110,54 @@ public class KMInspectorEditor
         }
     }
 
+    #region 按钮
 
+    /// <summary>
+    /// 绘制按钮
+    /// </summary>
+    /// <param name="content">内容</param>
+    /// <param name="color">颜色</param>
+    /// <param name="options">设置</param>
+
+    static public bool Button(GUIContent content, Color color, params GUILayoutOption[] options)
+    {
+        Color oldCol = GUI.backgroundColor;
+
+        GUI.backgroundColor = color;
+
+        bool isTap = GUILayout.Button(content, options);
+
+        GUI.backgroundColor = oldCol;
+
+        return isTap;
+    }
+
+    /// <summary>
+    /// 绘制按钮
+    /// </summary>
+    /// <param name="text">内容</param>
+    /// <param name="color">颜色</param>
+    /// <param name="options">设置</param>
+
+    static public bool Button(string text, Color color, params GUILayoutOption[] options)
+    {
+        return Button(new GUIContent(text), color, options);
+    }
+
+    static public bool Button(string text, params GUILayoutOption[] options)
+    {
+        return Button(new GUIContent(text), GUI.backgroundColor, options);
+    }
+
+    /// <summary>
+    /// 删除按钮
+    /// </summary>
+
+    static public bool BtnDelete(params GUILayoutOption[] options)
+    {
+        if (options.Length == 0) options = new GUILayoutOption[1] { GUILayout.Width(45) };
+        return Button("删除", Color.red, options);
+    }
+
+    #endregion
 }

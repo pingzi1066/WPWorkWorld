@@ -16,7 +16,7 @@ public class EW_Label : EditorWindow
     private const string BTN_SetLabel = "设置到物品";
     private const string BTN_ClearLabel = "清空物品标签";
 
-    private const string MENU_LABEL = "Tools/" + "标签";
+    private const string MENU_LABEL = "Tools/其它/" + "标签设置";
     private const string DESC_LABEL = "标签名字：";
 
     private const string saveKey = "KMLabel";

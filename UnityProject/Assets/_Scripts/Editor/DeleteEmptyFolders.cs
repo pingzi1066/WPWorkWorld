@@ -35,7 +35,7 @@ public class DeleteEmptyFolders : AssetPostprocessor
         isDelete = true;
     }
 
-    [MenuItem("Tools/其它/Delete Empty Folders")]// add item to menu
+    [MenuItem("Tools/其它/删除空文件夹")]// add item to menu
     static void DeleteFolders()
     {
         numFoldersChecked = 0;

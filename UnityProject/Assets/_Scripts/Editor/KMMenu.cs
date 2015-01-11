@@ -15,6 +15,31 @@ using System.IO;
 [ExecuteInEditMode]
 public class KMMenu : MonoBehaviour
 {
+    const string MENU_HEAD = "Tools/";
+    const string MENU_TRANSFORM = "变换/";
+
+    const string MENU_COPY_POS_ROT = MENU_HEAD + MENU_TRANSFORM + "复制世界坐标与旋转 %#c";
+    const string MENU_PASTE_POS_ROT = MENU_HEAD + MENU_TRANSFORM + "粘贴世界坐标与旋转 %#d";
+    const string MENU_RoundPRS = MENU_HEAD + MENU_TRANSFORM + "使自身PRS变为整数 %#r";
+    const string MENU_RoundPRSNChildren = MENU_HEAD + MENU_TRANSFORM + "子对象下所有物品的PRS坐标精确到整数";
+    const string MENU_RoundScaleNChildren = MENU_HEAD + MENU_TRANSFORM + "子对象下所有物品的大小精确到整数";
+    const string MENU_CopyLocalPosition = MENU_HEAD + MENU_TRANSFORM + "复制局部坐标 %#x";
+    const string MENU_PasteLocalPosition = MENU_HEAD + MENU_TRANSFORM + "粘贴局部坐标 %#v";
+
+    const string MENU_TEST = "测试/";
+
+    const string MENU_KMDebug = MENU_HEAD + MENU_TEST + "SendMessage方法KMDebug到对象 %#l";
+    const string MENU_KMEditor = MENU_HEAD + MENU_TEST + "SendMessage方法KMEditor到对象 %#k";
+
+    const string MENU_AUDIO = MENU_HEAD + "其它/";
+    const string MENU_AUDIO_SET3D = MENU_AUDIO + "设置为默认3D音效";
+
+    const string MENU_Time = "时间/";
+    const string MENU_Time_Plus = MENU_HEAD + MENU_Time + "游戏时间递增 %#=";
+    const string MENU_Time_Minus = MENU_HEAD + MENU_Time + "游戏时间递减 %#-";
+    const string MENU_Time_Default = MENU_HEAD + MENU_Time + "游戏时间默认";
+
+
     #region 坐标旋转绽放 PRS
 
     static Vector3 objPos = Vector3.zero;
@@ -23,7 +48,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// copy Position and rotation of the selected gameobject
     /// </summary>
-    [MenuItem(StrsEditor.MENU_COPY_POS_ROT)]
+    [MenuItem(MENU_COPY_POS_ROT)]
     public static void CopyPosAndRot()
     {
         GameObject go = Selection.activeGameObject;
@@ -41,7 +66,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// paste Position and rotation of the selected gameobject
     /// </summary>
-    [MenuItem(StrsEditor.MENU_PASTE_POS_ROT)]
+    [MenuItem(MENU_PASTE_POS_ROT)]
     public static void PastePosAndRot()
     {
         GameObject go = Selection.activeGameObject;
@@ -56,7 +81,7 @@ public class KMMenu : MonoBehaviour
         }
     }
 
-    [MenuItem(StrsEditor.MENU_RoundPRS)]
+    [MenuItem(MENU_RoundPRS)]
     public static void RoundPRS()
     {
         GameObject go = Selection.activeGameObject;
@@ -70,7 +95,7 @@ public class KMMenu : MonoBehaviour
         }
     }
 
-    [MenuItem(StrsEditor.MENU_RoundPRSNChildren)]
+    [MenuItem(MENU_RoundPRSNChildren)]
     public static void RoundLocalNChildren()
     {
         GameObject go = Selection.activeGameObject;
@@ -85,7 +110,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// 使子对象下所有物品的Z绽放到整数
     /// </summary>
-    [MenuItem(StrsEditor.MENU_RoundScaleNChildren)]
+    [MenuItem(MENU_RoundScaleNChildren)]
     public static void RoundScaleNChildren()
     {
         GameObject go = Selection.activeGameObject;
@@ -97,7 +122,7 @@ public class KMMenu : MonoBehaviour
     }
 
     private static Vector3 localPos;
-    [MenuItem(StrsEditor.MENU_CopyLocalPosition)]
+    [MenuItem(MENU_CopyLocalPosition)]
     public static void CopyLocalPosition()
     {
         GameObject go = Selection.activeGameObject;
@@ -106,7 +131,7 @@ public class KMMenu : MonoBehaviour
             localPos = go.transform.localPosition;
         }
     }
-    [MenuItem(StrsEditor.MENU_PasteLocalPosition)]
+    [MenuItem(MENU_PasteLocalPosition)]
     public static void PasteLocalPosition()
     {
         GameObject go = Selection.activeGameObject;
@@ -123,7 +148,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// 这个专用于调试
     /// </summary>
-    [MenuItem(StrsEditor.MENU_KMDebug)]
+    [MenuItem(MENU_KMDebug)]
     public static void KMDebug()
     {
         GameObject go = Selection.activeGameObject;
@@ -136,7 +161,7 @@ public class KMMenu : MonoBehaviour
     /// <summary>
     /// KM的游戏开发者快捷键，用这个可以在游戏没运行的时候运行代码段，覆盖了上面的方法 
     /// </summary>
-    [MenuItem(StrsEditor.MENU_KMEditor)]
+    [MenuItem(MENU_KMEditor)]
     public static void KMEditor()
     {
         GameObject go = Selection.activeGameObject;
@@ -150,19 +175,27 @@ public class KMMenu : MonoBehaviour
 
     #region Prefabs
 
-    const string prefabPath = "Assets/_Prefabs/_SceneObject/";
-
     /// <summary>
     /// 创建Prefab到指定路径
     /// </summary>
     /// <param name="folderName"></param>
-    static void CreatePrefabToFolder(string folderName)
+    [MenuItem("Tools/其它/创建Prefab")]
+    static void CreatePrefabToFolder()
     {
         GameObject[] gos = Selection.gameObjects;
+        string path = "";
+
+        if (gos.Length > 0)
+            path = EditorUtility.OpenFolderPanel("Save As", "Assets/", "");
+        else return;
+
+        string localPath = path.Substring((path.IndexOf("/Assets") + 1));
+
 
         foreach (GameObject go in gos)
         {
-            string localPath = prefabPath + folderName + go.name + ".prefab";
+            localPath = localPath + "/" + go.name + ".prefab";
+            Debug.Log(localPath);
             if (AssetDatabase.LoadAssetAtPath(localPath, typeof(GameObject)))
             {
                 if (EditorUtility.DisplayDialog("Are you sure?", "The prefab already exists. Do you want to overwrite it?", "Yes", "No"))
@@ -184,77 +217,11 @@ public class KMMenu : MonoBehaviour
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Tools/Prefabs/Tip:打印出所会创建的目录")]
-    public static void PathTipForLabel()
-    {
-        GameObject[] gos = Selection.gameObjects;
-
-        foreach (GameObject go in gos)
-        {
-            Debug.Log("所选 -> " + go.name, go);
-        }
-        Debug.Log("将被创建到：" + prefabPath);
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到Ground")]
-    public static void CreatePrefabsToGround()
-    {
-        CreatePrefabToFolder("Ground/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到Obstacle")]
-    public static void CreatePrefabsToObstacle()
-    {
-        CreatePrefabToFolder("Obstacle/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到Deco")]
-    public static void CreatePrefabsToDeco()
-    {
-        CreatePrefabToFolder("Deco/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到Wall")]
-    public static void CreatePrefabsToWall()
-    {
-        CreatePrefabToFolder("Wall/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到ElementGround")]
-    public static void CreatePrefabsToElementGround()
-    {
-        CreatePrefabToFolder("ElementGround/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到ElementObstacle")]
-    public static void CreatePrefabsToElementObstacle()
-    {
-        CreatePrefabToFolder("ElementObstacle/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到ElementDeco")]
-    public static void CreatePrefabsToElementDeco()
-    {
-        CreatePrefabToFolder("ElementDeco/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到Group")]
-    public static void CreatePrefabsToGroup()
-    {
-        CreatePrefabToFolder("Group/");
-    }
-
-    [MenuItem("Tools/Prefabs/所选->创建到Wait")]
-    public static void CreatePrefabsToWait()
-    {
-        CreatePrefabToFolder("Wait/");
-    }
-
     #endregion
 
     #region 音效 audio
 
-    [MenuItem(StrsEditor.MENU_AUDIO_SET3D)]
+    [MenuItem(MENU_AUDIO_SET3D)]
     public static void SetAudioTo3D()
     {
         GameObject[] gos = Selection.gameObjects;
@@ -271,7 +238,7 @@ public class KMMenu : MonoBehaviour
 
     #region 时间 TimeScale
 
-    [MenuItem(StrsEditor.MENU_Time_Plus)]
+    [MenuItem(MENU_Time_Plus)]
     public static void TimeScalePlus()
     {
         Time.timeScale += 0.5f;
@@ -279,14 +246,14 @@ public class KMMenu : MonoBehaviour
     }
 
 
-    [MenuItem(StrsEditor.MENU_Time_Minus)]
+    [MenuItem(MENU_Time_Minus)]
     public static void TimeScaleMinus()
     {
         Time.timeScale -= 0.5f;
         Debug.Log("timeScale:" + Time.timeScale);
     }
 
-    [MenuItem(StrsEditor.MENU_Time_Default)]
+    [MenuItem(MENU_Time_Default)]
     public static void TimeScaleDefault()
     {
         Time.timeScale = 1;

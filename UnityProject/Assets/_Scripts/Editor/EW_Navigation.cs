@@ -15,7 +15,7 @@ public class EW_Navigation : EditorWindow
 
     private static bool[] userSels = new bool[Enum.GetValues(typeof(StaticEditorFlags)).Length];
 
-    private const string MENU_LABEL = "Tools/" + "寻路";
+    private const string MENU_LABEL = "Tools/其它/" + "寻路设置";
 
     void OnGUI()
     {

@@ -102,16 +102,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   demoList:
-  - demoGo: {fileID: 0}
+  - demoGo: {fileID: 561225293}
     dmoTrans: {fileID: 0}
     demoRb: {fileID: 0}
     demoInt: 0
     demoStr: 
     demoFloat: 0
-    isShowDown: 1
+    isShowDown: 0
     param1: 0
     param2: 0
-  - demoGo: {fileID: 561225293}
+  - demoGo: {fileID: 913324454}
     dmoTrans: {fileID: 0}
     demoRb: {fileID: 0}
     demoInt: 0

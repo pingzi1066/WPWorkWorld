@@ -28,8 +28,6 @@ public class Demo_InsList : Editor
             true
             );
 
-        GUILayout.Button(new GUIContent("+", "click add "));
-
         // Flag Unity to save the changes to to the prefab to disk
         if (GUI.changed)
             EditorUtility.SetDirty(target);
