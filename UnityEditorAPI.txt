@@ -48,6 +48,9 @@
 	缩进，数值越大，缩进越前
 	EditorGUI.indentLevel = x;
 	
+	设置 Key 与 Value 之间的距离 
+	EditorGUIUtility.labelWidth
+	
 	注意事项：坐标 旋转 等Vector每帧都赋值，保存场景将会受到麻烦，而且像按钮等的一些提示弹出也会变得古怪。
 	
 	
