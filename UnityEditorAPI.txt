@@ -51,6 +51,11 @@
 	设置 Key 与 Value 之间的距离 
 	EditorGUIUtility.labelWidth
 	
+	当编辑器改变时，此参数的作用域只有一个方法内。
+	if (GUI.changed)
+         EditorUtility.SetDirty(curLevel);
+        
+	
 	注意事项：坐标 旋转 等Vector每帧都赋值，保存场景将会受到麻烦，而且像按钮等的一些提示弹出也会变得古怪。
 	
 	

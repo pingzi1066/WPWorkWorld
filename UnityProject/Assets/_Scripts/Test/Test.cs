@@ -5,6 +5,14 @@ public class Test : MonoBehaviour
 {
 
     public Color color = GUI.backgroundColor;
+
+    public Transform target;
+
+    void KMDebug()
+    {
+        KMTools.DestroyChildren(target);
+    }
+
     // Use this for initialization
     void Start()
     {

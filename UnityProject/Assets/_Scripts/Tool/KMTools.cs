@@ -9,6 +9,7 @@
  * 2013-08-27   WP      Fixed Verison To U_4.2.0f
  * 2013-09-05   WP      Added AddItemToList^^^^^^^^^^^ ,two 
  * 2014-11-14   WP      Added string convert to Vector3
+ * 2015-01-15   WP      Added Destroy Children by gameObject
  * 
  * *****************************************************************************/
 
@@ -509,5 +510,25 @@ static public class KMTools
         float z = float.Parse(temp[2]);
         Vector3 rValue = new Vector3(x, y, z);
         return rValue;
+    }
+
+    public static void DestroyChildren(Transform parent)
+    {
+        if (parent == null)
+        {
+            Debug.LogError("--------parent is null");
+            return;
+        }
+
+        List<Transform> children = new List<Transform>();
+        foreach (Transform t in parent)
+        {
+            children.Add(t);
+        }
+
+        for (int i = 0; i < children.Count; i++)
+        {
+            UnityEngine.Object.DestroyImmediate(children[i].gameObject);
+        }
     }
 }
