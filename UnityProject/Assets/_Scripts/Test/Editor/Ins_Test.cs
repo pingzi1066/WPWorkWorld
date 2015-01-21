@@ -6,11 +6,17 @@ using System.Collections;
 [CustomEditor(typeof(Test))]
 public class Ins_Test : Editor
 {
+
+    Test test;
+
+    void OnEnable()
+    {
+        test = target as Test;
+    }
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-
-        Test test = target as Test;
 
         if (KMGUI.DrawHeader("DrawHeader"))
         {
@@ -56,5 +62,11 @@ public class Ins_Test : Editor
 
         if (KMGUI.Button("按钮")) { }
 
+    }
+
+    void OnSceneGUI()
+    {
+        if (test.target)
+            KMSceneEditor.DrawAxis(test.target);
     }
 }

@@ -4,7 +4,7 @@ using System.Collections;
 public class Test : MonoBehaviour
 {
 
-    public Color color = GUI.backgroundColor;
+    public Color color ;
 
     public Transform target;
 
