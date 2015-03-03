@@ -11,8 +11,6 @@ using System;
 /// </summary>
 public class EW_Navigation : EditorWindow
 {
-    private StaticEditorFlags flags = StaticEditorFlags.BatchingStatic;
-
     private static bool[] userSels = new bool[Enum.GetValues(typeof(StaticEditorFlags)).Length];
 
     private const string MENU_LABEL = "Tools/其它/" + "寻路设置";

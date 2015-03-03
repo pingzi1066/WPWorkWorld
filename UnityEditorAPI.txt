@@ -55,6 +55,8 @@
 	if (GUI.changed)
          EditorUtility.SetDirty(curLevel);
         
+	自定义编辑器，同时多选编辑器也可以编辑
+	[CanEditMultipleObjects]
 	
 	注意事项：坐标 旋转 等Vector每帧都赋值，保存场景将会受到麻烦，而且像按钮等的一些提示弹出也会变得古怪。
 	
