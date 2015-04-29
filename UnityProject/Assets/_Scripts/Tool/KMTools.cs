@@ -531,4 +531,35 @@ static public class KMTools
             UnityEngine.Object.DestroyImmediate(children[i].gameObject);
         }
     }
+
+    public static void AddMaterial(Renderer ren, Material mat)
+    {
+        if (ren == null || mat == null)
+        {
+            Debug.Log("mat or ren is null -----  ", ren);
+            return;
+        }
+        List<Material> mats = new List<Material>(ren.materials);
+        mats.Add(mat);
+        ren.materials = mats.ToArray();
+    }
+
+    public static void RemoveLastMaterial(Renderer ren, bool keepOne)
+    {
+        if (ren == null) return;
+        List<Material> mats = new List<Material>(ren.materials);
+        if (keepOne && mats.Count < 2) return;
+
+        if (mats.Count > 1)
+        {
+            mats.RemoveAt(mats.Count - 1);
+            ren.materials = mats.ToArray();
+        }
+    }
+
+    public static T[] EmunConvertArray<T>()
+    {
+        T[] array = Enum.GetValues(typeof(T)) as T[];
+        return array;
+    }
 }
