@@ -8,9 +8,19 @@ public class Test : MonoBehaviour
 
     public Transform target;
 
+    public static Test instance;
+
+    public delegate void DelTest();
+
+    public DelTest eventTest;
+
+    void Awake() { instance = this; }
+
     void KMDebug()
     {
-        KMTools.DestroyChildren(target);
+        if (eventTest != null) eventTest();
+        else Debug.Log("eventTest is null");
+        //KMTools.DestroyChildren(target);
     }
 
     // Use this for initialization

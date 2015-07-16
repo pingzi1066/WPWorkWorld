@@ -25,7 +25,6 @@ public class DeleteEmptyFolders : AssetPostprocessor
     {
         if (isDelete)
         {
-
             DeleteFolders();
             isDelete = false;
             return;

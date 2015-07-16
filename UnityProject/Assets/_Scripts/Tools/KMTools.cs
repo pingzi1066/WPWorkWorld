@@ -556,10 +556,4 @@ static public class KMTools
             ren.materials = mats.ToArray();
         }
     }
-
-    public static T[] EmunConvertArray<T>()
-    {
-        T[] array = Enum.GetValues(typeof(T)) as T[];
-        return array;
-    }
 }
