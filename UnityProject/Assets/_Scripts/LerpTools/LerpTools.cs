@@ -236,7 +236,7 @@ public class LerpTools : MonoBehaviour
     {
         if (elements.Count > 0)
         {
-            float realDeltaTime = RealTime.deltaTime;
+            float realDeltaTime = KMTime.deltaTime;
             float gameDeltaTime = Time.deltaTime;
             for (int i = 0; i < elements.Count; )
             {

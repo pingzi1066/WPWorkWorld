@@ -69,8 +69,15 @@ public class Demo_LerpTools : MonoBehaviour
             top += 30;
 
             Rect rect5 = new Rect(left, top, 400, 30);
-            timeScale = GUI.HorizontalScrollbar(rect5, timeScale, .2f, 0, 5);
-            GUI.TextField(new Rect(left, top + 30, 400, 30), "Time Scale is " + timeScale);
+            Rect rect5_1 = new Rect(left, top + 30, 400, 30);
+            GUI.TextField(rect5, "Time Scale is " + timeScale);
+            timeScale = GUI.HorizontalScrollbar(rect5_1, timeScale, .2f, 0, 5);
+            top += 60;
+
+            Rect rect6 = new Rect(left, top, 400, 30);
+            Rect rect6_1 = new Rect(left, top + 30, 400, 30);
+            GUI.TextField(rect6, "KMTime Scale is " + KMTime.timeScale);
+            KMTime.timeScale = GUI.HorizontalScrollbar(rect6_1, KMTime.timeScale, .2f, 0, 5);
         }
     }
 
