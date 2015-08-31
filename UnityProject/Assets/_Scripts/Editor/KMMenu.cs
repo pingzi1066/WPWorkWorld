@@ -16,28 +16,30 @@ using System.IO;
 public class KMMenu : MonoBehaviour
 {
     const string MENU_HEAD = "Tools/";
-    const string MENU_TRANSFORM = "变换/";
+    const string MENU_TRANSFORM = MENU_HEAD + "变换/";
 
-    const string MENU_COPY_POS_ROT = MENU_HEAD + MENU_TRANSFORM + "复制世界坐标与旋转 %#c";
-    const string MENU_PASTE_POS_ROT = MENU_HEAD + MENU_TRANSFORM + "粘贴世界坐标与旋转 %#d";
-    const string MENU_RoundPRS = MENU_HEAD + MENU_TRANSFORM + "使自身PRS变为整数 %#r";
-    const string MENU_RoundPRSNChildren = MENU_HEAD + MENU_TRANSFORM + "子对象下所有物品的PRS坐标精确到整数";
-    const string MENU_RoundScaleNChildren = MENU_HEAD + MENU_TRANSFORM + "子对象下所有物品的大小精确到整数";
-    const string MENU_CopyLocalPosition = MENU_HEAD + MENU_TRANSFORM + "复制局部坐标 %#x";
-    const string MENU_PasteLocalPosition = MENU_HEAD + MENU_TRANSFORM + "粘贴局部坐标 %#v";
+    const string MENU_COPY_POS_ROT = MENU_TRANSFORM + "复制世界坐标与旋转 %#c";
+    const string MENU_PASTE_POS_ROT = MENU_TRANSFORM + "粘贴世界坐标与旋转 %#d";
+    const string MENU_RoundPRS = MENU_TRANSFORM + "使自身PRS变为整数 %#r";
+    const string MENU_RoundPRSNChildren = MENU_TRANSFORM + "子对象下所有物品的PRS坐标精确到整数";
+    const string MENU_RoundScaleNChildren = MENU_TRANSFORM + "子对象下所有物品的大小精确到整数";
+    const string MENU_CopyLocalPosition = MENU_TRANSFORM + "复制局部坐标 %#x";
+    const string MENU_PasteLocalPosition = MENU_TRANSFORM + "粘贴局部坐标 %#v";
 
-    const string MENU_TEST = "测试/";
+    const string MENU_TEST = MENU_HEAD + "测试/";
 
-    const string MENU_KMDebug = MENU_HEAD + MENU_TEST + "SendMessage方法KMDebug到对象 %#l";
-    const string MENU_KMEditor = MENU_HEAD + MENU_TEST + "SendMessage方法KMEditor到对象 %#k";
+    const string MENU_KMDebug = MENU_TEST + "SendMessage方法KMDebug到对象 %#l";
+    const string MENU_KMEditor = MENU_TEST + "SendMessage方法KMEditor到对象 %#k";
 
-    const string MENU_AUDIO = MENU_HEAD + "其它/";
-    const string MENU_AUDIO_SET3D = MENU_AUDIO + "设置为默认3D音效";
+    const string MENU_Other = MENU_HEAD + "其它/";
+    const string MENU_AUDIO_SET3D = MENU_Other + "设置为默认3D音效";
 
-    const string MENU_Time = "时间/";
-    const string MENU_Time_Plus = MENU_HEAD + MENU_Time + "游戏时间递增 %#=";
-    const string MENU_Time_Minus = MENU_HEAD + MENU_Time + "游戏时间递减 %#-";
-    const string MENU_Time_Default = MENU_HEAD + MENU_Time + "游戏时间默认";
+    const string MENU_Time = MENU_HEAD + "时间/";
+    const string MENU_Time_Plus = MENU_Time + "游戏时间递增 %#=";
+    const string MENU_Time_Minus = MENU_Time + "游戏时间递减 %#-";
+    const string MENU_Time_Default = MENU_Time + "游戏时间默认";
+
+    const string MENU_Other_RemoveMissingScript = MENU_Other + "删除所选对象空脚本（需手动移除）";
 
 
     #region 坐标旋转绽放 PRS
@@ -273,6 +275,48 @@ public class KMMenu : MonoBehaviour
     //        Debug.Log(p.name, p.gameObject);
     //    }
     //}
+
+    #endregion
+
+    #region 其它
+
+    [MenuItem(MENU_Other_RemoveMissingScript)]
+    public static void RemoveMissingScript()
+    {
+        //代码中无法Destroy，只能手动在编辑器里进行删除
+        //有空脚本的对象
+        List<GameObject> selection = new List<GameObject>();
+
+        foreach (Transform select in Selection.transforms)
+        {
+            foreach (Component c in select.GetComponents(typeof(Component)))
+            {
+                if (c == null && !selection.Contains(select.gameObject))
+                {
+                    selection.Add(select.gameObject);
+                    Debug.Log(" missing of script for gameobject", select);
+                }
+            }
+
+
+            foreach (Transform t in select)
+            {
+                Component[] components = t.GetComponents<Component>();
+
+                foreach (Component component in components)
+                {
+                    if (component == null && !selection.Contains(t.gameObject))
+                    {
+                        Debug.Log(" missing of script for gameobject", t);
+                        selection.Add(t.gameObject);
+                    }
+                }
+            }
+        }
+
+        //设置对象
+        Selection.objects = selection.ToArray();
+    }
 
     #endregion
 }
