@@ -1,23 +1,27 @@
-﻿using UnityEngine;
+﻿/****************************************************************************** 
+ * 
+ * Maintaince Logs: 
+ * 20     WP      Initial version
+ * 
+ * *****************************************************************************/
+
+using UnityEngine;
 using System.Collections;
 
 /// <summary>
 /// 描述
-/// 
-/// Maintaince Logs:
-/// 2015-	WP			Initial version. 
 /// </summary>
 public class #SCRIPTNAME# : MonoBehaviour 
 {
 
 	// Use this for initialization
-	void Start () 
+	void Start() 
 	{
 	
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void Update() 
 	{
 	
 	}

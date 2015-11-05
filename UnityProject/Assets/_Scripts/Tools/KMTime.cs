@@ -10,6 +10,9 @@ using System.Collections;
 /// </summary>
 public class KMTime : MonoBehaviour
 {
+    private static KMTime mInst;
+    private float mRealTime = 0f;
+
     static private float m_timeScale = 1;
     static public float timeScale
     {
@@ -28,10 +31,15 @@ public class KMTime : MonoBehaviour
         }
     }
 
-#if UNITY_4_3
-	static RealTime mInst;
+    static void Spawn()
+    {
+        GameObject go = new GameObject("_KMTime");
+        DontDestroyOnLoad(go);
+        mInst = go.AddComponent<KMTime>();
+    }
 
-	float mRealTime = 0f;
+#if UNITY_4_3
+
 	float mRealDelta = 0f;
 
 	/// <summary>
@@ -66,14 +74,6 @@ public class KMTime : MonoBehaviour
 		}
 	}
 
-	static void Spawn ()
-	{
-		GameObject go = new GameObject("_RealTime");
-		DontDestroyOnLoad(go);
-		mInst = go.AddComponent<RealTime>();
-		mInst.mRealTime = Time.realtimeSinceStartup;
-	}
-
 	void Update ()
 	{
 		float rt = Time.realtimeSinceStartup;
@@ -82,10 +82,26 @@ public class KMTime : MonoBehaviour
 	}
 #else
 
+
+
+    static public float time
+    {
+        get
+        {
+            if (mInst == null) Spawn();
+            return mInst.mRealTime;
+        }
+    }
+
     /// <summary>
     /// Real delta time.
     /// </summary>
 
     static public float deltaTime { get { return Time.unscaledDeltaTime * timeScale; } }
+
+    void Update()
+    {
+        mRealTime += deltaTime;
+    }
 #endif
 }
