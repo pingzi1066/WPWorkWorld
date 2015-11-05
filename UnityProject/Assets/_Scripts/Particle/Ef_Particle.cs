@@ -19,7 +19,11 @@ public class Ef_Particle : MonoBehaviour
     float timeParam;
 
     public bool playOnAwake = false;
-    public float delay = 0.5f;
+
+    /// <summary>
+    /// 粒子播放时间
+    /// </summary>
+    public float activeTime = 0.5f;
 
     public bool ignoreTimeScale = false;
     float timeAtLastFrame = 0;
@@ -73,7 +77,7 @@ public class Ef_Particle : MonoBehaviour
     {
         curFrame = KMTime.time - timeAtLastFrame;
         timeParam += ignoreTimeScale ? KMTime.deltaTime : Time.deltaTime;
-        if (timeParam >= delay)
+        if (timeParam >= activeTime)
         {
             gameObject.SetActive(false);
         }
