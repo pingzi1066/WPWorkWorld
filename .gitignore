@@ -17,3 +17,7 @@
 /UnityProject/sysinfo.txt
 /UnityProject/Assets/UnityVS/
 /UnityProject/Assets/UnityVS.meta
+
+#WP private folder
+/UnityProject/Assets/WPFolder/
+/UnityProject/Assets/WPFolder.meta

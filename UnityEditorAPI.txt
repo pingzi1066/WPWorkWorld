@@ -1,5 +1,9 @@
 ﻿
 编辑器相关
+	
+	模板目录（ 81-C# Script-NewBehaviourScript.cs ）：
+	\Editor\Data\Resources\ScriptTemplates	
+
 	Bool选择
 	EditorGUILayout.Toggle 
 	提示
