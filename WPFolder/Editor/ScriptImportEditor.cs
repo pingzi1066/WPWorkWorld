@@ -17,7 +17,6 @@ public class ScriptImportEditor : UnityEditor.AssetModificationProcessor
         int index = path.LastIndexOf(".");
         string file = path.Substring(index);
         if (file != ".cs" && file != ".js" && file != ".boo") return;
-        string fileExtension = file;
 
         index = Application.dataPath.LastIndexOf("Assets");
         path = Application.dataPath.Substring(0, index) + path;
