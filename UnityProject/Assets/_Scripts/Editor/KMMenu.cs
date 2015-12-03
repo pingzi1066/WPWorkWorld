@@ -39,7 +39,7 @@ public class KMMenu : MonoBehaviour
     const string MENU_Time_Minus = MENU_Time + "游戏时间递减 %#-";
     const string MENU_Time_Default = MENU_Time + "游戏时间默认";
 
-    const string MENU_Other_RemoveMissingScript = MENU_Other + "删除所选对象空脚本（需手动移除）";
+    const string MENU_Other_RemoveMissingScript = MENU_Other + "删除所选对象（包括子对象）空脚本";
 
 
     #region 坐标旋转绽放 PRS
@@ -283,39 +283,67 @@ public class KMMenu : MonoBehaviour
     [MenuItem(MENU_Other_RemoveMissingScript)]
     public static void RemoveMissingScript()
     {
-        //代码中无法Destroy，只能手动在编辑器里进行删除
-        //有空脚本的对象
-        List<GameObject> selection = new List<GameObject>();
-
-        foreach (Transform select in Selection.transforms)
+        List<GameObject> gos = new List<GameObject>();
+        for (int i = 0; i < Selection.gameObjects.Length; i++)
         {
-            foreach (Component c in select.GetComponents(typeof(Component)))
+            AddChildrenToList(Selection.gameObjects[i], gos);
+        }
+
+        Selection.objects = gos.ToArray();
+
+        //for (int i = 0; i < gos.Count; i++)
+        //{
+        //    RemoveMissingScript(gos[i]);
+        //}
+    }
+
+    static List<GameObject> AddChildrenToList(GameObject go, List<GameObject> gos)
+    {
+        if (go == null) return gos;
+        if (!gos.Contains(go))
+            gos.Add(go);
+        for (int i = 0; i < go.transform.childCount; i++)
+        {
+            GameObject child = go.transform.GetChild(i).gameObject;
+            AddChildrenToList(child, gos);
+        }
+        return gos;
+    }
+
+    static void RemoveMissingScript(GameObject go)
+    {
+        var gameObject = go;
+
+        // We must use the GetComponents array to actually detect missing components
+        var components = gameObject.GetComponents<MonoBehaviour>();
+
+        // Create a serialized object so that we can edit the component list
+        var serializedObject = new SerializedObject(gameObject);
+        // Find the component list property
+        var prop = serializedObject.FindProperty("m_Component");
+
+        // Track how many components we've removed
+        int r = 0;
+
+        // Iterate over all components
+        for (int j = 0; j < components.Length; j++)
+        {
+            // Check if the ref is null
+            if (components[j] == null)
             {
-                if (c == null && !selection.Contains(select.gameObject))
-                {
-                    selection.Add(select.gameObject);
-                    Debug.Log(" missing of script for gameobject", select);
-                }
-            }
+                Debug.Log("delete null script on " + go.name + " property is : " + prop.type + " " + prop.ToString(), go);
 
+                // If so, remove from the serialized component array
+                prop.DeleteArrayElementAtIndex(j - r);
+                // Increment removed count
+                r++;
 
-            foreach (Transform t in select)
-            {
-                Component[] components = t.GetComponents<Component>();
-
-                foreach (Component component in components)
-                {
-                    if (component == null && !selection.Contains(t.gameObject))
-                    {
-                        Debug.Log(" missing of script for gameobject", t);
-                        selection.Add(t.gameObject);
-                    }
-                }
             }
         }
 
-        //设置对象
-        Selection.objects = selection.ToArray();
+        // Apply our changes to the game object
+        serializedObject.ApplyModifiedProperties();
+        //EditorUtility.SetDirty(gameObject);
     }
 
     #endregion

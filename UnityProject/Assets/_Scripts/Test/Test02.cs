@@ -7,7 +7,7 @@ using System.Collections;
 /// Maintaince Logs: 
 /// 2015		WP			Initial version.
 /// <summary>
-public class Test02 : MonoBehaviour
+public class Test02 : MonoBehaviour 
 {
 
     // Use this for initialization
