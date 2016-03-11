@@ -15,6 +15,11 @@ public class ScriptImportEditor : UnityEditor.AssetModificationProcessor
     {
         path = path.Replace(".meta", "");
         int index = path.LastIndexOf(".");
+        if (index == -1)
+        {
+            return;
+        }
+        //Debug.Log("---" + path + "  index: " + index);
         string file = path.Substring(index);
         if (file != ".cs" && file != ".js" && file != ".boo") return;
 
