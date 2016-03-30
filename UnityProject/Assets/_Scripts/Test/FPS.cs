@@ -10,7 +10,7 @@ public class FPS : MonoBehaviour
 
     private void Start()
     {
-        if (base.guiText == null)
+        if (base.GetComponent<GUIText>() == null)
         {
             Debug.Log("UtilityFramesPerSecond needs a GUIText component!");
             base.enabled = false;
@@ -30,18 +30,18 @@ public class FPS : MonoBehaviour
         {
             float num = this.accum / ((float) this.frames);
             string str = string.Format("{0:F2} FPS", num);
-            base.guiText.text = str;
+            base.GetComponent<GUIText>().text = str;
             if (num < 30f)
             {
-                base.guiText.material.color = Color.yellow;
+                base.GetComponent<GUIText>().material.color = Color.yellow;
             }
             else if (num < 10f)
             {
-                base.guiText.material.color = Color.red;
+                base.GetComponent<GUIText>().material.color = Color.red;
             }
             else
             {
-                base.guiText.material.color = Color.green;
+                base.GetComponent<GUIText>().material.color = Color.green;
             }
             this.timeleft = this.updateInterval;
             this.accum = 0f;

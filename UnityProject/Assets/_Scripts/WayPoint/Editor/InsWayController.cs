@@ -146,7 +146,7 @@ public class InsWayController : Editor
                 //Retreive camera settings from the main camera
                 if (sceneCamera != null)
                 {
-                    go.camera.backgroundColor = sceneCamera.backgroundColor;
+                    go.GetComponent<Camera>().backgroundColor = sceneCamera.backgroundColor;
                     if (sceneCameraSkybox != null)
                         go.AddComponent<Skybox>().material = sceneCameraSkybox.material;
                     else
@@ -156,9 +156,9 @@ public class InsWayController : Editor
                 go.transform.position = inScenePos;
                 go.transform.rotation = inSceneRot;
 
-                go.camera.targetTexture = pointPreviewTexture;
-                go.camera.Render();
-                go.camera.targetTexture = null;
+                go.GetComponent<Camera>().targetTexture = pointPreviewTexture;
+                go.GetComponent<Camera>().Render();
+                go.GetComponent<Camera>().targetTexture = null;
                 DestroyImmediate(go);
 
                 //Display the camera preview

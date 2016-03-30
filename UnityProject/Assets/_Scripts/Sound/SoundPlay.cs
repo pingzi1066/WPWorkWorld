@@ -7,21 +7,35 @@ using System.Collections;
 /// Maintaince Logs: 
 /// 2015-05-08		WP			Initial version.
 /// <summary>
+[RequireComponent(typeof(AudioSource))]
 public class SoundPlay : MonoBehaviour
 {
     public delegate void DelFinish();
 
     public DelFinish eventFinish;
 
+    private AudioSource mAudio;
+    public AudioSource audioSource
+    {
+        get
+        {
+            if (mAudio == null)
+            {
+                mAudio = GetComponent<AudioSource>();
+            }
+            return mAudio;
+        }
+    }
+
     public void Play(AudioClip clip, Vector3 pos)
     {
         if (clip != null)
         {
-            audio.clip = clip;
+            audioSource.clip = clip;
             transform.position = pos;
-            audio.volume = SoundManager.volume;
-            audio.Stop();
-            audio.Play();
+            audioSource.volume = SoundManager.volume;
+            audioSource.Stop();
+            audioSource.Play();
 
             gameObject.name = "SoundPlay(" + clip.name + ")";
 
@@ -43,7 +57,7 @@ public class SoundPlay : MonoBehaviour
 
     public void SetVolume(float volume)
     {
-        audio.volume = volume;
+        audioSource.volume = volume;
     }
 
     public void Pause()
@@ -53,15 +67,15 @@ public class SoundPlay : MonoBehaviour
 
     public void Stop()
     {
-        if (audio && audio.isPlaying)
+        if (audioSource && audioSource.isPlaying)
         {
-            audio.Stop();
+            audioSource.Stop();
         }
     }
 
     void KMDebug()
     {
-        audio.Play();
+        audioSource.Play();
     }
 
 

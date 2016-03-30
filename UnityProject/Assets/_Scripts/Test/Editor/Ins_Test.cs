@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
-using UnityEditor;
 using System.Collections;
 
+using UnityEditor;
 
 [CustomEditor(typeof(Test))]
 public class Ins_Test : Editor
 {
+
 
     Test test;
 
@@ -16,7 +17,12 @@ public class Ins_Test : Editor
 
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        Ins_Default();
+    }
+
+    void Ins_Default()
+    {
+
 
         if (KMGUI.DrawHeader("DrawHeader"))
         {
@@ -59,9 +65,6 @@ public class Ins_Test : Editor
         {
             Debug.Log("del");
         }
-
-        if (KMGUI.Button("按钮")) { }
-
     }
 
     void OnSceneGUI()

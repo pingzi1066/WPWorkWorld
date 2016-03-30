@@ -70,7 +70,6 @@ public class SoundManager : MonoBehaviour
         //create audio sound
         GameObject go = KMTools.AddGameObj(gameObject);
         go.name = "SoundPlay";
-        go.AddComponent<AudioSource>();
         SoundPlay prbSoundPlay = go.AddComponent<SoundPlay>();
 
         for (int i = 0; i < limitCount; i++)

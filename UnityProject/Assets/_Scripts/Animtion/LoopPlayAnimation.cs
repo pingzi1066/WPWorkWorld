@@ -33,14 +33,14 @@ public class LoopPlayAnimation : MonoBehaviour
 
     void Play()
     {
-        if (animation == null)
+        if (GetComponent<Animation>() == null)
         {
             enabled = false;
             return;
         }
 
-        animation[nameAnim].wrapMode = WrapMode.Loop;
-        animation.Play(nameAnim);
+        GetComponent<Animation>()[nameAnim].wrapMode = WrapMode.Loop;
+        GetComponent<Animation>().Play(nameAnim);
     }
 
 }

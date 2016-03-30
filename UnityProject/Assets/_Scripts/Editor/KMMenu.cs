@@ -11,20 +11,23 @@ using UnityEngineInternal;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System;
+
+using Object = UnityEngine.Object;
 
 [ExecuteInEditMode]
-public class KMMenu : MonoBehaviour
+public class KMMenu
 {
     const string MENU_HEAD = "Tools/";
     const string MENU_TRANSFORM = MENU_HEAD + "变换/";
 
     const string MENU_COPY_POS_ROT = MENU_TRANSFORM + "复制世界坐标与旋转 %#c";
-    const string MENU_PASTE_POS_ROT = MENU_TRANSFORM + "粘贴世界坐标与旋转 %#d";
+    const string MENU_PASTE_POS_ROT = MENU_TRANSFORM + "粘贴世界坐标与旋转 %#v";
     const string MENU_RoundPRS = MENU_TRANSFORM + "使自身PRS变为整数 %#r";
     const string MENU_RoundPRSNChildren = MENU_TRANSFORM + "子对象下所有物品的PRS坐标精确到整数";
     const string MENU_RoundScaleNChildren = MENU_TRANSFORM + "子对象下所有物品的大小精确到整数";
-    const string MENU_CopyLocalPosition = MENU_TRANSFORM + "复制局部坐标 %#x";
-    const string MENU_PasteLocalPosition = MENU_TRANSFORM + "粘贴局部坐标 %#v";
+    const string MENU_CopyLocalPosition = MENU_TRANSFORM + "复制局部坐标 %&c";
+    const string MENU_PasteLocalPosition = MENU_TRANSFORM + "粘贴局部坐标 %&v";
 
     const string MENU_TEST = MENU_HEAD + "测试/";
 
@@ -349,4 +352,51 @@ public class KMMenu : MonoBehaviour
     #endregion
 }
 
+public class AssetImportByMenu : AssetPostprocessor
+{
+    // runs this script automatically after asset processing is done (reloading), via AssetPostprocessor.OnPostprocessAllAssets	
+    static void OnPostprocessAllAssets(String[] importedAssets, String[] deletedAssets, String[] movedAssets, String[] movedFromAssetPaths)
+    {
+        DebugLog(importedAssets, "importedAssets");
+        DebugLog(deletedAssets, "deletedAssets");
+        DebugLog(movedAssets, "movedAssets");
+    }
+
+    static void AddScene(String[] imported)
+    {
+        foreach (string path in imported)
+        {
+            int index = path.LastIndexOf(".");
+            if (index == -1)
+            {
+                continue;
+            }
+
+            string file = path.Substring(index);
+
+            if (file == ".unity")
+            {
+
+            }
+        }
+    }
+
+    static void DebugLog(String[] logs, string head = "")
+    {
+        string log = head + "\n";
+
+        if (logs.Length > 0)
+        {
+            foreach (String str in logs)
+            {
+                log += str;
+            }
+            Debug.Log(log);
+        }
+        else
+        {
+            Debug.Log("Don't assets change " + head);
+        }
+    }
+}
 
