@@ -29,7 +29,8 @@ public class KMHierarchy
 
         //Texture2D tex = KMGUI.blankTexture; //GetTexture2D("eye");
 
-        //GUI.DrawTexture(selectionRect, GetTexture2D("eye"));
+        GUI.DrawTexture(selectionRect.H_CR(), GetTexture2D("eye"));
+        KMGUI.xMiniButton(selectionRect.H_CR(2, 10).H_Size(24), "11", true, .5f, false);
 
         //string text = " \nx: " + selectionRect.x + " y: " + selectionRect.y + " width: " + selectionRect.width + " height: " + selectionRect.height;
         //Debug.Log(go.name + selectionRect.position + "  " + selectionRect.center + "   " + selectionRect.size + text, go);

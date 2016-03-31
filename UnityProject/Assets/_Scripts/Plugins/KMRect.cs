@@ -18,4 +18,30 @@ public static class KMRect
     {
         return rect;
     }
+
+    /// <summary>
+    /// Hierarchy 里面从右数的小位置
+    /// </summary>
+    /// <param name="rect"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    static public Rect H_CR(this Rect rect, int index = 1, int offectX = 0)
+    {
+        int dis = 2 * index;
+        rect.x += rect.width - index * rect.height - dis - offectX;
+
+        return H_Size(rect);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="rect"></param>
+    /// <param name="size"></param>
+    /// <returns></returns>
+    static public Rect H_Size(this Rect rect, int width = 16, int height = 16)
+    {
+        rect.size = new Vector2(width, height);
+        return rect;
+    }
 }

@@ -159,5 +159,20 @@ public static class KMGUI
         return Button("删除", Color.red, options);
     }
 
+    public static bool xMiniButton(this Rect r, string lb, bool autoSize = true, float lbAlign = 0.5f, bool drawButton = true)
+    {
+        //lb = "999+";
+        var style = EditorStyles.miniLabel;
+        var lbRect = style.CalcSize(new GUIContent(lb));
+        var rr = r;//.wh((autoSize ? lbRect.x : r.width), 14f);
+
+        lbRect = EditorStyles.label.CalcSize(new GUIContent(lb));
+        var isClicked = drawButton && GUI.Button(rr, "", EditorStyles.miniButton);
+        GUI.Label(rr,//rr.dx((rr.width - lbRect.x) * lbAlign).dy(-1f), lb,
+            lb, drawButton ? EditorStyles.miniLabel : EditorStyles.label);
+
+        return isClicked;
+    }
+
     #endregion
 }
