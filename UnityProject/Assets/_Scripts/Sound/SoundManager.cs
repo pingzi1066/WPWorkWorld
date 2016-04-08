@@ -6,6 +6,7 @@ using System.Collections.Generic;
 /// 
 /// Maintaince Logs: 
 /// 2015-05-08		WP			Initial version.
+/// 2016-04-08      WP          加入外部自带音效的播放接口
 /// <summary>
 public class SoundManager : MonoBehaviour
 {
@@ -115,6 +116,16 @@ public class SoundManager : MonoBehaviour
             {
                 Debug.LogError(" sound exceed limit count   " + name);
             }
+        }
+    }
+
+    public static void PlaySound(AudioSource audio)
+    {
+        if (audio)
+        {
+            audio.volume = volume;
+            audio.Stop();
+            audio.Play();
         }
     }
 

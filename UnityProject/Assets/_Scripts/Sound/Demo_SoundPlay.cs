@@ -91,6 +91,13 @@ public class Demo_SoundPlay : MonoBehaviour
 
         top += 35;
 
+        if (GUI.Button(rect, "Play Audio Source by self "))
+        {
+            SoundManager.PlaySound(GetComponent<AudioSource>());
+        }
+
+        top += 35;
+
         SoundManager.volume = GUI.HorizontalSlider(rect, SoundManager.volume, 0, 1);
 
     }
