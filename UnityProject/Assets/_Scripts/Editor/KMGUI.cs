@@ -163,10 +163,10 @@ public static class KMGUI
     {
         //lb = "999+";
         var style = EditorStyles.miniLabel;
-        var lbRect = style.CalcSize(new GUIContent(lb));
+        //var lbRect = style.CalcSize(new GUIContent(lb));
         var rr = r;//.wh((autoSize ? lbRect.x : r.width), 14f);
 
-        lbRect = EditorStyles.label.CalcSize(new GUIContent(lb));
+        //lbRect = EditorStyles.label.CalcSize(new GUIContent(lb));
         var isClicked = drawButton && GUI.Button(rr, "", EditorStyles.miniButton);
         GUI.Label(rr,//rr.dx((rr.width - lbRect.x) * lbAlign).dy(-1f), lb,
             lb, drawButton ? EditorStyles.miniLabel : EditorStyles.label);
