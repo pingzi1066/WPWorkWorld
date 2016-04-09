@@ -43,9 +43,9 @@ public class Ef_Bomb : MonoBehaviour
 
     public void StartDeadEffect(Color[] colors, float disableTime = 3, float power = 1.5f)
     {
-        SoundManager.PlaySound(audioSource);
-
         gameObject.SetActive(true);
+
+        SoundManager.PlaySound(audioSource);
 
         this.power = power;
 

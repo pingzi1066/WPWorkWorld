@@ -3086,7 +3086,7 @@ MonoBehaviour:
   - {x: -0.4000001, y: 0, z: 0}
   center: {x: 0, y: 0.13, z: 0}
   power: 1.5
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 8219162}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -3102,6 +3102,10 @@ Prefab:
       propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 8219162}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 188486}
