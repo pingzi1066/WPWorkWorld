@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// /// 路点控制器
+/// 路点控制器，里面包括了所有的路线，实际的播放者
 /// 
 /// Maintaince Logs:
 /// 2014-12-05  WP      Initial version. 

@@ -70,6 +70,12 @@ public class WayAnimator : MonoBehaviour
         LoginoutRecursion();
     }
 
+    public void SetParms(List<WayController> ways, modes mode)
+    {
+        wayList = ways;
+        this.mode = mode;
+    }
+
     //play the animation as runtime
     public void Play()
     {
@@ -225,7 +231,6 @@ public class WayAnimator : MonoBehaviour
 
     private void UpdateAnimationTime(float pathTime)
     {
-
         switch (mode)
         {
 
@@ -370,8 +375,6 @@ public class WayAnimator : MonoBehaviour
                 case modes.reverseLoop:
                     AnimLooped -= LoginoutRecursion;
                     break;
-                //case modes.reverseLoop:
-                //    break;
                 case modes.pingPong:
                     if (pingPongDirection == 1)
                     {
@@ -383,7 +386,6 @@ public class WayAnimator : MonoBehaviour
                     }
                     break;
             }
-            //Debug.Log("Logout event ", curWay);
             curWay.Logout(this);
             curWay = null;
         }
