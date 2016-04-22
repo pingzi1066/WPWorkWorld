@@ -162,7 +162,7 @@ public static class KMGUI
     public static bool xMiniButton(this Rect r, string lb, bool autoSize = true, float lbAlign = 0.5f, bool drawButton = true)
     {
         //lb = "999+";
-        var style = EditorStyles.miniLabel;
+        //var style = EditorStyles.miniLabel;
         //var lbRect = style.CalcSize(new GUIContent(lb));
         var rr = r;//.wh((autoSize ? lbRect.x : r.width), 14f);
 
