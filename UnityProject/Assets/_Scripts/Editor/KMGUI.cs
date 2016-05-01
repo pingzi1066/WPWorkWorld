@@ -167,9 +167,11 @@ public static class KMGUI
         var rr = r;//.wh((autoSize ? lbRect.x : r.width), 14f);
 
         //lbRect = EditorStyles.label.CalcSize(new GUIContent(lb));
-        var isClicked = drawButton && GUI.Button(rr, "", EditorStyles.miniButton);
+        //var isClicked = drawButton && GUI.Button(rr, "", EditorStyles.miniButton);
+        var isClicked =  GUI.Button(rr, "", EditorStyles.label);
         GUI.Label(rr,//rr.dx((rr.width - lbRect.x) * lbAlign).dy(-1f), lb,
-            lb, drawButton ? EditorStyles.miniLabel : EditorStyles.label);
+            //lb, drawButton ? EditorStyles.miniLabel : EditorStyles.label);
+            lb, EditorStyles.label);
 
         return isClicked;
     }

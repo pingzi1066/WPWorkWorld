@@ -28,29 +28,26 @@ public class KMHierarchy
         if (go == null) return;
 
         //Texture2D tex = KMGUI.blankTexture; //GetTexture2D("eye");
+        Rect eyeRect = selectionRect.H_CR();
 
-        GUI.DrawTexture(selectionRect.H_CR(), GetTexture2D("eye"));
-        KMGUI.xMiniButton(selectionRect.H_CR(2, 10).H_Size(24), "11", true, .5f, false);
+        GUI.DrawTexture(eyeRect, GetTexture2D("eye"));
+        if (GUI.Button(eyeRect, "", EditorStyles.label))
+        {
+            Debug.Log("Eye to me!");
+        }
 
-        //string text = " \nx: " + selectionRect.x + " y: " + selectionRect.y + " width: " + selectionRect.width + " height: " + selectionRect.height;
-        //Debug.Log(go.name + selectionRect.position + "  " + selectionRect.center + "   " + selectionRect.size + text, go);
+        Rect childRect = selectionRect.H_CR(2, 0).H_Size(24);
+        GUI.Label(childRect, "" + go.transform.childCount, EditorStyles.label);
+        if (GUI.Button(childRect, "", EditorStyles.label))
+        {
+            Debug.Log("child count for button");
+        }
     }
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     public static Texture2D GetTexture2D(string id)
     {
         Texture2D result;
-        //var dirList = Directory.GetDirectories("Assets", "_Script", SearchOption.AllDirectories);
+
         string path = "Assets/_Scripts/Editor/Images/" + id + ".png";
 
         var ba = File.ReadAllBytes(path);
