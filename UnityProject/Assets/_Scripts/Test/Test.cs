@@ -19,24 +19,7 @@ public class Test : MonoBehaviour
     public TA a;
     public TA b;
 
-    void KMDebug()
-    {
-        TA ta = new TA();
-        ta.a = 100;
-        a = ta;
-
-        TB tb = new TB();
-        tb.a = 102;
-        tb.b = 103;
-        Debug.Log("tb.b is " + tb.b);
-
-        b = tb;
-
-        Start();
-        //if (eventTest != null) eventTest();
-        //else Debug.Log("eventTest is null");
-        //KMTools.DestroyChildren(target);
-    }
+ 
 
     // Use this for initialization
     void Start()

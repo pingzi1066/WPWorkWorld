@@ -7,7 +7,7 @@
 
 using UnityEngine;
 using UnityEditor;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 
 /// <summary>
@@ -16,7 +16,6 @@ using System.IO;
 [InitializeOnLoad]
 public class KMHierarchy
 {
-
     static KMHierarchy()
     {
         EditorApplication.hierarchyWindowItemOnGUI += HierarchyItemCB;
@@ -36,12 +35,7 @@ public class KMHierarchy
             Debug.Log("Eye to me!");
         }
 
-        Rect childRect = selectionRect.H_CR(2, 0).H_Size(24);
-        GUI.Label(childRect, "" + go.transform.childCount, EditorStyles.label);
-        if (GUI.Button(childRect, "", EditorStyles.label))
-        {
-            Debug.Log("child count for button");
-        }
+        DrawChildInfo(go, selectionRect);
     }
 
     public static Texture2D GetTexture2D(string id)
@@ -55,5 +49,62 @@ public class KMHierarchy
         result.LoadImage(ba);
 
         return result;
+    }
+
+//    public static void xSetFlag(this Object go, HideFlags flag, bool value, string undoName = null) {
+//        if (go == null)
+//            return;
+//        if (!string.IsNullOrEmpty(undoName))
+//            Undo.RecordObject(go, undoName);
+//        if (value)
+//            go.hideFlags |= flag;
+//        else
+//            go.hideFlags &= ~flag;
+//    }
+
+    public static void DrawChildInfo(GameObject go,Rect selectRect)
+    {
+        int childCount = go.transform.childCount;
+        if (childCount > 0)
+        {
+
+            Rect childRect = selectRect.H_CR(2, 6).H_Size(24);
+//            GUI.Label(childRect, "" + childCount, EditorStyles.label);
+
+            //取子对象是否隐藏
+            bool isShow = (int)(go.transform.GetChild(0).hideFlags & HideFlags.HideInHierarchy) > 0;
+
+            if (isShow)
+                childRect = selectRect.H_CR(2, 8).H_Size(22);
+
+            if (GUI.Button(childRect, childCount.ToString(), isShow ? EditorStyles.miniButton : EditorStyles.label))
+            {
+                bool isAdd = !isShow;
+                SetChildrenFlag(go, HideFlags.HideInHierarchy, isAdd);
+
+                Debug.Log("the gameobje is " + (isShow ? "show" : "hide") + " and set is ");
+            }
+        }
+        else
+        {
+            //
+        }
+    }
+
+    private static void SetChildrenFlag(GameObject go,HideFlags flag,bool isAdd)
+    {
+        foreach (Transform t in go.transform)
+        {
+            if (isAdd)
+                t.gameObject.hideFlags |= flag;
+            else
+                t.gameObject.hideFlags &= ~flag;
+        }
+
+        //Work on 
+        bool old = go.activeSelf;
+
+        go.SetActive(!old);
+        go.SetActive(old);
     }
 }
