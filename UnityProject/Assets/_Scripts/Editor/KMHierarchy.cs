@@ -26,16 +26,9 @@ public class KMHierarchy
         var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
         if (go == null) return;
 
-        //Texture2D tex = KMGUI.blankTexture; //GetTexture2D("eye");
-        Rect eyeRect = selectionRect.H_CR();
+        DrawActive(go,selectionRect);
 
-        GUI.DrawTexture(eyeRect, GetTexture2D("eye"));
-        if (GUI.Button(eyeRect, "", EditorStyles.label))
-        {
-            Debug.Log("Eye to me!");
-        }
-
-        DrawChildInfo(go, selectionRect);
+        DrawCombine(go, selectionRect);
     }
 
     public static Texture2D GetTexture2D(string id)
@@ -51,43 +44,61 @@ public class KMHierarchy
         return result;
     }
 
-//    public static void xSetFlag(this Object go, HideFlags flag, bool value, string undoName = null) {
-//        if (go == null)
-//            return;
-//        if (!string.IsNullOrEmpty(undoName))
-//            Undo.RecordObject(go, undoName);
-//        if (value)
-//            go.hideFlags |= flag;
-//        else
-//            go.hideFlags &= ~flag;
-//    }
+    /// <summary>
+    /// 游戏对象Active相关信息
+    /// </summary>
+    private static void DrawActive(GameObject go,Rect SelectRect)
+    {
+        //此对象是否显示中
+        bool isActiveInHierarchy = go.activeInHierarchy;
 
-    public static void DrawChildInfo(GameObject go,Rect selectRect)
+        string texName = isActiveInHierarchy ? "eye" : "eye_dis";
+
+        Rect eyeRect = SelectRect.H_CR();
+
+        GUI.DrawTexture(eyeRect, GetTexture2D(texName));
+        if (GUI.Button(eyeRect, "", EditorStyles.label))
+        {
+            SetActiveInHierarchy(go, !isActiveInHierarchy);
+        }
+    }
+
+    /// <summary>
+    /// 设置对象显示状态
+    /// </summary>
+    private static void SetActiveInHierarchy(GameObject go , bool active)
+    {
+        if (go.activeSelf != active)
+            go.SetActive(active);
+
+        if (go.activeInHierarchy != active)
+            SetActiveInHierarchy(go.transform.parent.gameObject, active);
+    }
+
+    /// <summary>
+    /// 子对象相关信息
+    /// </summary>
+    private static void DrawCombine(GameObject go,Rect selectRect)
     {
         int childCount = go.transform.childCount;
-        if (childCount > 0)
+
+        if (childCount == 0)
+            return;
+
+        Rect childRect = selectRect.H_CR(2, 6).H_Size(24);
+
+        string text = childCount > 99 ? "99+" : childCount.ToString();
+
+        //取子对象是否隐藏
+        bool isHide = HasFlag(go.transform.GetChild(0), HideFlags.HideInHierarchy);
+
+        if (isHide)
+            childRect = selectRect.H_CR(2, 11).H_Size(22);
+
+        if (GUI.Button(childRect, text, isHide ? EditorStyles.miniButton : EditorStyles.label))
         {
-
-            Rect childRect = selectRect.H_CR(2, 6).H_Size(24);
-//            GUI.Label(childRect, "" + childCount, EditorStyles.label);
-
-            //取子对象是否隐藏
-            bool isShow = (int)(go.transform.GetChild(0).hideFlags & HideFlags.HideInHierarchy) > 0;
-
-            if (isShow)
-                childRect = selectRect.H_CR(2, 8).H_Size(22);
-
-            if (GUI.Button(childRect, childCount.ToString(), isShow ? EditorStyles.miniButton : EditorStyles.label))
-            {
-                bool isAdd = !isShow;
-                SetChildrenFlag(go, HideFlags.HideInHierarchy, isAdd);
-
-                Debug.Log("the gameobje is " + (isShow ? "show" : "hide") + " and set is ");
-            }
-        }
-        else
-        {
-            //
+            bool isAdd = !isHide;
+            SetChildrenFlag(go, HideFlags.HideInHierarchy, isAdd);
         }
     }
 
@@ -96,15 +107,19 @@ public class KMHierarchy
         foreach (Transform t in go.transform)
         {
             if (isAdd)
-                t.gameObject.hideFlags |= flag;
+                t.hideFlags |= flag;
             else
-                t.gameObject.hideFlags &= ~flag;
+                t.hideFlags &= ~flag;
         }
 
         //Work on 
         bool old = go.activeSelf;
-
         go.SetActive(!old);
         go.SetActive(old);
+    }
+
+    private static bool HasFlag(Transform t , HideFlags flag)
+    {
+        return (t.hideFlags & flag) > 0;
     }
 }
