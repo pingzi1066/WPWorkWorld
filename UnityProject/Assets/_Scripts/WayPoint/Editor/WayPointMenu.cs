@@ -7,7 +7,7 @@ using System.Collections;
 /// 2014-12-05  WP      Initial version. 
 /// </summary>
 
-public class WayPointMenu : EditorWindow
+public class WayPointMenu
 {
 
     [MenuItem("GameObject/Create New Way Point", false, 3)]
@@ -16,5 +16,6 @@ public class WayPointMenu : EditorWindow
         GameObject newPath = new GameObject("New Way");
         newPath.AddComponent<WayController>();
         newPath.AddComponent<WayBezier>();
+        Debug.Log("Add new way is finished");
     }
 }

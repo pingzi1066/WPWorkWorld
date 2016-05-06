@@ -14,7 +14,7 @@ using System.IO;
 /// Hierarchy 外观控制显示
 /// </summary>
 [InitializeOnLoad]
-public class KMHierarchy
+public partial class KMHierarchy
 {
     static KMHierarchy()
     {
@@ -26,9 +26,11 @@ public class KMHierarchy
         var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
         if (go == null) return;
 
-        DrawActive(go,selectionRect);
+        DrawActive(go, selectionRect);
 
         DrawCombine(go, selectionRect);
+
+        DrawMenu(go, selectionRect);
     }
 
     public static Texture2D GetTexture2D(string id)
@@ -47,7 +49,7 @@ public class KMHierarchy
     /// <summary>
     /// 游戏对象Active相关信息
     /// </summary>
-    private static void DrawActive(GameObject go,Rect SelectRect)
+    private static void DrawActive(GameObject go, Rect SelectRect)
     {
         //此对象是否显示中
         bool isActiveInHierarchy = go.activeInHierarchy;
@@ -66,7 +68,7 @@ public class KMHierarchy
     /// <summary>
     /// 设置对象显示状态
     /// </summary>
-    private static void SetActiveInHierarchy(GameObject go , bool active)
+    private static void SetActiveInHierarchy(GameObject go, bool active)
     {
         if (go.activeSelf != active)
             go.SetActive(active);
@@ -78,7 +80,7 @@ public class KMHierarchy
     /// <summary>
     /// 子对象相关信息
     /// </summary>
-    private static void DrawCombine(GameObject go,Rect selectRect)
+    private static void DrawCombine(GameObject go, Rect selectRect)
     {
         int childCount = go.transform.childCount;
 
@@ -102,7 +104,7 @@ public class KMHierarchy
         }
     }
 
-    private static void SetChildrenFlag(GameObject go,HideFlags flag,bool isAdd)
+    private static void SetChildrenFlag(GameObject go, HideFlags flag, bool isAdd)
     {
         foreach (Transform t in go.transform)
         {
@@ -118,7 +120,7 @@ public class KMHierarchy
         go.SetActive(old);
     }
 
-    private static bool HasFlag(Transform t , HideFlags flag)
+    private static bool HasFlag(Transform t, HideFlags flag)
     {
         return (t.hideFlags & flag) > 0;
     }
