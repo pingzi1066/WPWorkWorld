@@ -11,7 +11,7 @@ using System.Collections;
 /// <summary>
 /// 描述
 /// </summary>
-public class Demo_LocalDataMono : MonoBehaviour
+public class Demo_IntDataMono : MonoBehaviour
 {
     float height = 30;
     float width = 120;
@@ -24,7 +24,7 @@ public class Demo_LocalDataMono : MonoBehaviour
 
     string text;
 
-    private Demo_Data data;
+    private Demo_IntData data;
 
     private Rect rect
     {
@@ -37,7 +37,10 @@ public class Demo_LocalDataMono : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        data = Demo_Data.instance;
+        data = Demo_IntData.instance;
+//        System.ValueType a = 0;
+//        float b = a + 1;
+       
     }
 
     void OnGUI()
@@ -60,7 +63,7 @@ public class Demo_LocalDataMono : MonoBehaviour
 
         top += 35;
         width = 120;
-        Demo_Data.DemoEnum e = Demo_Data.DemoEnum.Coin;
+        DemoEnum e = DemoEnum.Coin;
         if (GUI.Button(rect, "Get " + e.ToString()))
         {
             text = e.ToString() + "  value is : " + data.GetInt(e);
@@ -74,7 +77,7 @@ public class Demo_LocalDataMono : MonoBehaviour
         }
 
         top += 35;
-        e = Demo_Data.DemoEnum.Gem;
+        e = DemoEnum.Gem;
         if (GUI.Button(rect, "Get " + e.ToString()))
         {
             text = e.ToString() + "  value is : " + data.GetInt(e);
