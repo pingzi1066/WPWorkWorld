@@ -1,0 +1,37 @@
+{
+	"1":{
+		"name":"计时礼物",
+		"describe":"第一个礼物",
+		"dis_time":10,
+		"gift_type":1,
+		"gift_num":100,
+	},
+	"2":{
+		"name":"计时礼物",
+		"describe":"免费的小礼物已经备好，快来玩一把打开它！",
+		"dis_time":120,
+		"gift_type":1,
+		"gift_num":20,
+	},
+	"3":{
+		"name":"计时礼物",
+		"describe":"吼吼吼，小礼包送上门来啦，玩一把领取它！",
+		"dis_time":300,
+		"gift_type":1,
+		"gift_num":25,
+	},
+	"4":{
+		"name":"计时礼物",
+		"describe":"小怪物呈上的小包越来越鼓，玩一把看看里面有什么！",
+		"dis_time":1800,
+		"gift_type":1,
+		"gift_num":30,
+	},
+	"5":{
+		"name":"计时礼物",
+		"describe":"满满的小礼包已经堆在门口，玩一把打开它哟！",
+		"dis_time":3600,
+		"gift_type":1,
+		"gift_num":50,
+	},
+}
