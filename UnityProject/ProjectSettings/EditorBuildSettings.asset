@@ -6,6 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Scripts/LocalData/Demo_LocalData.unity
+    path: Assets/_Scripts/IOS/Demo_IOS_Notification.unity
   - enabled: 1
     path: Assets/_Scripts/Test/Test.unity
+  - enabled: 1
+    path: Assets/_Scripts/LocalData/Demo_LocalData.unity

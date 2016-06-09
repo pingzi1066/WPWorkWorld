@@ -50,7 +50,7 @@ abstract public class LocalInt<T,U>
     /// <param name="eKey">E key.</param>
     /// <param name="value">Value.</param>
     /// <typeparam name="K">The 1st type parameter.</typeparam>
-    protected void SetInt(U eKey, int value)
+    public void SetInt(U eKey, int value)
     {
         if (dict.ContainsKey(eKey))
         {
@@ -67,11 +67,13 @@ abstract public class LocalInt<T,U>
     /// <typeparam name="K">The 1st type parameter.</typeparam>
     public int GetInt(U eKey)
     {
+        #if UNITY_EDITOR
         if (!dict.ContainsKey(eKey))
         {
             Debug.Log("Don't fount key " + eKey.ToString());
             return 0;
         }
+        #endif
 
         return dict[eKey];
     }
@@ -168,5 +170,17 @@ abstract public class LocalInt<T,U>
     public Dictionary<U,int> GetDict()
     {
         return dict;
+    }
+
+    /// <summary>
+    /// 清空数据
+    /// </summary>
+    public void ClearData()
+    {
+        CreateDefaultData();
+        SaveData();
+        #if UNITY_EDITOR
+        Debug.Log("Clear Data " + typeof(T).Name);
+        #endif
     }
 }

@@ -11,7 +11,7 @@ using System.Collections;
 /// <summary>
 /// 时间奖励的表结构
 /// </summary>
-public class StaticTimingReward : StaticJson<StaticTimingReward> 
+public class StaticTimeCountReward : StaticJson<StaticTimeCountReward> 
 {
 
 }
