@@ -18,9 +18,9 @@ public class Demo_IOS_Notification : MonoBehaviour
 	void Start()
     {
         //10秒后发送
-        IOS_Notification.instance.NotificationMessage(new IOS_Notification.Notification("P : 20秒后发送", System.DateTime.Now.AddSeconds(20), false));
+        IOS_Notification.instance.AddNotificationMessage("P : 60秒后发送", 0,1, false);
         //每天中午12点推送
-        IOS_Notification.instance.NotificationMessage("P : 每天中午12点推送", 12, true);
+        IOS_Notification.instance.AddNotificationMessage("P : 每天中午12点推送", 12,0, true);
     }
 	
 	// Update is called once per frame

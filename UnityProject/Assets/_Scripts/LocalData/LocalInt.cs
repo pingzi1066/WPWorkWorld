@@ -15,7 +15,7 @@ using SimpleJSON;
 /// <summary>
 /// int数据保存基类 T 为此继承函数，U为枚举
 /// </summary>
-abstract public class LocalInt<T,U> 
+ public class LocalInt<T,U> 
     where T : LocalInt<T,U>
 {
 
@@ -41,7 +41,7 @@ abstract public class LocalInt<T,U>
     /// 唯一的Key值，用于保存到数据
     /// </summary>
     /// <returns></returns>
-    abstract public string Key();
+    public virtual string Key() { return typeof(T).Name; }
     protected string key { get { return Key(); } }
 
     /// <summary>

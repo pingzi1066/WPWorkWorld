@@ -64,6 +64,8 @@ public class TimeCountRewardManager : MonoBehaviour
             {
                 GameObject go = new GameObject(typeof(TimeCountRewardManager).Name);
                 mInstance = go.AddComponent<TimeCountRewardManager>();
+                //全局管理不需要被销毁
+                DontDestroyOnLoad(go);
             }
             return mInstance;
         }
@@ -97,8 +99,6 @@ public class TimeCountRewardManager : MonoBehaviour
 	// Use this for initialization
 	void Start() 
 	{
-        //全局管理不需要被销毁
-        DontDestroyOnLoad(gameObject);
 
         if (data.GetInt(ED_TimingReward.isFinished) != 0)
         {

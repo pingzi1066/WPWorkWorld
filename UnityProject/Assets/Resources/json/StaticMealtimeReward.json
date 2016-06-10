@@ -1,0 +1,22 @@
+{
+	"1":{
+		"name":"定时礼物",
+		"describe":"午休的小时光，不如来虐一把Doge赢取定时小礼包~",
+		"hour":11,
+		"minute":55,
+		"last_time":120,
+		"repeat":1,
+		"gift_type":1,
+		"gift_num":10,
+	},
+	"2":{
+		"name":"定时礼物",
+		"describe":"夕阳西下，拿起你的彩虹枪消灭扑过来的小怪兽搜刮定时奖励！",
+		"hour":6,
+		"minute":30,
+		"last_time":120,
+		"repeat":1,
+		"gift_type":1,
+		"gift_num":10,
+	},
+}

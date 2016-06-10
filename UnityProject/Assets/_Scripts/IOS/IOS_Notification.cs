@@ -42,21 +42,20 @@ public class IOS_Notification : MonoBehaviour
     }
 
     //本地推送
-    public void NotificationMessage(string message,int hour ,bool isRepeatDay)
+    public void AddNotificationMessage(string message,int hour ,int minute,bool isRe)
     {
         int year = DateTime.Now.Year;
         int month = DateTime.Now.Month;
         int day= DateTime.Now.Day;
         DateTime newDate = new DateTime(year,month,day,hour,0,0);
-        NotificationMessage(new Notification(message, newDate, isRepeatDay));
+        Notification n = new Notification(message, newDate, false);
+
+        //加入列表 
+        listNotifi.Add(n);
     }
     //本地推送 你可以传入一个固定的推送时间
-    public void NotificationMessage(Notification notifi)
+    private void NotificationMessage(Notification notifi)
     {
-        //加入列表 
-        if (!listNotifi.Contains(notifi))
-            listNotifi.Add(notifi);
-
         DateTime newDate = notifi.newDate;
         string message = notifi.message;
         bool isRepeatDay = notifi.isRepeatDay;
@@ -121,9 +120,9 @@ public class IOS_Notification : MonoBehaviour
     void Test()
     {
         //10秒后发送
-        NotificationMessage(new Notification("P : 20秒后发送",DateTime.Now.AddSeconds(20),false));
+//        NotificationMessage(new Notification("P : 20秒后发送",DateTime.Now.AddSeconds(20)));
         //每天中午12点推送
-        NotificationMessage("P : 每天中午12点推送",12,true);
+//        NotificationMessage("P : 每天中午12点推送",12,0,true);
 
     }
 }
