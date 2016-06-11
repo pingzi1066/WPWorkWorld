@@ -57,7 +57,7 @@ using SimpleJSON;
     /// <param name="eKey">E key.</param>
     /// <param name="value">Value.</param>
     /// <typeparam name="K">The 1st type parameter.</typeparam>
-    public void SetInt(U eKey, int value)
+	public virtual void SetInt(U eKey, int value)
     {
         if (dict.ContainsKey(eKey))
         {
@@ -74,7 +74,7 @@ using SimpleJSON;
     /// </summary>
     /// <param name="e">E.</param>
     /// <param name="addValue">Add value.</param>
-    public void AddInt(U e, int addValue)
+    public virtual void AddInt(U e, int addValue)
     {
         SetInt(e, dict[e] + addValue);
     }
