@@ -34,13 +34,15 @@ public class Demo_IntDataMono : MonoBehaviour
         }
     }
 
+    private string logChange = "";
+
     // Use this for initialization
     void Start()
     {
         data = Demo_IntData.instance;
 //        System.ValueType a = 0;
 //        float b = a + 1;
-       
+        Demo_IntData.eventOnValue += OnValue;
     }
 
     void OnGUI()
@@ -97,6 +99,14 @@ public class Demo_IntDataMono : MonoBehaviour
         
         top += 35;
         GUI.Label(rect, "cur value is " + curValue + "  change value in inspector!!");
+
+        top += 35;
+        GUI.Label(rect, logChange);
+    }
+
+    void OnValue(DemoEnum d,int value)
+    {
+        logChange = "Set  " + d.ToString() + "  To: " + value;
     }
 
     // Update is called once per frame

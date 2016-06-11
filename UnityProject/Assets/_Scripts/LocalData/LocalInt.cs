@@ -44,8 +44,15 @@ using SimpleJSON;
     public virtual string Key() { return typeof(T).Name; }
     protected string key { get { return Key(); } }
 
+    public delegate void DelOnValue(U key,int value);
+
     /// <summary>
-    /// 设置值
+    /// 当值改变的方法监听
+    /// </summary>
+    static public DelOnValue eventOnValue;
+
+    /// <summary>
+    /// 设置值 全局唯一设置值的接口
     /// </summary>
     /// <param name="eKey">E key.</param>
     /// <param name="value">Value.</param>
@@ -57,6 +64,19 @@ using SimpleJSON;
             dict[eKey] = value;
         }
         else dict.Add(eKey, value);
+
+        if (eventOnValue != null)
+            eventOnValue(eKey, value);
+    }
+
+    /// <summary>
+    /// 添加值
+    /// </summary>
+    /// <param name="e">E.</param>
+    /// <param name="addValue">Add value.</param>
+    public void AddInt(U e, int addValue)
+    {
+        SetInt(e, dict[e] + addValue);
     }
 
     /// <summary>
@@ -144,23 +164,6 @@ using SimpleJSON;
     protected virtual int GetDefaultInt(U e)
     {
         return 0;
-    }
-
-    /// <summary>
-    /// 添加值
-    /// </summary>
-    /// <param name="e">E.</param>
-    /// <param name="addValue">Add value.</param>
-    public void AddInt(U e, int addValue)
-    {
-        if (dict.ContainsKey(e))
-        {
-            dict[e] += addValue;
-        }
-        else
-        {
-            dict.Add(e, addValue);
-        }
     }
 
     /// <summary>

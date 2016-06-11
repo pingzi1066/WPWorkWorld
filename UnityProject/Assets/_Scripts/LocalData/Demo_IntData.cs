@@ -20,7 +20,4 @@ public enum DemoEnum
 public class Demo_IntData : LocalInt<Demo_IntData,DemoEnum>
 {
     
-    override public string Key() { return "DemoKey"; }
-
-
 }
