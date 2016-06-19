@@ -20,6 +20,7 @@ public class ViewMealtimeReward : MonoBehaviour
     {
         MealtimeRewardManager.eventOnTime += EventOnTime;
         MealtimeRewardManager.eventOnFinished += EventOnFinished;
+        MealtimeRewardManager.RefreshEvent();
     }
 
     void OnDisable()
@@ -31,8 +32,6 @@ public class ViewMealtimeReward : MonoBehaviour
 	// Use this for initialization
 	void Start() 
 	{
-	    //FIX:
-        MealtimeRewardManager.Begin();
 	}
 	
 	// Update is called once per frame
@@ -50,9 +49,14 @@ public class ViewMealtimeReward : MonoBehaviour
     {
         TimeSpan ts = new TimeSpan(0, 0, (int)time);
         Debug.Log("TODO:  " + ts.ToString());
+
+
+        if (time > 0)
+            isFinished = false;
+
     }
 
-    private void BtnReceive()
+    public void BtnReceive()
     {
         if (isFinished)
         {

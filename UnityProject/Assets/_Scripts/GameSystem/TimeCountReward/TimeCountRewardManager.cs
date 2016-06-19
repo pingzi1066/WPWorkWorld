@@ -33,11 +33,11 @@ public class TimeCountRewardManager : MonoBehaviour
     /// </summary>
     static public OnTimeCount eventTimeCount;
     
-    private ModelTimeCountReward mModel;
+    static private ModelTimeCountReward mModel;
     /// <summary>
     /// 表里数据
     /// </summary>
-    public ModelTimeCountReward model
+    static public ModelTimeCountReward model
     {
         get
         { 
@@ -53,7 +53,7 @@ public class TimeCountRewardManager : MonoBehaviour
     /// <summary>
     /// 当前数据
     /// </summary>
-    private TimingRewardData data { get { return TimingRewardData.instance; } }
+    private static TimingRewardData data { get { return TimingRewardData.instance; } }
 
     private static TimeCountRewardManager mInstance;
     public static TimeCountRewardManager instance
@@ -89,11 +89,16 @@ public class TimeCountRewardManager : MonoBehaviour
     /// <summary>
     /// 开始计时工作
     /// </summary>
-    public static void Begin()
+    public static bool Begin()
     {
-        if (instance)
+        if (data.GetInt(ED_TimingReward.isFinished) == 0)
         {
+            if (instance)
+            {
+                return true;
+            }
         }
+        return false;
     }
 
 	// Use this for initialization
@@ -112,6 +117,11 @@ public class TimeCountRewardManager : MonoBehaviour
         if (!isFinishByCurGift && !isOver)
             Timing();
 	}
+
+    void OnApplicationQuit()
+    {
+        data.SaveData();
+    }
 
     /// <summary>
     /// 计时
@@ -135,10 +145,7 @@ public class TimeCountRewardManager : MonoBehaviour
             }
 
             //事件更新
-            if (eventTimeCount != null)
-            {
-                eventTimeCount(data.GetInt(ED_TimingReward.curTime), model.dis_time);
-            }
+            RefreshEvent();
         }
     }
 
@@ -163,11 +170,7 @@ public class TimeCountRewardManager : MonoBehaviour
                 data.SetInt(ED_TimingReward.curTime, 0);
                 isFinishByCurGift = false;
 
-                //事件更新
-                if (eventTimeCount != null)
-                {
-                    eventTimeCount(data.GetInt(ED_TimingReward.curTime), model.dis_time);
-                }
+                RefreshEvent();
             }
 
             data.SaveData();
@@ -179,8 +182,20 @@ public class TimeCountRewardManager : MonoBehaviour
     /// </summary>
     protected void ReceiveAward()
     {
-        //TODO 加入数据：
-        Debug.Log("TODO add to data!");
+        //加入数据：TODO
+//        UserData.instance.AddInt((E_UserData)model.gift_type, model.gift_num);
+    }
+
+    /// <summary>
+    /// 提供给公共参数的目标是当注册方法的时候没有即时调用更新，所以就用了
+    /// </summary>
+    static public void RefreshEvent()
+    {
+        //事件更新
+        if (eventTimeCount != null)
+        {
+            eventTimeCount(data.GetInt(ED_TimingReward.curTime), model.dis_time);
+        }
     }
 }
 

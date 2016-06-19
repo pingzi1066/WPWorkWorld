@@ -22,18 +22,19 @@ public class ViewTimeCountReward : MonoBehaviour
 	// Use this for initialization
 	void Start() 
 	{
-        //FIX:
-        TimeCountRewardManager.Begin();
+        
 	}
 	
     void OnEnable()
     {
         TimeCountRewardManager.eventTimeCount += Show;
+        TimeCountRewardManager.RefreshEvent();
     }
 
     void OnDisable()
     {
-        TimeCountRewardManager.eventTimeCount += Show;
+        TimeCountRewardManager.eventTimeCount -= Show;
+
     }
 
     protected virtual void Show(int curTime,int maxTime)
@@ -42,8 +43,7 @@ public class ViewTimeCountReward : MonoBehaviour
 
         TimeSpan time = new TimeSpan(0, 0, surplusTime);
 
-        //FIX:
-        Debug.Log(time);
+        Debug.Log(time.ToString());
     }
 
     /// <summary>
@@ -53,9 +53,8 @@ public class ViewTimeCountReward : MonoBehaviour
     {
         if (surplusTime == 0)
         {
-            ModelTimeCountReward mode = TimeCountRewardManager.instance.model;
 
-            Debug.Log("gift_type is  " + mode.gift_type + "gift_num is " + mode.gift_num + "  " + mode.dis_time);
+//            Debug.Log("gift_type is  " + mode.gift_type + "gift_num is " + mode.gift_num + "  " + mode.dis_time);
 
             TimeCountRewardManager.instance.ReceiveAwardAndNextGift();
 
@@ -65,7 +64,7 @@ public class ViewTimeCountReward : MonoBehaviour
 
     void KMDebug()
     {
-        BtnReceive();
+        
     }
 
     void KMEditor()

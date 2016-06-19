@@ -38,12 +38,12 @@ public class MealtimeRewardManager : MonoBehaviour
     /// <summary>
     /// 等于0的时候代表没有礼物可以领取
     /// </summary>
-    private int curId = 0;
+    static private int curId = 0;
 
     /// <summary>
     /// 离得最近的一个领取的时间 
     /// </summary>
-    private float timeCount = 999999;
+    static private float timeCount = 999999;
 
     /// <summary>
     /// 是否已经加入推送
@@ -198,8 +198,9 @@ public class MealtimeRewardManager : MonoBehaviour
     /// </summary>
     public void ReceiveAward()
     {
-        //TODO:
         Debug.Log("TODO Receive award!! award "  + curModel.desc);
+//        UserData.instance.AddInt((E_UserData)curModel.gift_type, curModel.gift_num);
+//        UserData.instance.SaveData();
 
         curId = 0;
         //记录时间：
@@ -233,6 +234,22 @@ public class MealtimeRewardManager : MonoBehaviour
         tp += tp2;
         Debug.Log(tp.ToString());
 
+    }
+
+    static public void RefreshEvent()
+    {
+        if (curId == 0)
+        {
+            if (eventOnTime != null)
+            {
+                eventOnTime(timeCount);
+            }
+        }
+        else
+        {
+            if (eventOnFinished != null)
+                eventOnFinished();
+        }
     }
 }
 
