@@ -21,3 +21,7 @@
 #WP private folder
 /UnityProject/Assets/Ignore/
 /UnityProject/Assets/Ignore.meta
+
+#Blender temp files
+*.blend1
+*.blend1.meta
