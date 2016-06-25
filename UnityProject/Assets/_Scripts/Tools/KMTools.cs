@@ -10,6 +10,7 @@
  * 2013-09-05   WP      Added AddItemToList^^^^^^^^^^^ ,two 
  * 2014-11-14   WP      Added string convert to Vector3
  * 2015-01-15   WP      Added Destroy Children by gameObject
+ * 2016-06-24   WP      Added convert pos by cameras
  * 
  * *****************************************************************************/
 
@@ -370,7 +371,8 @@ static public class KMTools
     /// </summary>
     public static bool OddsByInt(int odds)
     {
-        if (odds > 100 || odds < 0) return false;
+        if (odds < 1) return false;
+        else if (odds > 99) return true;
         if (UnityEngine.Random.Range(0, 10000) < odds * 100)
         {
             return true;
@@ -555,5 +557,58 @@ static public class KMTools
             mats.RemoveAt(mats.Count - 1);
             ren.materials = mats.ToArray();
         }
+    }
+
+    /// <summary>
+    /// 转换摄像机坐标到另一个摄像机坐标 (可用于3D转2D)，Z为深度值
+    /// </summary>
+    /// <param name="z">The z coordinate.</param>
+    static  public Vector3 ConvertPosByCam(Camera from, Camera to, Vector3 fromPos, float z = 0)
+    {
+        Vector3 viewPos = from.WorldToViewportPoint(fromPos);
+
+        Vector3 toPos = to.ViewportToWorldPoint(viewPos);
+
+        toPos.z = z;
+
+        return toPos;
+    }
+
+    /// <summary>
+    /// 转换摄像机坐标到另一个摄像机坐标 (可用于2D转3D)并且保持和原摄像机的距离，prePos是原来的3D坐标
+    /// </summary>
+    /// <param name="prePos">Pre position.</param>
+    static public Vector3 ConvertPosByCamKeepDis(Camera from,Camera to, Vector3 fromPos,Vector3 prePos)
+    {
+        float dis = GetDisForPointToTrans(prePos, to.transform);
+
+        Vector3 camDis = from.transform.forward * dis;
+
+        //视窗坐标
+        Vector3 viewPos = from.WorldToViewportPoint(fromPos + camDis);
+
+        //转世界坐标
+        Vector3 worldPos = to.ViewportToWorldPoint(viewPos);
+
+        return worldPos;
+    }
+
+    /// <summary>
+    /// 取一点到另一个对象展开的平面的最小的距离
+    /// </summary>
+    /// <returns>The dis for point to trans.</returns>
+    static public float GetDisForPointToTrans(Vector3 pos ,Transform trans)
+    {
+        //两点连线
+        Vector3 line = pos - trans.position;
+        float angle = Vector3.Angle(trans.forward, line);
+
+        float disPosToTrans = Vector3.Distance(trans.position, pos);
+
+        float cos = Mathf.Cos((Mathf.PI / 180) * angle);
+
+        float minDis = cos * disPosToTrans;
+
+        return minDis;
     }
 }
