@@ -44,6 +44,7 @@ public class KMMenu
 
     const string MENU_Other_RemoveMissingScript = MENU_Other + "删除所选对象（包括子对象）空脚本";
 
+    const string MENU_Other_DeletePlayerPrefs = MENU_Other + "清除数据";
 
     #region 坐标旋转绽放 PRS
 
@@ -298,6 +299,12 @@ public class KMMenu
         //{
         //    RemoveMissingScript(gos[i]);
         //}
+    }
+
+    [MenuItem(MENU_Other_DeletePlayerPrefs)]
+    public static void ClearPlayerPrefs()
+    {
+        PlayerPrefs.DeleteAll();
     }
 
     static List<GameObject> AddChildrenToList(GameObject go, List<GameObject> gos)

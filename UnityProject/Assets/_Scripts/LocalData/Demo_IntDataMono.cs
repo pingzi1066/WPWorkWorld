@@ -6,7 +6,7 @@
  * *****************************************************************************/
 
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// 描述
@@ -21,6 +21,9 @@ public class Demo_IntDataMono : MonoBehaviour
 
     [SerializeField]
     int curValue = 10;
+
+    [SerializeField]
+    float topDis = 35;
 
     string text;
 
@@ -40,13 +43,14 @@ public class Demo_IntDataMono : MonoBehaviour
     void Start()
     {
         data = Demo_IntData.instance;
-//        System.ValueType a = 0;
-//        float b = a + 1;
+        //        System.ValueType a = 0;
+        //        float b = a + 1;
         Demo_IntData.eventOnValue += OnValue;
     }
 
     void OnGUI()
     {
+        left = 10;
         top = 10;
         width = 120;
 
@@ -55,7 +59,7 @@ public class Demo_IntDataMono : MonoBehaviour
             text = data.SaveData();
         }
 
-        top += 35;
+        top += topDis;
 
         if (GUI.Button(rect, "Load"))
         {
@@ -63,7 +67,7 @@ public class Demo_IntDataMono : MonoBehaviour
         }
 
 
-        top += 35;
+        top += topDis;
         width = 120;
         DemoEnum e = DemoEnum.Coin;
         if (GUI.Button(rect, "Get " + e.ToString()))
@@ -71,21 +75,21 @@ public class Demo_IntDataMono : MonoBehaviour
             text = e.ToString() + "  value is : " + data.GetInt(e);
         }
 
-        top += 35;
+        top += topDis;
 
         if (GUI.Button(rect, "Add " + e.ToString()))
         {
             data.AddInt(e, curValue);
         }
 
-        top += 35;
+        top += topDis;
         e = DemoEnum.Gem;
         if (GUI.Button(rect, "Get " + e.ToString()))
         {
             text = e.ToString() + "  value is : " + data.GetInt(e);
         }
 
-        top += 35;
+        top += topDis;
 
         if (GUI.Button(rect, "Add " + e.ToString()))
         {
@@ -93,18 +97,66 @@ public class Demo_IntDataMono : MonoBehaviour
         }
 
 
-        top += 35; 
+        top += topDis;
         width = 300;
         GUI.Label(rect, text);
-        
-        top += 35;
+
+        top += topDis;
         GUI.Label(rect, "cur value is " + curValue + "  change value in inspector!!");
 
-        top += 35;
+        top += topDis;
         GUI.Label(rect, logChange);
+
+        OnGUIList();
     }
 
-    void OnValue(DemoEnum d,int value)
+    private void OnGUIList()
+    {
+
+        left = 210;
+        top = 10;
+
+        if (GUI.Button(rect, "Save "))
+        {
+            Demo_ListIntData.instance.SaveData();
+        }
+
+        width = 220;
+
+        DemoListEnum[] es = EnumTools.EnumConvertArray<DemoListEnum>();
+        for (int i = 0; i < es.Length; i++)
+        {
+            DemoListEnum e = es[i];
+            top += topDis; width = 220;
+
+            if (GUI.Button(rect, "Add " + curValue + " To List" + e.ToString()))
+            {
+                Demo_ListIntData.instance.AddItem(e, curValue);
+                return;
+            }
+            top += topDis;
+
+            if (GUI.Button(rect, "Remove " + curValue + " To List" + e.ToString()))
+            {
+                Demo_ListIntData.instance.RemoveItem(e, curValue);
+                return;
+            }
+
+            top += topDis;
+            List<int> list = Demo_ListIntData.instance.GetList(e);
+            width = 1000;
+            string listText = "count is " + list.Count + " value is  :";
+
+            for (int j = 0; j < list.Count; j++)
+            {
+                listText += list[j] + " ,";
+            }
+
+            GUI.Label(rect, listText);
+        }
+    }
+
+    void OnValue(DemoEnum d, int value)
     {
         logChange = "Set  " + d.ToString() + "  To: " + value;
     }
