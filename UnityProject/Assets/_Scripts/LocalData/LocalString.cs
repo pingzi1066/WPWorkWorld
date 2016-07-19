@@ -1,24 +1,21 @@
 /****************************************************************************** 
  * 
  * Maintaince Logs: 
- * 2016-04-22       WP      Initial version V.1.0 Save int data 
- * 2016-06-04       WP      重写继承、保存、读取类，现在可以更快的在子类使用
- *                          添加AddValue、GetDict函数
+ * 2016-07-19     WP      Initial version
  * 
  * *****************************************************************************/
 
 using UnityEngine;
 using System.Collections.Generic;
-using System;
 using SimpleJSON;
+using System;
 
 /// <summary>
-/// int数据保存基类 T 为此继承函数，U为枚举
+/// string 数据保存基类
 /// </summary>
- public class LocalInt<T,U> 
-    where T : LocalInt<T,U>
+public class LocalString<T, U>
+    where T : LocalString<T, U>
 {
-
     private static T m_instance = null;
     public static T instance
     {
@@ -35,7 +32,7 @@ using SimpleJSON;
         }
     }
 
-    protected Dictionary<U, int> dict = new Dictionary<U, int>();
+    protected Dictionary<U, string> dict = new Dictionary<U, string>();
 
     /// <summary>
     /// 唯一的Key值，用于保存到数据
@@ -44,7 +41,7 @@ using SimpleJSON;
     public virtual string Key() { return typeof(T).Name; }
     protected string key { get { return Key(); } }
 
-    public delegate void DelOnValue(U key,int value);
+    public delegate void DelOnValue(U key, string value);
 
     /// <summary>
     /// 当值改变的方法监听
@@ -57,7 +54,7 @@ using SimpleJSON;
     /// <param name="eKey">E key.</param>
     /// <param name="value">Value.</param>
     /// <typeparam name="K">The 1st type parameter.</typeparam>
-	public virtual void SetData(U eKey, int value)
+    public virtual void SetData(U eKey, string value)
     {
         if (dict.ContainsKey(eKey))
         {
@@ -70,30 +67,20 @@ using SimpleJSON;
     }
 
     /// <summary>
-    /// 添加值
-    /// </summary>
-    /// <param name="e">E.</param>
-    /// <param name="addValue">Add value.</param>
-    public virtual void AddData(U e, int addValue)
-    {
-        SetData(e, dict[e] + addValue);
-    }
-
-    /// <summary>
     /// 取值
     /// </summary>
-    /// <returns>The int.</returns>
+    /// <returns>The string.</returns>
     /// <param name="eKey">E key.</param>
     /// <typeparam name="K">The 1st type parameter.</typeparam>
-    public int GetData(U eKey)
+    public string GetData(U eKey)
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (!dict.ContainsKey(eKey))
         {
             Debug.Log("Don't fount key " + eKey.ToString());
-            return 0;
+            return "";
         }
-        #endif
+#endif
 
         return dict[eKey];
     }
@@ -117,7 +104,7 @@ using SimpleJSON;
             {
                 if (obj.HasKey(e.ToString()))
                 {
-                    SetData(e, obj[e.ToString()].AsInt);
+                    SetData(e, obj[e.ToString()].ToString());
                 }
                 else SetData(e, GetDefaultValue(e));
             }
@@ -167,16 +154,16 @@ using SimpleJSON;
         }
     }
 
-    protected virtual int GetDefaultValue(U e)
+    protected virtual string GetDefaultValue(U e)
     {
-        return 0;
+        return "";
     }
 
     /// <summary>
     /// 取数组：值传递
     /// </summary>
     /// <returns>The dict.</returns>
-    public Dictionary<U,int> GetDict()
+    public Dictionary<U, string> GetDict()
     {
         return dict;
     }
@@ -188,9 +175,9 @@ using SimpleJSON;
     {
         CreateDefaultData();
         SaveData();
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         Debug.Log("Clear Data " + typeof(T).Name);
-        #endif
+#endif
     }
 
     public string ToDebug()

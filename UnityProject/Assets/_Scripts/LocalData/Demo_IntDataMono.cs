@@ -53,6 +53,7 @@ public class Demo_IntDataMono : MonoBehaviour
         left = 10;
         top = 10;
         width = 120;
+        height = 30;
 
         if (GUI.Button(rect, "Save"))
         {
@@ -72,28 +73,28 @@ public class Demo_IntDataMono : MonoBehaviour
         DemoEnum e = DemoEnum.Coin;
         if (GUI.Button(rect, "Get " + e.ToString()))
         {
-            text = e.ToString() + "  value is : " + data.GetInt(e);
+            text = e.ToString() + "  value is : " + data.GetData(e);
         }
 
         top += topDis;
 
         if (GUI.Button(rect, "Add " + e.ToString()))
         {
-            data.AddInt(e, curValue);
+            data.AddData(e, curValue);
         }
 
         top += topDis;
         e = DemoEnum.Gem;
         if (GUI.Button(rect, "Get " + e.ToString()))
         {
-            text = e.ToString() + "  value is : " + data.GetInt(e);
+            text = e.ToString() + "  value is : " + data.GetData(e);
         }
 
         top += topDis;
 
         if (GUI.Button(rect, "Add " + e.ToString()))
         {
-            data.AddInt(e, curValue);
+            data.AddData(e, curValue);
         }
 
 
@@ -105,7 +106,8 @@ public class Demo_IntDataMono : MonoBehaviour
         GUI.Label(rect, "cur value is " + curValue + "  change value in inspector!!");
 
         top += topDis;
-        GUI.Label(rect, logChange);
+        height = 100;
+        GUI.Label(rect, logChange + "\n" + Demo_IntData.instance.ToDebug());
 
         OnGUIList();
     }
@@ -113,6 +115,7 @@ public class Demo_IntDataMono : MonoBehaviour
     private void OnGUIList()
     {
 
+        height = 30;
         left = 210;
         top = 10;
 
@@ -143,7 +146,7 @@ public class Demo_IntDataMono : MonoBehaviour
             }
 
             top += topDis;
-            List<int> list = Demo_ListIntData.instance.GetList(e);
+            List<int> list = Demo_ListIntData.instance.GetData(e);
             width = 1000;
             string listText = "count is " + list.Count + " value is  :";
 
@@ -154,6 +157,10 @@ public class Demo_IntDataMono : MonoBehaviour
 
             GUI.Label(rect, listText);
         }
+
+        top += topDis * 3;
+        height = 100;
+        GUI.Label(rect, Demo_ListIntData.instance.ToDebug());
     }
 
     void OnValue(DemoEnum d, int value)

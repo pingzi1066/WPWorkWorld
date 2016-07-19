@@ -50,6 +50,15 @@ public class LocalListInt<T, U>
     static public DelOnValue eventOnValue;
 
     /// <summary>
+    /// 是否允许重复
+    /// </summary>
+    /// <returns></returns>
+    protected bool IsRepeat()
+    {
+        return false;
+    }
+
+    /// <summary>
     /// 增加值
     /// </summary>
     /// <param name="e">E.</param>
@@ -62,10 +71,12 @@ public class LocalListInt<T, U>
             return;
         }
 
-        if (!dict[e].Contains(addItem))
+        if (dict[e].Contains(addItem) && !IsRepeat())
         {
-            dict[e].Add(addItem);
+            return;
         }
+
+        dict[e].Add(addItem);
     }
 
     public virtual void RemoveItem(U e, int item)
@@ -98,7 +109,7 @@ public class LocalListInt<T, U>
     /// <returns>The int.</returns>
     /// <param name="eKey">E key.</param>
     /// <typeparam name="K">The 1st type parameter.</typeparam>
-    public List<int> GetList(U eKey)
+    public List<int> GetData(U eKey)
     {
 #if UNITY_EDITOR
         if (!dict.ContainsKey(eKey))
@@ -117,9 +128,9 @@ public class LocalListInt<T, U>
     /// </summary>
     public virtual void LoadData()
     {
-        if (PlayerPrefs.HasKey(key))
+        if (LocalTools.HasKey(key))
         {
-            string jsonText = PlayerPrefs.GetString(key);
+            string jsonText = LocalTools.GetString(key);
 
             JSONNode data = JSON.Parse(jsonText);
             JSONClass obj = data.AsObject;
@@ -128,7 +139,8 @@ public class LocalListInt<T, U>
             Array arr = Enum.GetValues(tp);
             foreach (U e in arr)
             {
-                List<int> newList = GetDefaultInt(e);
+                //读取的时候用新数组
+                List<int> newList = new List<int>();
                 if (obj.HasKey(e.ToString()))
                 {
                     JSONArray jsonArray = obj[e.ToString()].AsArray;
@@ -138,7 +150,7 @@ public class LocalListInt<T, U>
                         newList.Add(jsonArray[i].AsInt);
                     }
                 }
-                SetList(e, newList);
+                SetData(e, newList);
 
             }
         }
@@ -153,6 +165,13 @@ public class LocalListInt<T, U>
     /// 保存数据
     /// </summary>
     public virtual string SaveData()
+    {
+        string jsonText = ConvertDictToJson();
+        LocalTools.SetString(key, jsonText);
+        return jsonText;
+    }
+
+    protected string ConvertDictToJson()
     {
         JSONClass jsonObj = new JSONClass();
 
@@ -169,7 +188,6 @@ public class LocalListInt<T, U>
         }
 
         string jsonText = jsonObj.ToString();
-        PlayerPrefs.SetString(key, jsonObj.ToString());
         return jsonText;
     }
 
@@ -183,11 +201,11 @@ public class LocalListInt<T, U>
 
         foreach (U a in arr)
         {
-            SetList(a, GetDefaultInt(a));
+            SetData(a, GetDefaultValue(a));
         }
     }
 
-    protected virtual List<int> GetDefaultInt(U e)
+    protected virtual List<int> GetDefaultValue(U e)
     {
         return new List<int>();
     }
@@ -201,7 +219,7 @@ public class LocalListInt<T, U>
         return dict;
     }
 
-    protected virtual void SetList(U e, List<int> list)
+    protected virtual void SetData(U e, List<int> list)
     {
         if (dict.ContainsKey(e))
         {
@@ -220,5 +238,14 @@ public class LocalListInt<T, U>
 #if UNITY_EDITOR
         Debug.Log("Clear Data " + typeof(T).Name);
 #endif
+    }
+
+    public string ToDebug()
+    {
+        string text = "The Key :  " + key + "\n";
+
+        text += ConvertDictToJson() + "\n";
+
+        return text;
     }
 }

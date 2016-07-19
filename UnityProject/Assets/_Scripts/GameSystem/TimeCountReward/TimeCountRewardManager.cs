@@ -44,7 +44,7 @@ public class TimeCountRewardManager : MonoBehaviour
             if (mModel == null)
             {
                 mModel = new ModelTimeCountReward();
-                mModel.SetTemplateID(data.GetInt(ED_TimingReward.curId));
+                mModel.SetTemplateID(data.GetData(ED_TimingReward.curId));
             }
             return mModel;
         }
@@ -91,7 +91,7 @@ public class TimeCountRewardManager : MonoBehaviour
     /// </summary>
     public static bool Begin()
     {
-        if (data.GetInt(ED_TimingReward.isFinished) == 0)
+        if (data.GetData(ED_TimingReward.isFinished) == 0)
         {
             if (instance)
             {
@@ -105,7 +105,7 @@ public class TimeCountRewardManager : MonoBehaviour
 	void Start() 
 	{
 
-        if (data.GetInt(ED_TimingReward.isFinished) != 0)
+        if (data.GetData(ED_TimingReward.isFinished) != 0)
         {
             isOver = true;
         }
@@ -134,13 +134,13 @@ public class TimeCountRewardManager : MonoBehaviour
         if (timeParam > 1)
         {
             timeParam--;
-            data.AddInt(ED_TimingReward.curTime, 1);
+            data.AddData(ED_TimingReward.curTime, 1);
 
             //时间已经完成
-            if (model.dis_time <= data.GetInt(ED_TimingReward.curTime))
+            if (model.dis_time <= data.GetData(ED_TimingReward.curTime))
             {
                 //时间总数不超过
-                data.SetInt(ED_TimingReward.curTime, model.dis_time);
+                data.SetData(ED_TimingReward.curTime, model.dis_time);
                 isFinishByCurGift = true;
             }
 
@@ -161,13 +161,13 @@ public class TimeCountRewardManager : MonoBehaviour
             if (model.templateID >= lastId)
             {
                 //全完成
-                data.SetInt(ED_TimingReward.isFinished, 1);
+                data.SetData(ED_TimingReward.isFinished, 1);
                 isOver = true;
             }
             else
             {
-                data.AddInt(ED_TimingReward.curId, 1);
-                data.SetInt(ED_TimingReward.curTime, 0);
+                data.AddData(ED_TimingReward.curId, 1);
+                data.SetData(ED_TimingReward.curTime, 0);
                 isFinishByCurGift = false;
 
                 RefreshEvent();
@@ -194,7 +194,7 @@ public class TimeCountRewardManager : MonoBehaviour
         //事件更新
         if (eventTimeCount != null)
         {
-            eventTimeCount(data.GetInt(ED_TimingReward.curTime), model.dis_time);
+            eventTimeCount(data.GetData(ED_TimingReward.curTime), model.dis_time);
         }
     }
 }
@@ -227,7 +227,7 @@ public class TimingRewardData :LocalInt<TimingRewardData,ED_TimingReward>
         return "TimingRewardData";
     }
 
-    protected override int GetDefaultInt(ED_TimingReward e)
+    protected override int GetDefaultValue(ED_TimingReward e)
     {
         if (e == ED_TimingReward.curId)
             return TimeCountRewardManager.startId;

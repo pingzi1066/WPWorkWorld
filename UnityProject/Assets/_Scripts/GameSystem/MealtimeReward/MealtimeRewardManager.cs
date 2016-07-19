@@ -112,10 +112,10 @@ public class MealtimeRewardManager : MonoBehaviour
 
         bool hasLast = false;
         DateTime last = now;
-        if (data.GetInt(ED_MealtimeReward.lastYear) != 0)
+        if (data.GetData(ED_MealtimeReward.lastYear) != 0)
         {
-            last = new DateTime(data.GetInt(ED_MealtimeReward.lastYear), data.GetInt(ED_MealtimeReward.lastMonth),
-                            data.GetInt(ED_MealtimeReward.lastDay), data.GetInt(ED_MealtimeReward.lastHour), 0, 0);
+            last = new DateTime(data.GetData(ED_MealtimeReward.lastYear), data.GetData(ED_MealtimeReward.lastMonth),
+                            data.GetData(ED_MealtimeReward.lastDay), data.GetData(ED_MealtimeReward.lastHour), 0, 0);
         }
 
         //防修改时间 
@@ -210,10 +210,10 @@ public class MealtimeRewardManager : MonoBehaviour
         int month = now.Month;
         int day= now.Day;
         int hour = now.Hour;
-        data.SetInt(ED_MealtimeReward.lastYear, year);
-        data.SetInt(ED_MealtimeReward.lastMonth, month);
-        data.SetInt(ED_MealtimeReward.lastDay, day);
-        data.SetInt(ED_MealtimeReward.lastHour, hour);
+        data.SetData(ED_MealtimeReward.lastYear, year);
+        data.SetData(ED_MealtimeReward.lastMonth, month);
+        data.SetData(ED_MealtimeReward.lastDay, day);
+        data.SetData(ED_MealtimeReward.lastHour, hour);
         data.SaveData();
     }
 

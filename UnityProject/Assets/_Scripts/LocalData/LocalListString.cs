@@ -1,9 +1,7 @@
 /****************************************************************************** 
  * 
  * Maintaince Logs: 
- * 2016-04-22       WP      Initial version V.1.0 Save int data 
- * 2016-06-04       WP      重写继承、保存、读取类，现在可以更快的在子类使用
- *                          添加AddValue、GetDict函数
+ * 2016-07-19     WP      Initial version
  * 
  * *****************************************************************************/
 
@@ -13,10 +11,10 @@ using System;
 using SimpleJSON;
 
 /// <summary>
-/// int数据保存基类 T 为此继承函数，U为枚举
+/// String数组 数据保存
 /// </summary>
- public class LocalInt<T,U> 
-    where T : LocalInt<T,U>
+public class LocalListString<T, U>
+    where T : LocalListString<T, U>
 {
 
     private static T m_instance = null;
@@ -35,7 +33,7 @@ using SimpleJSON;
         }
     }
 
-    protected Dictionary<U, int> dict = new Dictionary<U, int>();
+    protected Dictionary<U, List<string>> dict = new Dictionary<U, List<string>>();
 
     /// <summary>
     /// 唯一的Key值，用于保存到数据
@@ -44,7 +42,7 @@ using SimpleJSON;
     public virtual string Key() { return typeof(T).Name; }
     protected string key { get { return Key(); } }
 
-    public delegate void DelOnValue(U key,int value);
+    public delegate void DelOnValue(U key, string value);
 
     /// <summary>
     /// 当值改变的方法监听
@@ -52,31 +50,57 @@ using SimpleJSON;
     static public DelOnValue eventOnValue;
 
     /// <summary>
-    /// 设置值 全局唯一设置值的接口
+    /// 是否允许重复
     /// </summary>
-    /// <param name="eKey">E key.</param>
-    /// <param name="value">Value.</param>
-    /// <typeparam name="K">The 1st type parameter.</typeparam>
-	public virtual void SetData(U eKey, int value)
+    /// <returns></returns>
+    protected bool IsRepeat()
     {
-        if (dict.ContainsKey(eKey))
-        {
-            dict[eKey] = value;
-        }
-        else dict.Add(eKey, value);
-
-        if (eventOnValue != null)
-            eventOnValue(eKey, value);
+        return false;
     }
 
     /// <summary>
-    /// 添加值
+    /// 增加值
     /// </summary>
     /// <param name="e">E.</param>
-    /// <param name="addValue">Add value.</param>
-    public virtual void AddData(U e, int addValue)
+    /// <param name="addItem">Add value.</param>
+    public virtual void AddItem(U e, string addItem)
     {
-        SetData(e, dict[e] + addValue);
+        if (!dict.ContainsKey(e))
+        {
+            Debug.LogError("Don't fount list " + e.ToString());
+            return;
+        }
+
+        if (dict[e].Contains(addItem) && !IsRepeat())
+        {
+            return;
+        } 
+        
+        dict[e].Add(addItem);
+    }
+
+    public virtual void RemoveItem(U e, string item)
+    {
+        if (dict.ContainsKey(e) && dict[e].Contains(item))
+        {
+            dict[e].Remove(item);
+        }
+        else
+        {
+            Debug.Log("Don't found item " + item);
+        }
+    }
+
+    public virtual void Clear(U e)
+    {
+        if (dict.ContainsKey(e))
+        {
+            dict[e].Clear();
+        }
+        else
+        {
+            Debug.Log("Don't found list " + e.ToString());
+        }
     }
 
     /// <summary>
@@ -85,15 +109,15 @@ using SimpleJSON;
     /// <returns>The int.</returns>
     /// <param name="eKey">E key.</param>
     /// <typeparam name="K">The 1st type parameter.</typeparam>
-    public int GetData(U eKey)
+    public List<string> GetData(U eKey)
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (!dict.ContainsKey(eKey))
         {
             Debug.Log("Don't fount key " + eKey.ToString());
-            return 0;
+            return null;
         }
-        #endif
+#endif
 
         return dict[eKey];
     }
@@ -115,11 +139,19 @@ using SimpleJSON;
             Array arr = Enum.GetValues(tp);
             foreach (U e in arr)
             {
+                //读取的时候用新数组
+                List<string> newList = new List<string>();
                 if (obj.HasKey(e.ToString()))
                 {
-                    SetData(e, obj[e.ToString()].AsInt);
+                    JSONArray jsonArray = obj[e.ToString()].AsArray;
+
+                    for (int i = 0; i < jsonArray.Count; i++)
+                    {
+                        newList.Add(jsonArray[i].ToString());
+                    }
                 }
-                else SetData(e, GetDefaultValue(e));
+                SetData(e, newList);
+
             }
         }
         else
@@ -145,8 +177,14 @@ using SimpleJSON;
 
         foreach (var v in dict)
         {
+            List<string> list = v.Value;
+            JSONArray array = new JSONArray();
             // add key and jsonData
-            jsonObj.Add(v.Key.ToString(), new JSONData(v.Value));
+            for (int i = 0; i < list.Count; i++)
+            {
+                array.Add(new JSONData(list[i]));
+            }
+            jsonObj.Add(v.Key.ToString(), array);
         }
 
         string jsonText = jsonObj.ToString();
@@ -167,18 +205,27 @@ using SimpleJSON;
         }
     }
 
-    protected virtual int GetDefaultValue(U e)
+    protected virtual List<string> GetDefaultValue(U e)
     {
-        return 0;
+        return new List<string>();
     }
 
     /// <summary>
     /// 取数组：值传递
     /// </summary>
     /// <returns>The dict.</returns>
-    public Dictionary<U,int> GetDict()
+    public Dictionary<U, List<string>> GetDict()
     {
         return dict;
+    }
+
+    protected virtual void SetData(U e, List<string> list)
+    {
+        if (dict.ContainsKey(e))
+        {
+            dict[e] = list;
+        }
+        else dict.Add(e, list);
     }
 
     /// <summary>
@@ -188,9 +235,9 @@ using SimpleJSON;
     {
         CreateDefaultData();
         SaveData();
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         Debug.Log("Clear Data " + typeof(T).Name);
-        #endif
+#endif
     }
 
     public string ToDebug()
