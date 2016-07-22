@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// 提供一些Inspector 或 window 绘制工具
@@ -9,7 +10,7 @@ using System.Collections;
 /// 2014-11-01      WP      Initial version
 /// 2015-01-10      WP      加入有色按钮,类改名为KMGUI
 /// </summary>
-public static class KMGUI
+public static partial class KMGUI
 {
 
     /// <summary>
