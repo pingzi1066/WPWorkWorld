@@ -20,9 +20,8 @@ public struct Parms
 }
 
 [Serializable]
-public partial class ListParms
+public partial class Table_GlobalParms : DataTable<Parms>
 {
-    public List<Parms> listParms = new List<Parms>();
 }
 
 [System.Serializable]
@@ -30,6 +29,11 @@ public partial class ListParms
 public class GlobalParms : ScriptableObject
 {
     [Table(typeof(Parms))]
-    public ListParms listParms;
+    public Table_GlobalParms listParms;
 
+
+    [Table(typeof(Parms))]
+    public Table_GlobalParms listParms2;
+
+    public int row2;
 }

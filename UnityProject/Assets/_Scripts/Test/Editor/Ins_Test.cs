@@ -7,7 +7,6 @@ using UnityEditor;
 public class Ins_Test : Editor
 {
 
-
     Test test;
 
     void OnEnable()
