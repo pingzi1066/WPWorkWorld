@@ -18,7 +18,7 @@ def openFile(name,ftype):
     sysType = platform.system()
     if os.path.exists(name) == False:
         fp = open(name,'w')
-        #fp.close()
+        fp.close()
 
     if(sysType =="Windows"):
         try:

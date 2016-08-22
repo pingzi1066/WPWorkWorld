@@ -30,4 +30,6 @@ public class Demo_DisableEdit : MonoBehaviour
 
 
     }
+
+    public void Test() { }
 }
