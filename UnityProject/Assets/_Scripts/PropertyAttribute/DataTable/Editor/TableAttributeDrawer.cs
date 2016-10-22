@@ -3,6 +3,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Custom inspector for <see cref="TableAttribute"/>
@@ -65,16 +66,51 @@ public class TableAttributeDrawer : PropertyDrawer
         var totalSizeFieldRect = new Rect(sizePrefixLabelRect.position.x, sizePrefixLabelRect.position.y,
                                           sizePrefixLabelRect.width + sizePrefixLabelRect.y,
                                           _singleHeight);
+        
+        //将查找内容进行比对，并选择配对的项目，然后转换为数组，加入到显示的 _dataTable 中，玩家在个性显示的数组时，要求同时修改源数据
+        List<int> searList = new List<int>();
+        if (!string.IsNullOrEmpty(search))
+        {
+            FieldInfo[] fields = _attr.RowType.GetFields(BindingFlags.Public | BindingFlags.Instance);
 
+            //添加stirng型字段名字
+            List<string> searchStr = new List<string>();
+            for (int i = 0; i < fields.Length; i++)
+            {
+                if (string.Compare(fields[i].FieldType.ToString(), "System.String") == 0)
+                {
+                    searchStr.Add(fields[i].Name);
+                }
+
+            }
+
+            //将符合要求的发送过去
+            for (int i = 0; i < _dataTable.arraySize; i++)
+            {
+                for (int j = 0; j < searchStr.Count; j++)
+                {
+                    string curValue = _dataTable.GetArrayElementAtIndex(i).FindPropertyRelative(searchStr[j]).stringValue;
+                    if (curValue.Contains(search))
+                    {
+                        searList.Add(i);
+                        break;
+                    }
+                }
+            }
+           
+        }
+
+
+        //显示数组总长度
         EditorGUI.HandlePrefixLabel(totalSizeFieldRect, sizePrefixLabelRect, new GUIContent("Size"));
-
         _dataTable.arraySize = EditorGUI.DelayedIntField(sizeFieldRect, _dataTable.arraySize);
 
         rect.position = new Vector2(rect.position.x, rect.position.y + _singleHeight);
 
         if (_showTable)
         {
-            var list = KMGUI.GetReorderableList(GetHashCode(), property.serializedObject, _dataTable, _attr.RowType.GetFields());
+
+            var list = KMGUI.GetReorderableList(GetHashCode(), property.serializedObject, _dataTable, _attr.RowType.GetFields(),searList);
 
             list.DoList(rect);
 
@@ -88,6 +124,7 @@ public class TableAttributeDrawer : PropertyDrawer
 
             rect.height = _singleHeight;
             search = EditorGUI.TextField(rect, "Search", search);
+
         }
 
         EditorGUI.EndChangeCheck();

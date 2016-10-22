@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b1684b61fef483c90b8d90b5bbab73, type: 3}
+  m_Name: GlobalIntParms
+  m_EditorClassIdentifier: 
+  listParms:
+    Rows:
+    - name: hp
+      desc: 
+      value: 2
+    - name: hp100
+      desc: 
+      value: 200
+    - name: test
+      desc: 
+      value: 333

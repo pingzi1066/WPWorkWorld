@@ -245,6 +245,8 @@ public static partial class KMGUI
     /// </summary>
     private static Dictionary<int, ReorderableList> _reorderableListStorage = new Dictionary<int, ReorderableList>();
 
+    private static List<int> stringSearchByList = new List<int>();
+
     #endregion
 
     /// <summary>
@@ -255,8 +257,10 @@ public static partial class KMGUI
     /// <param name="elements">The elements.</param>
     /// <param name="fieldsInfo">The fields information.</param>
     /// <returns></returns>
-    public static ReorderableList GetReorderableList(int drawerHashCode, SerializedObject serializedObject, SerializedProperty elements, FieldInfo[] fieldsInfo)
+    public static ReorderableList GetReorderableList(int drawerHashCode, SerializedObject serializedObject, SerializedProperty elements, FieldInfo[] fieldsInfo,List<int> searchList = null)
     {
+        stringSearchByList = searchList;
+
         if (_reorderableListStorage.ContainsKey(drawerHashCode))
         {
             _reorderableListStorage[drawerHashCode].serializedProperty = elements;
@@ -288,7 +292,7 @@ public static partial class KMGUI
         reorderableList.drawHeaderCallback += rect => DrawTableHeader(rect, fieldsInfo);
         reorderableList.drawElementCallback += (Rect rect, int index, bool isActive, bool isFocused) =>
         {
-            DrawTableElement(rect, index, isActive, isFocused, reorderableList, fieldsInfo);
+                DrawTableElement(rect, index, isActive, isFocused, reorderableList, fieldsInfo );
         };
 
         return reorderableList;
@@ -347,7 +351,19 @@ public static partial class KMGUI
             return;
         }
 
+        bool isSearch = false;
+        if (stringSearchByList != null && stringSearchByList.Contains(index))
+        {
+            isSearch = true;
+        }
+
         BeginHorizontal(rect);
+
+        Color col = GUI.backgroundColor;
+        if (isSearch)
+        {
+            GUI.backgroundColor = Color.green;
+        }
 
         float prefixLabelWidth = IndexWidth - EditorGUIUtility.singleLineHeight;
 
@@ -366,6 +382,11 @@ public static partial class KMGUI
         if (GUI.Button(GetHorizontalRect(ContentPaddingRight), "X", KMGUIStyles.MidBoldLabel))
         {
             reorderableList.serializedProperty.DeleteArrayElementAtIndex(index);
+        }
+
+        if (isSearch)
+        {
+            GUI.backgroundColor = col;
         }
 
         EndHorizontal();
