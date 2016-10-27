@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45ebeca7051f477fa18ad24d40f9bf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intParms:
+  intScriptableObjects:
   - {fileID: 11400000, guid: 2fe66c32472e54bffb2ca19fe5c2c514, type: 2}
-  floatParms:
+  floatScriptableObjects:
   - {fileID: 11400000, guid: 7223c6209c8d14950bea7c0e8e86c105, type: 2}

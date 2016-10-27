@@ -14,5 +14,5 @@ MonoBehaviour:
   listParms:
     Rows:
     - name: test
-      desc: 
-      value: 222
+      desc: "\u968F\u4FBF\u586B"
+      value: 22.555
