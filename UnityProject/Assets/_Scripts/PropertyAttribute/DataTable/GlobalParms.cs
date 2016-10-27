@@ -13,9 +13,12 @@ public class GlobalParms : MonoBehaviour
     private const string PATH = "GlobalParms/GlobalParms";
 
     [SerializeField]
-    private List<ScriptableObjectIntParms> intParms = new List<ScriptableObjectIntParms>();
+    private List<ScriptableObjectIntParms> intScriptableObjects = new List<ScriptableObjectIntParms>();
     [SerializeField]
-    private List<ScriptableObjectFloatParms> floatParms = new List<ScriptableObjectFloatParms>();
+    private List<ScriptableObjectFloatParms> floatScriptableObjects = new List<ScriptableObjectFloatParms>();
+
+    private Dictionary<string,float> floatParms = new Dictionary<string, float>();
+    private Dictionary<string,int> intParms = new Dictionary<string, int>();
 
 
     static private GlobalParms mInstance;
@@ -31,9 +34,53 @@ public class GlobalParms : MonoBehaviour
                     GameObject go = obj as GameObject;
 
                     mInstance = go.GetComponent<GlobalParms>();
+
+                    if (mInstance)
+                    {
+                        mInstance.Init();
+                    }
                 }
             }
             return mInstance;
+        }
+    }
+
+    /// <summary>
+    /// 首次取实例的时候，会进行添加
+    /// </summary>
+    private void Init()
+    {
+        floatParms.Clear();
+        intParms.Clear();
+
+        for (int i = 0; i < intScriptableObjects.Count; i++)
+        {
+            ScriptableObjectIntParms so = intScriptableObjects[i];
+
+            if (so == null)
+                continue;
+            if (so.listParms == null)
+                continue;
+
+            for (int j = 0; j < so.listParms.Count; j++)
+            {
+                intParms.Add(so.listParms[j].name,so.listParms[j].value);
+            }
+        }
+
+        for (int i = 0; i < floatScriptableObjects.Count; i++)
+        {
+            ScriptableObjectFloatParms so = floatScriptableObjects[i];
+
+            if (so == null)
+                continue;
+            if (so.listParms == null)
+                continue;
+
+            for (int j = 0; j < so.listParms.Count; j++)
+            {
+                floatParms.Add(so.listParms[j].name,so.listParms[j].value);
+            }
         }
     }
 
@@ -45,9 +92,9 @@ public class GlobalParms : MonoBehaviour
 
     private void AddIntFile(ScriptableObjectIntParms so)
     {
-        if (!intParms.Contains(so))
+        if (!intScriptableObjects.Contains(so))
         {
-            intParms.Add(so);
+            intScriptableObjects.Add(so);
         }
     }
 
@@ -60,9 +107,9 @@ public class GlobalParms : MonoBehaviour
     private void RemoveIntFile(ScriptableObjectIntParms so)
     {
         Debug.Log("remove");
-        if (intParms.Contains(so))
+        if (intScriptableObjects.Contains(so))
         {
-            intParms.Remove(so);
+            intScriptableObjects.Remove(so);
         }
     }
 
@@ -74,9 +121,9 @@ public class GlobalParms : MonoBehaviour
 
     private void AddFloatFile(ScriptableObjectFloatParms so)
     {
-        if (!floatParms.Contains(so))
+        if (!floatScriptableObjects.Contains(so))
         {
-            floatParms.Add(so);
+            floatScriptableObjects.Add(so);
         }
     }
 
@@ -88,9 +135,9 @@ public class GlobalParms : MonoBehaviour
 
     private void RemoveFloatFile(ScriptableObjectFloatParms so)
     {
-        if (floatParms.Contains(so))
+        if (floatScriptableObjects.Contains(so))
         {
-            floatParms.Remove(so);
+            floatScriptableObjects.Remove(so);
         }
     }
 
@@ -99,18 +146,15 @@ public class GlobalParms : MonoBehaviour
         if (instance)
             return instance.GetIntParm(name);
 
-        Debug.Log("Don't find indtance");
+        Debug.Log("Don't find instance");
         return -1;
     }
 
     private int GetIntParm(string name)
     {
-        for (int i = 0; i < intParms.Count; i++)
+        if (intParms.ContainsKey(name))
         {
-            if (intParms[i] != null && intParms[i].listParms.Contains(name))
-            {
-                return intParms[i].listParms.Get(name);
-            }
+            return intParms[name];
         }
 
         Debug.Log("Don't find int with " + name);
@@ -122,18 +166,15 @@ public class GlobalParms : MonoBehaviour
         if (instance)
             return instance.GetFloatParm(name);
 
-        Debug.Log("Don't find indtance");
+        Debug.Log("Don't find instance");
         return -1;
     }
 
     private float GetFloatParm(string name)
     {
-        for (int i = 0; i < intParms.Count; i++)
+        if (floatParms.ContainsKey(name))
         {
-            if (intParms[i] != null && intParms[i].listParms.Contains(name))
-            {
-                return intParms[i].listParms.Get(name);
-            }
+            return floatParms[name];
         }
         Debug.Log("Don't find float with " + name);
         return -1;
@@ -147,21 +188,21 @@ public class GlobalParms : MonoBehaviour
 
     private void Refresh()
     {
-        for (int i = 0; i < intParms.Count;)
+        for (int i = 0; i < intScriptableObjects.Count;)
         {
-            if (intParms[i] == null)
+            if (intScriptableObjects[i] == null)
             {
-                intParms.RemoveAt(i);
+                intScriptableObjects.RemoveAt(i);
                 continue;
             }
             i++;
         }
 
-        for (int i = 0; i < floatParms.Count;)
+        for (int i = 0; i < floatScriptableObjects.Count;)
         {
-            if (floatParms[i] == null)
+            if (floatScriptableObjects[i] == null)
             {
-                floatParms.RemoveAt(i);
+                floatScriptableObjects.RemoveAt(i);
                 continue;
             }
             i++;
