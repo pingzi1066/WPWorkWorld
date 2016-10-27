@@ -51,6 +51,21 @@ public class GlobalParms : MonoBehaviour
         }
     }
 
+    static public void RemoveIntObj(ScriptableObjectIntParms so)
+    {
+        if (instance)
+            instance.RemoveIntFile(so);
+    }
+
+    private void RemoveIntFile(ScriptableObjectIntParms so)
+    {
+        Debug.Log("remove");
+        if (intParms.Contains(so))
+        {
+            intParms.Remove(so);
+        }
+    }
+
     static public void AddFloatObj(ScriptableObjectFloatParms so)
     {
         if (instance)
@@ -62,6 +77,20 @@ public class GlobalParms : MonoBehaviour
         if (!floatParms.Contains(so))
         {
             floatParms.Add(so);
+        }
+    }
+
+    static public void RemoveFloatObj(ScriptableObjectFloatParms so)
+    {
+        if (instance)
+            instance.RemoveFloatFile(so);   
+    }
+
+    private void RemoveFloatFile(ScriptableObjectFloatParms so)
+    {
+        if (floatParms.Contains(so))
+        {
+            floatParms.Remove(so);
         }
     }
 
@@ -108,5 +137,34 @@ public class GlobalParms : MonoBehaviour
         }
         Debug.Log("Don't find float with " + name);
         return -1;
+    }
+
+    static public void RefreshRes()
+    {
+        if (instance)
+            instance.Refresh();
+    }
+
+    private void Refresh()
+    {
+        for (int i = 0; i < intParms.Count;)
+        {
+            if (intParms[i] == null)
+            {
+                intParms.RemoveAt(i);
+                continue;
+            }
+            i++;
+        }
+
+        for (int i = 0; i < floatParms.Count;)
+        {
+            if (floatParms[i] == null)
+            {
+                floatParms.RemoveAt(i);
+                continue;
+            }
+            i++;
+        }
     }
 }

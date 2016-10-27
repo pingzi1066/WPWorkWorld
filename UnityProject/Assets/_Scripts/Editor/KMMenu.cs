@@ -364,9 +364,9 @@ public class AssetImportByMenu : AssetPostprocessor
     // runs this script automatically after asset processing is done (reloading), via AssetPostprocessor.OnPostprocessAllAssets	
     static void OnPostprocessAllAssets(String[] importedAssets, String[] deletedAssets, String[] movedAssets, String[] movedFromAssetPaths)
     {
-        DebugLog(importedAssets, "importedAssets");
-        DebugLog(deletedAssets, "deletedAssets");
-        DebugLog(movedAssets, "movedAssets");
+//        DebugLog(importedAssets, "importedAssets");
+//        DebugLog(deletedAssets, "deletedAssets");
+//        DebugLog(movedAssets, "movedAssets");
     }
 
     static void AddScene(String[] imported)
