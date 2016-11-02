@@ -13,12 +13,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   listParms:
     Rows:
-    - name: hp
-      desc: 
-      value: 2
-    - name: hp100
-      desc: 
-      value: 200
     - name: test
       desc: "\u968F\u4FBF\u586B"
       value: 333

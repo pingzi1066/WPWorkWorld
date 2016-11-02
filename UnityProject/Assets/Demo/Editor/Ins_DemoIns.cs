@@ -7,6 +7,7 @@
 
 using UnityEngine;
 using System.Collections;
+using KMTool;
 
 using UnityEditor;
 /// <summary>
