@@ -1,7 +1,8 @@
 /****************************************************************************** 
  * 
  * Maintaince Logs: 
- * 2016-03-30     WP      Initial version
+ * 2016-03-30       WP      Initial version
+ * 2016-11-02       WP      加入菜单开关
  * 
  * *****************************************************************************/
 
@@ -20,13 +21,21 @@ namespace KMTool
     [InitializeOnLoad]
     public partial class KMHierarchy
     {
+        const string KEY_NAME = "KMHierarchy";
+        static bool isOpen = false;
+
+
         static KMHierarchy()
         {
+            isOpen = EditorPrefs.GetBool(KEY_NAME, true);
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyItemCB;
         }
 
         private static void HierarchyItemCB(int instanceID, Rect selectionRect)
         {
+            if (!isOpen)
+                return;
+            
             var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (go == null) return;
 
@@ -127,6 +136,23 @@ namespace KMTool
         private static bool HasFlag(Transform t, HideFlags flag)
         {
             return (t.hideFlags & flag) > 0;
+        }
+
+        /// <summary>
+        /// 设置开关
+        /// </summary>
+        [MenuItem(KMMenu.MENU_SETTING_HEAD + "层级开关-开启")]
+        static private void SetTurnOn()
+        {
+            EditorPrefs.SetBool(KEY_NAME, true);
+            isOpen = true;
+        }
+
+        [MenuItem(KMMenu.MENU_SETTING_HEAD + "层级开关-关闭")]
+        static private void SetTurnOff()
+        {
+            EditorPrefs.SetBool(KEY_NAME, false);
+            isOpen = false;
         }
     }
 }

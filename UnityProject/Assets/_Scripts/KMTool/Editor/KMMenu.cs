@@ -49,6 +49,8 @@ namespace KMTool
 
         const string MENU_Other_DeletePlayerPrefs = MENU_Other + "清除数据";
 
+        public const string MENU_SETTING_HEAD = MENU_HEAD + "设置/";
+
         #region 坐标旋转绽放 PRS
 
         static Vector3 objPos = Vector3.zero;

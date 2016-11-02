@@ -25,6 +25,8 @@ public class InsTransform : Editor
 
     void OnEnable()
     {
+        isOpen = EditorPrefs.GetBool(KEY_NAME, true);
+
         mPos = serializedObject.FindProperty("m_LocalPosition");
         mRot = serializedObject.FindProperty("m_LocalRotation");
         mScale = serializedObject.FindProperty("m_LocalScale");
@@ -33,6 +35,7 @@ public class InsTransform : Editor
     /// <summary>
     /// Draw the inspector widget.
     /// </summary>
+
 
     public override void OnInspectorGUI()
     {
@@ -45,7 +48,8 @@ public class InsTransform : Editor
         DrawRotation();
         DrawScale();
 
-        DrawButtons();
+        if(isOpen)
+            DrawButtons();
 
         serializedObject.ApplyModifiedProperties();
     }
@@ -54,23 +58,31 @@ public class InsTransform : Editor
     {
         GUILayout.BeginHorizontal();
         {
-            bool reset = GUILayout.Button("P", GUILayout.Width(20f));
-
-            if (GUILayout.Button(new GUIContent("复制", "copy local position"), GUILayout.Width(40)))
+            if (isOpen)
             {
-                copyLocalPosition = mPos.vector3Value;
+                bool reset = GUILayout.Button("P", GUILayout.Width(20f));
+
+                if (reset)
+                    mPos.vector3Value = Vector3.zero;
+                
+                if (GUILayout.Button(new GUIContent("复制", "copy local position"), GUILayout.Width(40)))
+                {
+                    copyLocalPosition = mPos.vector3Value;
+                }
+
+                if (GUILayout.Button(new GUIContent("粘贴", "paste local position"), GUILayout.Width(40)))
+                {
+                    mPos.vector3Value = copyLocalPosition;
+                }
             }
-
-            if (GUILayout.Button(new GUIContent("粘贴", "paste local position"), GUILayout.Width(40)))
+            else
             {
-                mPos.vector3Value = copyLocalPosition;
+                EditorGUILayout.LabelField("Position");
             }
 
             EditorGUILayout.PropertyField(mPos.FindPropertyRelative("x"));
             EditorGUILayout.PropertyField(mPos.FindPropertyRelative("y"));
             EditorGUILayout.PropertyField(mPos.FindPropertyRelative("z"));
-
-            if (reset) mPos.vector3Value = Vector3.zero;
         }
         GUILayout.EndHorizontal();
     }
@@ -79,13 +91,21 @@ public class InsTransform : Editor
     {
         GUILayout.BeginHorizontal();
         {
-            bool reset = GUILayout.Button("S", GUILayout.Width(20f));
+            if (isOpen)
+            {
+                bool reset = GUILayout.Button("S", GUILayout.Width(20f));
+                if (reset)
+                    mScale.vector3Value = Vector3.one;
+            }
+            else
+            {
+                EditorGUILayout.LabelField("Scale");
+            }
 
             EditorGUILayout.PropertyField(mScale.FindPropertyRelative("x"));
             EditorGUILayout.PropertyField(mScale.FindPropertyRelative("y"));
             EditorGUILayout.PropertyField(mScale.FindPropertyRelative("z"));
 
-            if (reset) mScale.vector3Value = Vector3.one;
         }
         GUILayout.EndHorizontal();
     }
@@ -204,7 +224,15 @@ public class InsTransform : Editor
     {
         GUILayout.BeginHorizontal();
         {
-            bool reset = GUILayout.Button("R", GUILayout.Width(20f));
+            bool reset = false;
+            if (isOpen)
+            {
+                reset = GUILayout.Button("R", GUILayout.Width(20f));
+            }
+            else
+            {
+                EditorGUILayout.LabelField("Rotation");
+            }
 
             Vector3 visible = (serializedObject.targetObject as Transform).localEulerAngles;
 
@@ -241,4 +269,24 @@ public class InsTransform : Editor
         GUILayout.EndHorizontal();
     }
     #endregion
+
+    const string KEY_NAME = "KMTransform";
+    static bool isOpen = false;
+
+    /// <summary>
+    /// 设置开关
+    /// </summary>
+    [MenuItem(KMMenu.MENU_SETTING_HEAD + "变换开关-开启")]
+    static private void SetTurnOn()
+    {
+        EditorPrefs.SetBool(KEY_NAME, true);
+        isOpen = true;
+    }
+
+    [MenuItem(KMMenu.MENU_SETTING_HEAD + "变换开关-关闭")]
+    static private void SetTurnOff()
+    {
+        EditorPrefs.SetBool(KEY_NAME, false);
+        isOpen = false;
+    }
 }
