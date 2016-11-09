@@ -3,144 +3,147 @@ using System.Collections;
 using System.Collections.Generic;
 using OfficeOpenXml;
 
-public class ExcelTable
+namespace KMTool
 {
-    private Dictionary <int, Dictionary<int, ExcelTableCell>> cells = new Dictionary<int, Dictionary<int, ExcelTableCell>>();
-
-    public string TableName;
-    public int NumberOfRows;
-    public int NumberOfColumns;
-
-    public Vector2 Position;
-
-    public ExcelTable()
+    public class ExcelTable
     {
+        private Dictionary <int, Dictionary<int, ExcelTableCell>> cells = new Dictionary<int, Dictionary<int, ExcelTableCell>>();
 
-    }
+        public string TableName;
+        public int NumberOfRows;
+        public int NumberOfColumns;
 
-    public ExcelTable(ExcelWorksheet sheet)
-    {
-        TableName = sheet.Name;
-//        Debug.Log("The table name " + TableName);
+        public Vector2 Position;
 
-        if (sheet.Dimension == null)
+        public ExcelTable()
         {
-            Debug.Log("sheet.Dimension is null");
-            return;
+
         }
 
-
-
-        NumberOfRows = sheet.Dimension.Rows;
-        NumberOfColumns = sheet.Dimension.Columns;
-        for (int row = 1; row <= NumberOfRows; row++)
+        public ExcelTable(ExcelWorksheet sheet)
         {
-            for (int column = 1; column <= NumberOfColumns; column++)
+            TableName = sheet.Name;
+    //        Debug.Log("The table name " + TableName);
+
+            if (sheet.Dimension == null)
             {
-                string value = sheet.Cells[row, column].Value.ToString();
-                SetValue(row, column, value);
+                Debug.Log("sheet.Dimension is null");
+                return;
+            }
+
+
+
+            NumberOfRows = sheet.Dimension.Rows;
+            NumberOfColumns = sheet.Dimension.Columns;
+            for (int row = 1; row <= NumberOfRows; row++)
+            {
+                for (int column = 1; column <= NumberOfColumns; column++)
+                {
+                    string value = sheet.Cells[row, column].Value.ToString();
+                    SetValue(row, column, value);
+                }
             }
         }
-    }
 
-    public ExcelTableCell SetValue(int row, int column, string value)
-    {
-		CorrectSize(row, column);
-        if (!cells.ContainsKey(row))
+        public ExcelTableCell SetValue(int row, int column, string value)
         {
-            cells[row] = new Dictionary<int, ExcelTableCell>();
-        }
-        if (cells[row].ContainsKey(column))
-        {
-            cells[row][column].Value = value;
-
-            return cells[row][column];
-        }
-        else
-        {
-            ExcelTableCell cell = new ExcelTableCell(row, column, value);
-            cells[row][column] = cell;
-            return cell;
-        }
-    }
-
-    public object GetValue(int row, int column)
-    {
-        ExcelTableCell cell = GetCell(row, column);
-        if (cell != null)
-        {
-            return cell.Value;
-        }
-
-        return SetValue(row, column, "").Value;
-    }
-
-    public ExcelTableCell GetCell(int row, int column)
-    {
-        if (cells.ContainsKey(row))
-        {
+    		CorrectSize(row, column);
+            if (!cells.ContainsKey(row))
+            {
+                cells[row] = new Dictionary<int, ExcelTableCell>();
+            }
             if (cells[row].ContainsKey(column))
             {
+                cells[row][column].Value = value;
+
                 return cells[row][column];
             }
             else
             {
-                Debug.Log("dont find col " + column);
+                ExcelTableCell cell = new ExcelTableCell(row, column, value);
+                cells[row][column] = cell;
+                return cell;
             }
         }
-        else
-        {
-            Debug.Log("don't find row " + row);
-        }
-        return null;
-    }
 
-    public void CorrectSize(int row, int column)
-    {
-        NumberOfRows = Mathf.Max(row, NumberOfRows);
-        NumberOfColumns = Mathf.Max(column, NumberOfColumns);
-    }
-
-    public void SetCellTypeRow(int rowIndex, ExcelTableCellType type)
-    {
-        for (int column = 1; column <= NumberOfColumns; column++)
+        public object GetValue(int row, int column)
         {
-            ExcelTableCell cell = GetCell(rowIndex, column);
+            ExcelTableCell cell = GetCell(row, column);
             if (cell != null)
             {
-                cell.Type = type;
+                return cell.Value;
             }
-        }
-    }
 
-    public void SetCellTypeColumn(int columnIndex, ExcelTableCellType type, List<string> values = null)
-    {
-        for (int row = 1; row <= NumberOfRows; row++)
+            return SetValue(row, column, "").Value;
+        }
+
+        public ExcelTableCell GetCell(int row, int column)
         {
-            ExcelTableCell cell = GetCell(row, columnIndex);
-            if (cell != null)
+            if (cells.ContainsKey(row))
             {
-                cell.Type = type;
-                if (values != null)
+                if (cells[row].ContainsKey(column))
                 {
-                    cell.ValueSelected = values;
+                    return cells[row][column];
+                }
+                else
+                {
+                    Debug.Log("dont find col " + column);
                 }
             }
+            else
+            {
+                Debug.Log("don't find row " + row);
+            }
+            return null;
         }
-    }
 
-    public void ShowLog() {
-        string msg = "";
-        for (int row = 1; row <= NumberOfRows; row++)
+        public void CorrectSize(int row, int column)
+        {
+            NumberOfRows = Mathf.Max(row, NumberOfRows);
+            NumberOfColumns = Mathf.Max(column, NumberOfColumns);
+        }
+
+        public void SetCellTypeRow(int rowIndex, ExcelTableCellType type)
         {
             for (int column = 1; column <= NumberOfColumns; column++)
             {
-                msg += string.Format("{0} ", GetValue(row, column));
+                ExcelTableCell cell = GetCell(rowIndex, column);
+                if (cell != null)
+                {
+                    cell.Type = type;
+                }
             }
-            msg += "\n";
         }
-        Debug.Log(msg);
+
+        public void SetCellTypeColumn(int columnIndex, ExcelTableCellType type, List<string> values = null)
+        {
+            for (int row = 1; row <= NumberOfRows; row++)
+            {
+                ExcelTableCell cell = GetCell(row, columnIndex);
+                if (cell != null)
+                {
+                    cell.Type = type;
+                    if (values != null)
+                    {
+                        cell.ValueSelected = values;
+                    }
+                }
+            }
+        }
+
+        public void ShowLog() {
+            string msg = "";
+            for (int row = 1; row <= NumberOfRows; row++)
+            {
+                for (int column = 1; column <= NumberOfColumns; column++)
+                {
+                    msg += string.Format("{0} ", GetValue(row, column));
+                }
+                msg += "\n";
+            }
+            Debug.Log(msg);
+        }
+
+
     }
-
-
 }

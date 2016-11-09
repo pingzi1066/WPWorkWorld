@@ -3,45 +3,48 @@ using System.Collections;
 using OfficeOpenXml;
 using System.IO;
 
-public class ExcelHelper
+namespace KMTool
 {
-
-    public static Excel LoadExcel(string path)
+    public class ExcelHelper
     {
-        FileInfo file = new FileInfo(path);
-        return LoadExcel(file);
-    }
 
-    public static Excel LoadExcel(FileInfo file)
-    {
-        ExcelPackage ep = new ExcelPackage(file);
-        Excel xls = new Excel(ep.Workbook);
-        return xls;
-    }
-
-	public static Excel CreateExcel(string path) {
-		ExcelPackage ep = new ExcelPackage ();
-		ep.Workbook.Worksheets.Add ("sheet");
-		Excel xls = new Excel(ep.Workbook);
-		SaveExcel (xls, path);
-		return xls;
-	}
-
-    public static void SaveExcel(Excel xls, string path)
-    {
-        FileInfo output = new FileInfo(path);
-        ExcelPackage ep = new ExcelPackage();
-        for (int i = 0; i < xls.Tables.Count; i++)
+        public static Excel LoadExcel(string path)
         {
-            ExcelTable table = xls.Tables[i];
-            ExcelWorksheet sheet = ep.Workbook.Worksheets.Add(table.TableName);
-            for (int row = 1; row <= table.NumberOfRows; row++) {
-                for (int column = 1; column <= table.NumberOfColumns; column++) {
-                    sheet.Cells[row, column].Value = table.GetValue(row, column);
+            FileInfo file = new FileInfo(path);
+            return LoadExcel(file);
+        }
+
+        public static Excel LoadExcel(FileInfo file)
+        {
+            ExcelPackage ep = new ExcelPackage(file);
+            Excel xls = new Excel(ep.Workbook);
+            return xls;
+        }
+
+    	public static Excel CreateExcel(string path) {
+    		ExcelPackage ep = new ExcelPackage ();
+    		ep.Workbook.Worksheets.Add ("sheet");
+    		Excel xls = new Excel(ep.Workbook);
+    		SaveExcel (xls, path);
+    		return xls;
+    	}
+
+        public static void SaveExcel(Excel xls, string path)
+        {
+            FileInfo output = new FileInfo(path);
+            ExcelPackage ep = new ExcelPackage();
+            for (int i = 0; i < xls.Tables.Count; i++)
+            {
+                ExcelTable table = xls.Tables[i];
+                ExcelWorksheet sheet = ep.Workbook.Worksheets.Add(table.TableName);
+                for (int row = 1; row <= table.NumberOfRows; row++) {
+                    for (int column = 1; column <= table.NumberOfColumns; column++) {
+                        sheet.Cells[row, column].Value = table.GetValue(row, column);
+                    }
                 }
             }
+            ep.SaveAs(output);
         }
-        ep.SaveAs(output);
-    }
 
+    }
 }
