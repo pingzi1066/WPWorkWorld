@@ -147,7 +147,7 @@ namespace KMTool
             foreach (var v in dict)
             {
                 // add key and jsonData
-                jsonObj.Add(v.Key.ToString(), new JSONData(v.Value));
+                jsonObj.Add(v.Key.ToString(), new JSONData(v.Value).Value);
             }
 
             string jsonText = jsonObj.ToString();
@@ -201,6 +201,19 @@ namespace KMTool
             text += ConvertDictToJson() + "\n";
 
             return text;
+        }
+
+        public void RefreshEvent()
+        {
+            if (eventOnValue != null)
+            {
+                Type tp = typeof(U);
+                Array arr = Enum.GetValues(tp);
+                foreach (U e in arr)
+                {
+                    eventOnValue(e, GetData(e));
+                }
+            }
         }
     }
 }

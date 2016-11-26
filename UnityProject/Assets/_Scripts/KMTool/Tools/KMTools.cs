@@ -174,7 +174,20 @@ static public class KMTools
         if (go != null && parent != null)
         {
             Transform t = go.gameObject.transform;
-            t.parent = parent.transform;
+            if (t is RectTransform)
+            {
+                RectTransform rt = t as RectTransform;
+                rt.SetParent(parent.transform);
+
+                RectTransform prbRt = prefab.transform as RectTransform;
+                if(prbRt)
+                {
+                    rt.offsetMax = prbRt.offsetMax;
+                    rt.offsetMin = prbRt.offsetMin;
+                }
+            }
+            else
+                t.parent = parent.transform;
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
             if (!isPreSize) t.localScale = Vector3.one;
@@ -202,7 +215,20 @@ static public class KMTools
         if (go != null && parent != null)
         {
             Transform t = go.gameObject.transform;
-            t.parent = parent.transform;
+            if (t is RectTransform)
+            {
+                RectTransform rt = t as RectTransform;
+                rt.SetParent(parent.transform);
+
+                RectTransform prbRt = prefab.transform as RectTransform;
+                if(prbRt)
+                {
+                    rt.offsetMax = prbRt.offsetMax;
+                    rt.offsetMin = prbRt.offsetMin;
+                }
+            }
+            else
+                t.parent = parent.transform;
             if (isPosAndRot)
             {
                 t.localPosition = Vector3.zero;
@@ -229,7 +255,20 @@ static public class KMTools
         if (go != null && parent != null)
         {
             Transform t = go.transform;
-            t.parent = parent.transform;
+            if (t is RectTransform)
+            {
+                RectTransform rt = t as RectTransform;
+                rt.SetParent(parent.transform);
+
+                RectTransform prbRt = prefab.transform as RectTransform;
+                if (prbRt)
+                {
+                    rt.offsetMax = prbRt.offsetMax;
+                    rt.offsetMin = prbRt.offsetMin;
+                }
+            }
+            else
+                t.parent = parent.transform;
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
             if (!isPreSize) t.localScale = Vector3.one;
@@ -248,7 +287,10 @@ static public class KMTools
         if (go != null && parent != null)
         {
             Transform t = go.transform;
-            t.parent = parent.transform;
+            if (t is RectTransform)
+                (t as RectTransform).SetParent(parent.transform);
+            else
+                t.parent = parent.transform;
             t.localPosition = Vector3.zero;
             t.localRotation = Quaternion.identity;
             t.localScale = Vector3.one;

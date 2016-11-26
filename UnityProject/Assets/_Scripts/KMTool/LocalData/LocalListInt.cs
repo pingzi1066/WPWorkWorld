@@ -45,7 +45,7 @@ namespace KMTool
         public virtual string Key() { return typeof(T).Name; }
         protected string key { get { return Key(); } }
 
-        public delegate void DelOnValue(U key, int value);
+        public delegate void DelOnValue(U key, List<int> value);
 
         /// <summary>
         /// 当值改变的方法监听
@@ -80,6 +80,10 @@ namespace KMTool
             }
 
             dict[e].Add(addItem);
+            if (eventOnValue != null)
+            {
+                eventOnValue(e, dict[e]);
+            }
         }
 
         public virtual void RemoveItem(U e, int item)
@@ -87,6 +91,11 @@ namespace KMTool
             if (dict.ContainsKey(e) && dict[e].Contains(item))
             {
                 dict[e].Remove(item);
+
+                if (eventOnValue != null)
+                {
+                    eventOnValue(e, dict[e]);
+                }
             }
             else
             {
@@ -229,6 +238,11 @@ namespace KMTool
                 dict[e] = list;
             }
             else dict.Add(e, list);
+
+            if (eventOnValue != null)
+            {
+                eventOnValue(e, dict[e]);
+            }
         }
 
         /// <summary>
@@ -250,6 +264,19 @@ namespace KMTool
             text += ConvertDictToJson() + "\n";
 
             return text;
+        }
+
+        public void RefreshEvent()
+        {
+            if (eventOnValue != null)
+            {
+                Type tp = typeof(U);
+                Array arr = Enum.GetValues(tp);
+                foreach (U e in arr)
+                {
+                    eventOnValue(e, GetData(e));
+                }
+            }
         }
     }
 }

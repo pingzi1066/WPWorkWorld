@@ -1,7 +1,8 @@
 /****************************************************************************** 
  * 
  * Maintaince Logs: 
- * 2016-07-19     WP      Initial version
+ * 2016-07-19       WP      Initial version
+ * 2016-11-14       WP      Add get and set the int and float method
  * 
  * *****************************************************************************/
 
@@ -68,6 +69,21 @@ namespace KMTool
                 eventOnValue(eKey, value);
         }
 
+        public virtual void AddInt(U eKey,int value)
+        {
+            int perv = GetInt(eKey);
+
+            perv += value;
+            SetData(eKey, perv.ToString());
+        }
+
+        public virtual void AddFloat(U eKey,float value)
+        {
+            float perv = GetFloat(eKey);
+            perv += value;
+            SetData(eKey, perv.ToString());
+        }
+
         /// <summary>
         /// 取值
         /// </summary>
@@ -85,6 +101,44 @@ namespace KMTool
     #endif
 
             return dict[eKey];
+        }
+
+        //取int 类型
+        public int GetInt(U eKey)
+        {
+            string str = GetData(eKey);
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return 0;
+            }
+
+            int v = 0;
+            if (!int.TryParse(str, out v))
+            {
+                Debug.LogError("Parse error ! " + str);
+            }
+            
+            return v;
+        }
+
+        //取float类型
+        public float GetFloat(U eKey)
+        {
+            string str = GetData(eKey);
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return 0;
+            }
+
+            float v = 0;
+            if (!float.TryParse(str, out v))
+            {
+                Debug.LogError("Parse error ! " + str);
+            }
+
+            return v;
         }
 
 
@@ -106,7 +160,7 @@ namespace KMTool
                 {
                     if (obj.HasKey(e.ToString()))
                     {
-                        SetData(e, obj[e.ToString()].ToString());
+                        SetData(e, obj[e.ToString()].Value);
                     }
                     else SetData(e, GetDefaultValue(e));
                 }
@@ -134,8 +188,12 @@ namespace KMTool
 
             foreach (var v in dict)
             {
+//                if (!string.IsNullOrEmpty(v.Value))
+//                {
+//                    Debug.Log(new JSONData(v.Value).ToString() + " --- " + new JSONData(v.Value).Value);
+//                }
                 // add key and jsonData
-                jsonObj.Add(v.Key.ToString(), new JSONData(v.Value));
+                jsonObj.Add(v.Key.ToString(), new JSONData(v.Value).Value);
             }
 
             string jsonText = jsonObj.ToString();
@@ -189,6 +247,19 @@ namespace KMTool
             text += ConvertDictToJson() + "\n";
 
             return text;
+        }
+
+        public void RefreshEvent()
+        {
+            if (eventOnValue != null)
+            {
+                Type tp = typeof(U);
+                Array arr = Enum.GetValues(tp);
+                foreach (U e in arr)
+                {
+                    eventOnValue(e, GetData(e));
+                }
+            }
         }
     }
 }

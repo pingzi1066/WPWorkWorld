@@ -44,7 +44,7 @@ namespace KMTool
         public virtual string Key() { return typeof(T).Name; }
         protected string key { get { return Key(); } }
 
-        public delegate void DelOnValue(U key, string value);
+        public delegate void DelOnValue(U key, List<string> value);
 
         /// <summary>
         /// 当值改变的方法监听
@@ -79,6 +79,10 @@ namespace KMTool
             } 
             
             dict[e].Add(addItem);
+            if (eventOnValue != null)
+            {
+                eventOnValue(e, dict[e]);
+            }
         }
 
         public virtual void RemoveItem(U e, string item)
@@ -86,6 +90,10 @@ namespace KMTool
             if (dict.ContainsKey(e) && dict[e].Contains(item))
             {
                 dict[e].Remove(item);
+                if (eventOnValue != null)
+                {
+                    eventOnValue(e, dict[e]);
+                }
             }
             else
             {
@@ -149,7 +157,7 @@ namespace KMTool
 
                         for (int i = 0; i < jsonArray.Count; i++)
                         {
-                            newList.Add(jsonArray[i].ToString());
+                            newList.Add(jsonArray[i].Value);
                         }
                     }
                     SetData(e, newList);
@@ -184,7 +192,7 @@ namespace KMTool
                 // add key and jsonData
                 for (int i = 0; i < list.Count; i++)
                 {
-                    array.Add(new JSONData(list[i]));
+                    array.Add(new JSONData(list[i]).Value);
                 }
                 jsonObj.Add(v.Key.ToString(), array);
             }
@@ -228,6 +236,10 @@ namespace KMTool
                 dict[e] = list;
             }
             else dict.Add(e, list);
+            if (eventOnValue != null)
+            {
+                eventOnValue(e, dict[e]);
+            }
         }
 
         /// <summary>
@@ -249,6 +261,19 @@ namespace KMTool
             text += ConvertDictToJson() + "\n";
 
             return text;
+        }
+
+        public void RefreshEvent()
+        {
+            if (eventOnValue != null)
+            {
+                Type tp = typeof(U);
+                Array arr = Enum.GetValues(tp);
+                foreach (U e in arr)
+                {
+                    eventOnValue(e, GetData(e));
+                }
+            }
         }
     }
 }
