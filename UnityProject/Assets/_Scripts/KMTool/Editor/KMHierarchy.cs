@@ -24,10 +24,12 @@ namespace KMTool
         const string KEY_NAME = "KMHierarchy";
         static bool isOpen = false;
 
-
+        /// <summary>
+        /// 已知BUG，在Unity长时间的脚本导入与编辑中，Unity将变慢，类似于内存泄漏，3小时以上出现过
+        /// </summary>
         static KMHierarchy()
         {
-            isOpen = EditorPrefs.GetBool(KEY_NAME, true);
+            isOpen = EditorPrefs.GetBool(KEY_NAME, false);
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyItemCB;
         }
 
