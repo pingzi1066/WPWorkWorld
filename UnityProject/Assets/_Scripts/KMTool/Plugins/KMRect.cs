@@ -18,7 +18,7 @@ namespace KMTool
         /// <summary>
         /// Hierarchy 里面从右往左数的位置
         /// </summary>
-        static public Rect H_CR(this Rect rect, int index = 1, int offectX = 0)
+        static public Rect H_CR(this Rect rect, int index = 1, float offectX = 0)
         {
             int dis = 2 * index;
             rect.x += rect.width - index * rect.height - dis - offectX;
@@ -29,7 +29,7 @@ namespace KMTool
         /// <summary>
         /// 重置定义Rect的大小
         /// </summary>
-        static public Rect H_Size(this Rect rect, int width = 16, int height = 16)
+        static public Rect H_Size(this Rect rect, float width = 16, float height = 16)
         {
             rect.size = new Vector2(width, height);
             return rect;
