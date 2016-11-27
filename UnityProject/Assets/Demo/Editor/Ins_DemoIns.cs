@@ -15,7 +15,7 @@ using UnityEditor;
 /// </summary>
 
 [CustomEditor(typeof(Demo_Inspector))]
-public class Ins_DemoIns : Editor 
+public class Ins_DemoIns : Editor
 {
     //Demo_Inspector test;
 
