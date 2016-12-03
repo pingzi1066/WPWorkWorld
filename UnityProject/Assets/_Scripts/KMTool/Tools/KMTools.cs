@@ -287,8 +287,12 @@ static public class KMTools
         if (go != null && parent != null)
         {
             Transform t = go.transform;
-            if (t is RectTransform)
-                (t as RectTransform).SetParent(parent.transform);
+            if (parent.transform is RectTransform)
+            {
+                t = go.AddComponent<RectTransform>();
+                t.SetParent(parent.transform);
+//                Debug.Log("set the " + t is RectTransform);
+            }
             else
                 t.parent = parent.transform;
             t.localPosition = Vector3.zero;
@@ -298,22 +302,6 @@ static public class KMTools
         }
         return go;
     }
-
-    //static public T AddChild<T>(GameObject parent, bool isChangeLayer) where T : Component
-    //{
-    //    GameObject go = new GameObject();
-    //    if (parent != null)
-    //    {
-    //        Transform t = go.transform;
-    //        t.parent = parent.transform;
-    //        t.localPosition = Vector3.zero;
-    //        t.localRotation = Quaternion.identity;
-    //        t.localScale = Vector3.one;
-    //        if (isChangeLayer) SetLayer(go.gameObject, parent.layer);
-    //    }
-    //    T self = go.AddComponent<T>();
-    //    return self;
-    //}
 
     #endregion
 

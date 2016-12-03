@@ -18,6 +18,7 @@ public class DemoReourcesPrefabMono : MonoBehaviour
     {
         if (DemoReourcesPrefab.instance)
         {
+            Debug.Log("instance is success load \n" + DemoReourcesPrefab.instance.desc);
         }
     }
 

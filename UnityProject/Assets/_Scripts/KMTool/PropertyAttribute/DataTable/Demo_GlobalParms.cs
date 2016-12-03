@@ -40,7 +40,7 @@ public class Demo_GlobalParms : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-	
+        Debug.Log(GlobalParms.GetDouble("icbc"));
 	}
 	
 	// Update is called once per frame

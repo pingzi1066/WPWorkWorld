@@ -216,5 +216,18 @@ namespace KMTool
                 }
             }
         }
+
+        public void RefreshEvent(DelOnValue method)
+        {
+            if (method != null)
+            {
+                Type tp = typeof(U);
+                Array arr = Enum.GetValues(tp);
+                foreach (U e in arr)
+                {
+                    method(e, GetData(e));
+                }
+            }
+        }
     }
 }

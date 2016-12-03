@@ -188,8 +188,8 @@ namespace KMTool
         //Add a new control point specified by the index of where you want to place it.
         public GameObject AddNewPoint(int index)
         {
-            GameObject newPoint = new GameObject("Control Point");
-            newPoint.transform.parent = transform;
+            GameObject newPoint = KMTools.AddGameObj(gameObject); //new GameObject("Control Point");
+            newPoint.name = "Control Point"; //.transform.parent = transform;
 
             if (numberOfControlPoints == 0)
             {

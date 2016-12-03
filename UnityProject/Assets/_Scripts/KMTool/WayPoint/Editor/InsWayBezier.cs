@@ -100,21 +100,31 @@ namespace KMTool
 
                 GUILayout.EndHorizontal();
 
-                GUILayout.Space(10);
-                GUILayout.Box(EditorGUIUtility.whiteTexture, GUILayout.Height(2), GUILayout.Width(Screen.width - 20));
-                GUILayout.Space(3);
+                KMGUI.DarwLine(10, 3);
+
+                if (KMGUI.Button("Add New Point At Head", Color.green)) //if (GUILayout.Button("Add New Point At End"))
+                {
+                    Undo.RecordObject(bezier.AddNewPoint(0), "Create a new way point");
+
+                    EditorUtility.SetDirty(bezier);
+//                    Debug.Log(Screen.width - 20);
+                }
+
+                EditorGUIUtility.labelWidth = 50;
 
                 for (int i = 0; i < numberOfControlPoints; i++)
                 {
+                    EditorGUILayout.BeginHorizontal();
                     WayPoint go = bezier.controlPoints[i];
 
                     if (go == null)
                         go = (WayPoint)EditorGUILayout.ObjectField(null, typeof(WayPoint), true);
                     else
-                        go = (WayPoint)EditorGUILayout.ObjectField(go.name, go, typeof(WayPoint), true);
+                        go = (WayPoint)EditorGUILayout.ObjectField("No." + (i + 1), go, typeof(WayPoint), true);
 
-                    EditorGUILayout.BeginHorizontal();
-                    if (GUILayout.Button("Delete"))
+
+                    //if (GUILayout.Button("Delete"))
+                    if (KMGUI.Button("Delete", Color.red, GUILayout.MaxWidth(50)))
                     {
                         Undo.RecordObject(bezier.GetPoints()[i], "Delete way point");
                         bezier.DeletePoint(i, true);
@@ -123,35 +133,30 @@ namespace KMTool
                         return;
                     }
 
-                    if (i == numberOfControlPoints - 1)
-                    {
-                        if (GUILayout.Button("Add New Point At End"))
-                        {
-                            Undo.RecordObject(bezier.AddNewPoint(i + 1), "Create a new way point");
-
-                            EditorUtility.SetDirty(bezier);
-                        }
-                    }
-                    else
-                    {
-                        if (GUILayout.Button("Add New Point Between"))
-                        {
-                            Undo.RecordObject(bezier.AddNewPoint(i + 1), "Create a new way point");
-                            //bezier.AddNewPoint(i + 1);
-                            EditorUtility.SetDirty(bezier);
-                        }
-                    }
                     EditorGUILayout.EndHorizontal();
 
-                    GUILayout.Space(7);
-                    GUILayout.Box(EditorGUIUtility.whiteTexture, GUILayout.Height(2), GUILayout.Width(Screen.width - 25));
-                    GUILayout.Space(7);
+                    string btnText = "Add New Point At End";
+                    if (i != numberOfControlPoints - 1)
+                    {
+                        btnText = "Add New Point Between";
+                    }
+
+                    //if (GUILayout.Button())
+                    if (KMGUI.Button(btnText, Color.green))
+                    {
+                        Undo.RecordObject(bezier.AddNewPoint(i + 1), "Create a new way point");
+                        //bezier.AddNewPoint(i + 1);
+                        EditorUtility.SetDirty(bezier);
+                    }
+
+
+                    KMGUI.DarwLine();
                 }
                 //EditorGUILayout.EndScrollView();
             }
             else
             {
-                if (GUILayout.Button("Add New Point At End"))
+                if (KMGUI.Button("Add New Point At End", Color.green)) //if (GUILayout.Button("Add New Point At End"))
                 {
                     Undo.RecordObject(bezier.AddNewPoint(), "Create a way point");
 

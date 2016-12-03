@@ -1,4 +1,4 @@
-﻿
+
 编辑器相关
 	
 	模板目录（ 81-C# Script-NewBehaviourScript.cs ）：
@@ -52,8 +52,12 @@
 	缩进，数值越大，缩进越前
 	EditorGUI.indentLevel = x;
 	
+	参数名字显示的长度
 	设置 Key 与 Value 之间的距离 
-	EditorGUIUtility.labelWidth
+	EditorGUIUtility.labelWidth = 50;
+	
+	Inspector里面的宽度
+	EditorGUIUtility.currentViewWidth
 	
 	当编辑器改变时，此参数的作用域只有一个方法内。
 	if (GUI.changed)

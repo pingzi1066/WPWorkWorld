@@ -13,6 +13,8 @@ using System.Collections;
 /// </summary>
 public class DemoReourcesPrefab :  ResourcesInstance<DemoReourcesPrefab>
 {
+    public string desc = "";
+
     // Use this for initialization
     void Start()
     {

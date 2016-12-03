@@ -64,6 +64,13 @@ namespace KMTool
                                 else
                                     AddIntFile(so as ScriptableObjectIntParms);
                             }
+                            if (so is ScriptableObjectStringParms)
+                            {
+                                if (!isAdd)
+                                    RemoverStrFile(so as ScriptableObjectStringParms);
+                                else
+                                    AddStrFile(so as ScriptableObjectStringParms);
+                            }
                         }
                         else
                         {
@@ -92,6 +99,11 @@ namespace KMTool
             GlobalParms.AddFloatObj(obj);
         }
 
+        static void AddStrFile(ScriptableObjectStringParms obj)
+        {
+            GlobalParms.AddStringObj(obj);
+        }
+
         static void RemoveInt(ScriptableObjectIntParms obj)
         {
             GlobalParms.RemoveIntObj(obj);
@@ -100,6 +112,11 @@ namespace KMTool
         static void RemoveFloat(ScriptableObjectFloatParms obj)
         {
             GlobalParms.RemoveFloatObj(obj);
+        }
+
+        static void RemoverStrFile(ScriptableObjectStringParms obj)
+        {
+            GlobalParms.RemoveStringObj(obj);
         }
     }
 }

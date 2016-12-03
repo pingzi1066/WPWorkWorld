@@ -81,7 +81,39 @@ namespace KMTool
         //play the animation as runtime
         public void Play()
         {
+            if (playing)
+                return;
+            
             playing = true;
+
+            //当停止的时候也要求播放
+            switch (mode)
+            {
+                case modes.once:
+                    if(_percentage == 1)
+                        _percentage = 0;
+                    break;
+                case modes.reverse:
+                    if(_percentage == 0)
+                        _percentage = 1;
+                    break;
+                case modes.pingPong:
+                    //正向
+                    if (pingPongDirection == 1)
+                    {
+                        if(_percentage == 1)
+                            _percentage = 0;
+                    }
+                    else
+                    {
+                        if(_percentage == 0)
+                            _percentage = 1;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
             if (!isReversed)
             {
                 if (_percentage == 0)
@@ -111,6 +143,9 @@ namespace KMTool
             if (AnimPaused != null) AnimPaused();
         }
 
+        /// <summary>
+        /// 反转，不代表播放
+        /// </summary>
         public void Reverse()
         {
             switch (mode)

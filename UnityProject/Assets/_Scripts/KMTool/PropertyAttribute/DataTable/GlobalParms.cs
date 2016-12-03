@@ -17,9 +17,12 @@ public class GlobalParms : MonoBehaviour
     private List<ScriptableObjectIntParms> intScriptableObjects = new List<ScriptableObjectIntParms>();
     [SerializeField]
     private List<ScriptableObjectFloatParms> floatScriptableObjects = new List<ScriptableObjectFloatParms>();
+    [SerializeField]
+    private List<ScriptableObjectStringParms> stringScriptableObjects = new List<ScriptableObjectStringParms>();
 
     private Dictionary<string,float> floatParms = new Dictionary<string, float>();
     private Dictionary<string,int> intParms = new Dictionary<string, int>();
+    private Dictionary<string,string> stringParms = new Dictionary<string, string>();
 
 
     static private GlobalParms mInstance;
@@ -51,8 +54,12 @@ public class GlobalParms : MonoBehaviour
     /// </summary>
     private void Init()
     {
+        if (!Application.isPlaying)
+            return;
+
         floatParms.Clear();
         intParms.Clear();
+        stringParms.Clear();
 
         for (int i = 0; i < intScriptableObjects.Count; i++)
         {
@@ -65,7 +72,10 @@ public class GlobalParms : MonoBehaviour
 
             for (int j = 0; j < so.listParms.Count; j++)
             {
-                intParms.Add(so.listParms[j].name,so.listParms[j].value);
+                if (!intParms.ContainsKey(so.listParms[j].name))
+                    intParms.Add(so.listParms[j].name, so.listParms[j].value);
+                else
+                    Debug.Log("has key " + so.listParms[j].name);
             }
         }
 
@@ -80,7 +90,28 @@ public class GlobalParms : MonoBehaviour
 
             for (int j = 0; j < so.listParms.Count; j++)
             {
-                floatParms.Add(so.listParms[j].name,so.listParms[j].value);
+                if (!floatParms.ContainsKey(so.listParms[j].name))
+                    floatParms.Add(so.listParms[j].name,so.listParms[j].value);
+                else
+                    Debug.Log("has key " + so.listParms[j].name);
+            }
+        }
+
+        for (int i = 0; i < stringScriptableObjects.Count; i++)
+        {
+            ScriptableObjectStringParms so = stringScriptableObjects[i];
+
+            if (so == null)
+                continue;
+            if (so.listParms == null)
+                continue;
+
+            for (int j = 0; j < so.listParms.Count; j++)
+            {
+                if (!stringParms.ContainsKey(so.listParms[j].name))
+                    stringParms.Add(so.listParms[j].name,so.listParms[j].value);
+                else
+                    Debug.Log("has key " + so.listParms[j].name);
             }
         }
     }
@@ -142,6 +173,34 @@ public class GlobalParms : MonoBehaviour
         }
     }
 
+    static public void AddStringObj(ScriptableObjectStringParms so)
+    {
+        if (instance)
+            instance.AddStringFile(so);   
+    }
+
+    private void AddStringFile(ScriptableObjectStringParms so)
+    {
+        if (!stringScriptableObjects.Contains(so))
+        {
+            stringScriptableObjects.Add(so);
+        }
+    }
+
+    static public void RemoveStringObj(ScriptableObjectStringParms so)
+    {
+        if (instance)
+            instance.RemoveStringFile(so);   
+    }
+
+    private void RemoveStringFile(ScriptableObjectStringParms so)
+    {
+        if (stringScriptableObjects.Contains(so))
+        {
+            stringScriptableObjects.Remove(so);
+        }
+    }
+
     static public int GetInt(string name)
     {
         if (instance)
@@ -181,6 +240,25 @@ public class GlobalParms : MonoBehaviour
         return -1;
     }
 
+    static public string GetString(string name)
+    {
+        if (instance)
+            return instance.GetStringParm(name);
+
+        Debug.Log("Don't find instance");
+        return "";
+    }
+
+    private string GetStringParm(string name)
+    {
+        if (stringParms.ContainsKey(name))
+        {
+            return stringParms[name];
+        }
+        Debug.Log("Don't find str with " + name);
+        return "";
+    }
+
     static public void RefreshRes()
     {
         if (instance)
@@ -208,5 +286,24 @@ public class GlobalParms : MonoBehaviour
             }
             i++;
         }
+
+        for (int i = 0; i < stringScriptableObjects.Count;)
+        {
+            if (stringScriptableObjects[i] == null)
+            {
+                stringScriptableObjects.RemoveAt(i);
+                continue;
+            }
+            i++;
+        }
+    }
+
+    static public double GetDouble(string name)
+    {
+        double d = 0;
+        string str = GetString(name);
+        double.TryParse(str, out d);
+
+        return d;
     }
 }

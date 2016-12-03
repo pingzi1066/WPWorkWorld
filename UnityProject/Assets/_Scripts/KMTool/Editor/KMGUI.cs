@@ -113,6 +113,23 @@ namespace KMTool
             }
         }
 
+        static public void DarwLine()
+        {
+            DarwLine(7, 7);
+        }
+
+        /// <summary>
+        /// 画中隔线
+        /// </summary>
+        /// <param name="upper">Upper.</param>
+        /// <param name="lower">Lower.</param>
+        static public void DarwLine(float upper,float lower)
+        {
+            GUILayout.Space(upper);
+            GUILayout.Box(blankTexture, GUILayout.Height(2),GUILayout.Width(EditorGUIUtility.currentViewWidth - 40));
+            GUILayout.Space(lower);
+        }
+
         #region 按钮
 
         /// <summary>

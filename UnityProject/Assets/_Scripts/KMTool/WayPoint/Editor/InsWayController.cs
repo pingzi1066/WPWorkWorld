@@ -82,7 +82,7 @@ namespace KMTool
                 bool cameraPreview = EditorPrefs.GetBool("CameraPreview");
                 GUILayout.Space(7);
                 EditorGUILayout.BeginHorizontal();
-                GUILayout.Label("Animation Preview");
+                GUILayout.Label("Animation Preview" , GUILayout.MaxWidth(200));
                 if (cameraPreview)
                 {
                     if (GUILayout.Button("Hide Look Preview", GUILayout.Width(150)))
@@ -186,17 +186,17 @@ namespace KMTool
             animator.showScenePreview = EditorGUILayout.Toggle("Show Scene Preview Info", animator.showScenePreview);
 
             EditorGUILayout.BeginHorizontal();
-            animator.pathTime = EditorGUILayout.FloatField("Animation Time", animator.pathTime);
-            EditorGUILayout.LabelField("sec", GUILayout.Width(25));
+            animator.pathTime = EditorGUILayout.FloatField("Animation Time", animator.pathTime,GUILayout.MaxWidth(300));
+            EditorGUILayout.LabelField("sec", GUILayout.MaxWidth(25));
             EditorGUILayout.EndHorizontal();
 
             bool noPath = bezier.numberOfControlPoints < 2;
             EditorGUI.BeginDisabledGroup(noPath);
             EditorGUILayout.BeginHorizontal();
-            float newPathSpeed = EditorGUILayout.FloatField("Animation Speed", animator.pathSpeed);
+            float newPathSpeed = EditorGUILayout.FloatField("Animation Speed", animator.pathSpeed,GUILayout.MaxWidth(300));
             if (!noPath)
                 animator.pathSpeed = newPathSpeed;
-            EditorGUILayout.LabelField("m/sec", GUILayout.Width(25));
+            EditorGUILayout.LabelField("m/sec", GUILayout.MaxWidth(25));
             EditorGUILayout.EndHorizontal();
             EditorGUI.EndDisabledGroup();
 
