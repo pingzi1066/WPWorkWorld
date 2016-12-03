@@ -52,7 +52,7 @@ namespace KMTool
         {
             Texture2D result;
 
-            string path = "Assets/_Scripts/KMTool/Editor/Images/" + id + ".png";
+            string path = "Assets/KMTool/Editor/Images/" + id + ".png";
 
             var ba = File.ReadAllBytes(path);
             result = new Texture2D(4, 4, TextureFormat.ARGB32, false) { hideFlags = HideFlags.HideAndDontSave };
