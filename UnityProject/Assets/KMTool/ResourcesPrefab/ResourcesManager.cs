@@ -36,6 +36,11 @@ namespace KMTool
 
         public const string thisPrefab = "KMPrefab/ResourcesManager";
 
+        void Start()
+        {
+            
+        }
+
         private bool ContainsKey(string key)
         {
             bool con = false;

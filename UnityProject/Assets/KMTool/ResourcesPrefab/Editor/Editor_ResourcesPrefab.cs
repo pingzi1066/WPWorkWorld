@@ -79,6 +79,7 @@ namespace KMTool
         {
 //            Debug.Log(path);
             ResourcesManager.AddItem(key, path);
+            AssetDatabase.Refresh();
         }
 
         public static bool IsAssignableToGenericType(Type givenType, Type genericType)

@@ -76,6 +76,12 @@ namespace KMTool
         {
             wayList = ways;
             this.mode = mode;
+            LoginoutRecursion();
+        }
+
+        public void SetParms(WayController way , modes mode)
+        {
+            SetParms(new List<WayController>(){ way }, mode);
         }
 
         //play the animation as runtime
@@ -168,7 +174,7 @@ namespace KMTool
             }
         }
 
-        public void Init(int reversedIndex, Vector3 initalRotation)
+        public void Init(int reversedIndex)
         {
             if (!isReversed)
             {
@@ -394,7 +400,7 @@ namespace KMTool
             //无路可选
             if (wayList.Count < 1 || curIndex > (wayList.Count - 1))
             {
-                Debug.Log("way list Finished----------------", gameObject);
+//                Debug.Log("way list Finished----------------", gameObject);
                 return;
             }
 

@@ -397,17 +397,49 @@ static public class KMTools
     }
 
     /// <summary>
-    /// ,odds = 1 ~ 100,such as %60 -> odds = 60 .机率百分比
+    /// ,odds = 0 ~ 100,such as %60 -> odds = 60 .机率百分比
     /// </summary>
-    public static bool OddsByInt(int odds)
+    public static bool OddsByFloat(float odds)
     {
-        if (odds < 1) return false;
-        else if (odds > 99) return true;
+        if (odds <= 0) return false;
+        else if (odds >= 100) return true;
         if (UnityEngine.Random.Range(0, 10000) < odds * 100)
         {
             return true;
         }
         else return false;
+    }
+
+    /// <summary>
+    /// 判断机率的所在区间，返回第几（从0开始）个数 odds sum = 0 ~ 100
+    /// 比如 传入30，45 则有3段，第一段机率为30 返回0，第二为45 返回 1 第三为 100 - 30 - 45 返回2，
+    /// </summary>
+    /// <param name="odds">Odds.</param>
+    public static int Odds(params float[] odds)
+    {
+        int index = odds.Length;
+        float odd = UnityEngine.Random.Range(0, 10000f);
+
+        if (odds.Length > 0)
+        {
+            float cur = odds[0] * 100;
+            if (odd < cur)
+            {
+                index = 0;
+            }
+            else
+                for (int i = 1; i < odds.Length; i++)
+                {
+                    cur += odds[i] * 100;
+                    if (odd < cur)
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+        }
+
+        return index;
     }
 
     /// <summary>

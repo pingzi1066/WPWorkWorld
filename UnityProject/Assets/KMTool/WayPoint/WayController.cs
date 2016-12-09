@@ -94,7 +94,7 @@ namespace KMTool
         {
             if (anims.Contains(anim)) return;
 
-            anim.Init(bezier.numberOfControlPoints - 1, bezier.GetPathRotation(0).eulerAngles);
+            anim.Init(bezier.numberOfControlPoints - 1);
 
             anims.Add(anim);
         }
