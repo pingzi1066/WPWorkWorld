@@ -54,6 +54,5 @@ public static class EnumTools
 
         ulong num = Convert.ToUInt64(value);
         return ((Convert.ToUInt64(variable) & num) == num);
-
     }
 }

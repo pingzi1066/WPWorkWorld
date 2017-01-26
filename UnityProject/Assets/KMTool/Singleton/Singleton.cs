@@ -34,7 +34,7 @@ abstract public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
     private static T m_instance = null;
 
-
+    private bool isInit = false;
     public static T instance
     {
         get
@@ -56,14 +56,18 @@ abstract public class Singleton<T> : MonoBehaviour where T : Singleton<T>
                     obj.transform.parent = goParent.transform;
                     m_instance = obj.AddComponent(typeof(T)) as T;
                 }
-                m_instance.OnInit();
+                if (!m_instance.isInit)
+                {
+                    m_instance.isInit = true;
+                    m_instance.Init();
+                }
             }
 
             return m_instance;
         }
     }
 
-    protected virtual void OnInit()
+    protected virtual void Init()
     {
     }
 
@@ -72,7 +76,11 @@ abstract public class Singleton<T> : MonoBehaviour where T : Singleton<T>
         if (m_instance == null)
         {
             m_instance = this as T;
-            OnInit();
+            if(!isInit)
+            {
+                Init();
+                isInit = true;
+            }
         }
         else if (m_instance != this)
         {
