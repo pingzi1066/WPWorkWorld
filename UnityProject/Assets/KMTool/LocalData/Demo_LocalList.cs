@@ -8,7 +8,21 @@ using KMTool;
 using UnityEngine;
 using System.Collections;
 
-
+public enum E_Demo_Lsl
+{
+    AAA,
+    BB,
+    CC,
+}
+public class Demo_Lsl : LocalListString<Demo_Lsl,E_Demo_Lsl>
+{
+    
+}
+    
+public class Demo_LS : LocalString < Demo_LS,E_Demo_Lsl>
+{
+    
+}
 
 /// <summary>
 /// 描述

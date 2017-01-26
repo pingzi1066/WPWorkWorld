@@ -20,6 +20,8 @@ namespace KMTool
         where T : LocalFloat<T, U>
     {
 
+        private bool isInit = false;
+
         private static T m_instance = null;
         public static T instance
         {
@@ -31,6 +33,9 @@ namespace KMTool
                     object obj = type.Assembly.CreateInstance(type.FullName);
                     m_instance = obj as T;
                     m_instance.LoadData();
+                    LocalTools.eventSaveData += m_instance.PrivateSaveData;
+                    LocalTools.eventDelData += m_instance.ClearData;
+                    m_instance.isInit = true;
                 }
                 return m_instance;
             }
@@ -66,7 +71,7 @@ namespace KMTool
             }
             else dict.Add(eKey, value);
 
-            if (eventOnValue != null)
+            if (isInit && eventOnValue != null)
                 eventOnValue(eKey, value);
         }
 
@@ -138,6 +143,11 @@ namespace KMTool
             string jsonText = ConvertDictToJson();
             LocalTools.SetString(key, jsonText);
             return jsonText;
+        }
+
+        private void PrivateSaveData()
+        {
+            SaveData();
         }
 
         protected string ConvertDictToJson()

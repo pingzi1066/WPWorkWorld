@@ -20,6 +20,7 @@ namespace KMTool
         where T : LocalListInt<T, U>
     {
 
+        private bool isInit = false;
         private static T m_instance = null;
         public static T instance
         {
@@ -31,6 +32,9 @@ namespace KMTool
                     object obj = type.Assembly.CreateInstance(type.FullName);
                     m_instance = obj as T;
                     m_instance.LoadData();
+                    LocalTools.eventSaveData += m_instance.PrivateSaveData;
+                    LocalTools.eventDelData += m_instance.ClearData;
+                    m_instance.isInit = true;
                 }
                 return m_instance;
             }
@@ -80,10 +84,7 @@ namespace KMTool
             }
 
             dict[e].Add(addItem);
-            if (eventOnValue != null)
-            {
-                eventOnValue(e, dict[e]);
-            }
+            RefreshEvent(e, dict[e]);
         }
 
         public virtual void RemoveItem(U e, int item)
@@ -91,11 +92,8 @@ namespace KMTool
             if (dict.ContainsKey(e) && dict[e].Contains(item))
             {
                 dict[e].Remove(item);
-
-                if (eventOnValue != null)
-                {
-                    eventOnValue(e, dict[e]);
-                }
+                
+                RefreshEvent(e, dict[e]);
             }
             else
             {
@@ -183,6 +181,11 @@ namespace KMTool
             return jsonText;
         }
 
+        private void PrivateSaveData()
+        {
+            SaveData();
+        }
+
         protected string ConvertDictToJson()
         {
             JSONClass jsonObj = new JSONClass();
@@ -239,9 +242,14 @@ namespace KMTool
             }
             else dict.Add(e, list);
 
-            if (eventOnValue != null)
+            RefreshEvent(e, list);
+        }
+
+        protected virtual void RefreshEvent(U e, List<int> list)
+        {
+            if (isInit && eventOnValue != null)
             {
-                eventOnValue(e, dict[e]);
+                eventOnValue(e, list);
             }
         }
 

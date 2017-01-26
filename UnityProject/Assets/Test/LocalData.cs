@@ -13,15 +13,12 @@ using SimpleJSON;
 
 namespace KMTool
 {
-    
     /// <summary>
-    /// Float 数组 类型保存
+    /// 本地化数据 T : 类名， U：枚举， K：值类型
     /// </summary>
-    public class LocalListFloat<T, U>
-        where T : LocalListFloat<T, U>
+    public abstract class LocalData<T, U , K>
+        where T : LocalData<T, U , K>
     {
-
-        private bool isInit = false;
         private static T m_instance = null;
         public static T instance
         {
@@ -33,15 +30,12 @@ namespace KMTool
                     object obj = type.Assembly.CreateInstance(type.FullName);
                     m_instance = obj as T;
                     m_instance.LoadData();
-                    LocalTools.eventSaveData += m_instance.PrivateSaveData;
-                    LocalTools.eventDelData += m_instance.ClearData;
-                    m_instance.isInit = true;
                 }
                 return m_instance;
             }
         }
 
-        protected Dictionary<U, List<float>> dict = new Dictionary<U, List<float>>();
+        protected Dictionary<U, K> dict = new Dictionary<U, K>();
 
         /// <summary>
         /// 唯一的Key值，用于保存到数据
@@ -50,7 +44,7 @@ namespace KMTool
         public virtual string Key() { return typeof(T).Name; }
         protected string key { get { return Key(); } }
 
-        public delegate void DelOnValue(U key, List<float> value);
+        public delegate void DelOnValue(U key, K value);
 
         /// <summary>
         /// 当值改变的方法监听
@@ -58,60 +52,21 @@ namespace KMTool
         static public DelOnValue eventOnValue;
 
         /// <summary>
-        /// 是否允许重复
+        /// 设置值 全局唯一设置值的接口
         /// </summary>
-        /// <returns></returns>
-        protected bool IsRepeat()
+        /// <param name="eKey">E key.</param>
+        /// <param name="value">Value.</param>
+        /// <typeparam name="K">The 1st type parameter.</typeparam>
+        public virtual void SetData(U eKey, K value)
         {
-            return false;
-        }
+            if (dict.ContainsKey(eKey))
+            {
+                dict[eKey] = value;
+            }
+            else dict.Add(eKey, value);
 
-        /// <summary>
-        /// 增加值
-        /// </summary>
-        /// <param name="e">E.</param>
-        /// <param name="addItem">Add value.</param>
-        public virtual void AddItem(U e, float addItem)
-        {
-            if (!dict.ContainsKey(e))
-            {
-                Debug.LogError("Don't fount list " + e.ToString());
-                return;
-            }
-
-            if (dict[e].Contains(addItem) && !IsRepeat())
-            {
-                return;
-            }
-
-            dict[e].Add(addItem);
-            RefreshEvent(e, dict[e]);
-        }
-
-        public virtual void RemoveItem(U e, float item)
-        {
-            if (dict.ContainsKey(e) && dict[e].Contains(item))
-            {
-                dict[e].Remove(item);
-                RefreshEvent(e, dict[e]);
-            }
-            else
-            {
-                Debug.Log("Don't found item " + item);
-            }
-        }
-
-        public virtual void Clear(U e)
-        {
-            if (dict.ContainsKey(e))
-            {
-                dict[e].Clear();
-                RefreshEvent(e, dict[e]);
-            }
-            else
-            {
-                Debug.Log("Don't found list " + e.ToString());
-            }
+            if (eventOnValue != null)
+                eventOnValue(eKey, value);
         }
 
         /// <summary>
@@ -120,15 +75,15 @@ namespace KMTool
         /// <returns>The int.</returns>
         /// <param name="eKey">E key.</param>
         /// <typeparam name="K">The 1st type parameter.</typeparam>
-        public List<float> GetData(U eKey)
+        public K GetData(U eKey)
         {
-    #if UNITY_EDITOR
+            #if UNITY_EDITOR
             if (!dict.ContainsKey(eKey))
             {
                 Debug.Log("Don't fount key " + eKey.ToString());
-                return null;
+                return GetDefaultValue(eKey);
             }
-    #endif
+            #endif
 
             return dict[eKey];
         }
@@ -150,19 +105,11 @@ namespace KMTool
                 Array arr = Enum.GetValues(tp);
                 foreach (U e in arr)
                 {
-                    //读取的时候用新数组
-                    List<float> newList = new List<float>();
                     if (obj.HasKey(e.ToString()))
                     {
-                        JSONArray jsonArray = obj[e.ToString()].AsArray;
-
-                        for (int i = 0; i < jsonArray.Count; i++)
-                        {
-                            newList.Add(jsonArray[i].AsFloat);
-                        }
+                        SetData(e, ConvertFormString(obj[e.ToString()]));
                     }
-                    SetData(e, newList);
-
+                    else SetData(e, GetDefaultValue(e));
                 }
             }
             else
@@ -182,25 +129,14 @@ namespace KMTool
             return jsonText;
         }
 
-        private void PrivateSaveData()
-        {
-            SaveData();
-        }
-
-        protected string ConvertDictToJson()
+        static protected string ConvertDictToJson()
         {
             JSONClass jsonObj = new JSONClass();
 
-            foreach (var v in dict)
+            foreach (var v in instance.dict)
             {
-                List<float> list = v.Value;
-                JSONArray array = new JSONArray();
                 // add key and jsonData
-                for (int i = 0; i < list.Count; i++)
-                {
-                    array.Add(new JSONData(list[i]));
-                }
-                jsonObj.Add(v.Key.ToString(), array);
+                jsonObj.Add(v.Key.ToString(), new JSONData(v.Value.ToString()).Value);
             }
 
             string jsonText = jsonObj.ToString();
@@ -221,37 +157,16 @@ namespace KMTool
             }
         }
 
-        protected virtual List<float> GetDefaultValue(U e)
-        {
-            return new List<float>();
-        }
+        protected abstract K GetDefaultValue(U e);
+        protected abstract K ConvertFormString(string str);
 
         /// <summary>
         /// 取数组：值传递
         /// </summary>
         /// <returns>The dict.</returns>
-        public Dictionary<U, List<float>> GetDict()
+        public Dictionary<U, K> GetDict()
         {
             return dict;
-        }
-
-        protected virtual void SetData(U e, List<float> list)
-        {
-            if (dict.ContainsKey(e))
-            {
-                dict[e] = list;
-            }
-            else dict.Add(e, list);
-
-            RefreshEvent(e, list);
-        }
-
-        protected virtual void RefreshEvent(U e, List<float> list)
-        {
-            if (isInit && eventOnValue != null)
-            {
-                eventOnValue(e, list);
-            }
         }
 
         /// <summary>
@@ -261,34 +176,21 @@ namespace KMTool
         {
             CreateDefaultData();
             SaveData();
-    #if UNITY_EDITOR
+            #if UNITY_EDITOR
             Debug.Log("Clear Data " + typeof(T).Name);
-    #endif
+            #endif
         }
 
-        public string ToDebug()
+        static public string ToDebug()
         {
-            string text = "The Key :  " + key + "\n";
+            string text = "The Key :  " + instance.key + "\n";
 
             text += ConvertDictToJson() + "\n";
 
             return text;
         }
 
-        public void RefreshEvent()
-        {
-            if (eventOnValue != null)
-            {
-                Type tp = typeof(U);
-                Array arr = Enum.GetValues(tp);
-                foreach (U e in arr)
-                {
-                    eventOnValue(e, GetData(e));
-                }
-            }
-        }
-
-        public void RefreshEvent(DelOnValue method)
+        static public void RefreshEvent(DelOnValue method)
         {
             if (method != null)
             {
@@ -296,7 +198,7 @@ namespace KMTool
                 Array arr = Enum.GetValues(tp);
                 foreach (U e in arr)
                 {
-                    method(e, GetData(e));
+                    method(e, instance.GetData(e));
                 }
             }
         }
