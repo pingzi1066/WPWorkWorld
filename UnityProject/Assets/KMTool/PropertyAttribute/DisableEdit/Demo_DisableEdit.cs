@@ -2,35 +2,38 @@
 using System.Collections;
 using KMTool;
 
-public class Demo_DisableEdit : MonoBehaviour
+namespace KMToolDemo
 {
-    [Range(0, 2)]
-    public int timeScale = 1;
-
-    [DisableEdit]
-    public float time;
-
-    [SerializeField]
-    [DisableEdit]
-    [Tooltip("time += Time.deltaTime")]
-    private string tip = "<--- Stay with 'Tip' !";
-
-    void Start()
+    public class Demo_DisableEdit : MonoBehaviour
     {
-        tip += "!";
-    }
+        [Range(0, 2)]
+        public int timeScale = 1;
 
-    void Update()
-    {
-        time += Time.deltaTime;
+        [DisableEdit]
+        public float time;
 
-        if (Time.timeScale != timeScale)
+        [SerializeField]
+        [DisableEdit]
+        [Tooltip("time += Time.deltaTime")]
+        private string tip = "<--- Stay with 'Tip' !";
+
+        void Start()
         {
-            Time.timeScale = timeScale;
+            tip += "!";
         }
 
+        void Update()
+        {
+            time += Time.deltaTime;
 
+            if (Time.timeScale != timeScale)
+            {
+                Time.timeScale = timeScale;
+            }
+
+
+        }
+
+        public void Test() { }
     }
-
-    public void Test() { }
 }

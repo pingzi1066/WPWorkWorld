@@ -8,37 +8,40 @@
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// 描述
-/// </summary>
-public class DemoReourcesPrefabMono : MonoBehaviour 
+namespace KMToolDemo
 {
-    // Use this for initialization
-    void Start()
+    /// <summary>
+    /// 描述
+    /// </summary>
+    public class DemoReourcesPrefabMono : MonoBehaviour 
     {
-        if (DemoReourcesPrefab.instance)
+        // Use this for initialization
+        void Start()
         {
-            Debug.Log("instance is success load \n" + DemoReourcesPrefab.instance.desc);
+            if (DemoReourcesPrefab.instance)
+            {
+                Debug.Log("instance is success load \n" + DemoReourcesPrefab.instance.desc);
+            }
         }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        #region 测试
+
+        public void KMDebug()
+        {
+            Debug.Log(" ---------KMDebug----------", gameObject);
+        }
+
+        public void KMEditor()
+        {
+            Debug.Log(" ---------KMEditor----------", gameObject);
+        }
+
+        #endregion
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    #region 测试
-
-    public void KMDebug()
-    {
-        Debug.Log(" ---------KMDebug----------", gameObject);
-    }
-
-    public void KMEditor()
-    {
-        Debug.Log(" ---------KMEditor----------", gameObject);
-    }
-
-    #endregion
 }

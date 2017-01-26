@@ -8,21 +8,24 @@
 using UnityEngine;
 using System.Collections;
 
-public class Demo_KMSceneEditor : MonoBehaviour 
+namespace KMToolDemo
 {
-    public Transform[] objs;
+    public class Demo_KMSceneEditor : MonoBehaviour 
+    {
+        public Transform[] objs;
 
-    public Transform center;
+        public Transform center;
 
-	// Use this for initialization
-	void Start() 
-	{
-	    
-	}
-	
-	// Update is called once per frame
-	void Update() 
-	{
-	    
-	}
+    	// Use this for initialization
+    	void Start() 
+    	{
+    	    
+    	}
+    	
+    	// Update is called once per frame
+    	void Update() 
+    	{
+    	    
+    	}
+    }
 }

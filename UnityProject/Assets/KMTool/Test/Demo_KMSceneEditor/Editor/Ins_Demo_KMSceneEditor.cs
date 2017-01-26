@@ -10,29 +10,32 @@ using UnityEditor;
 using System.Collections;
 using KMTool;
 
-[CustomEditor(typeof(Demo_KMSceneEditor),true)]
-public class Ins_Demo_KMSceneEditor : Editor 
+namespace KMToolDemo
 {
-    
-    Demo_KMSceneEditor script;
-
-    void OnEnable()
+    [CustomEditor(typeof(Demo_KMSceneEditor),true)]
+    public class Ins_Demo_KMSceneEditor : Editor 
     {
-        script = target as Demo_KMSceneEditor;
-    }
+        
+        Demo_KMSceneEditor script;
 
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-    }
-
-    void OnSceneGUI()
-    {
-        if (Selection.activeGameObject == script.gameObject)
+        void OnEnable()
         {
-            KMSceneEditor.DrawAxis(script.objs);
+            script = target as Demo_KMSceneEditor;
+        }
 
-            KMSceneEditor.DrawName(script.center);
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+        }
+
+        void OnSceneGUI()
+        {
+            if (Selection.activeGameObject == script.gameObject)
+            {
+                KMSceneEditor.DrawAxis(script.objs);
+
+                KMSceneEditor.DrawName(script.center);
+            }
         }
     }
 }

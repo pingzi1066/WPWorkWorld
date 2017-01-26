@@ -1,54 +1,57 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Test : MonoBehaviour
+namespace KMToolDemo
 {
-
-    public Color color;
-
-    public Transform target;
-
-    public static Test instance;
-
-    public delegate void DelTest();
-
-    public DelTest eventTest;
-
-    void Awake() { instance = this; }
-
-    public TA a;
-    public TA b;
-
- 
-
-    // Use this for initialization
-    void Start()
+    public class Test : MonoBehaviour
     {
-        if (b is TB)
+
+        public Color color;
+
+        public Transform target;
+
+        public static Test instance;
+
+        public delegate void DelTest();
+
+        public DelTest eventTest;
+
+        void Awake() { instance = this; }
+
+        public TA a;
+        public TA b;
+
+     
+
+        // Use this for initialization
+        void Start()
         {
-            print("b is tb and -- b.b is " + (b as TB).b);
+            if (b is TB)
+            {
+                print("b is tb and -- b.b is " + (b as TB).b);
+            }
+            else
+            {
+                print("b isn't TB");
+            }
         }
-        else
+
+        // Update is called once per frame
+        void Update()
         {
-            print("b isn't TB");
+
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    [System.Serializable]
+    public class TA
     {
-
+        public int a;
     }
-}
 
-[System.Serializable]
-public class TA
-{
-    public int a;
-}
-
-[System.Serializable]
-public class TB : TA
-{
-    public float b;
+    [System.Serializable]
+    public class TB : TA
+    {
+        public float b;
+    }
 }

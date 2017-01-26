@@ -9,67 +9,70 @@ using UnityEngine;
 using System.Collections.Generic;
 using KMTool;
 
-/// <summary>
-/// WayPoint 的Demo演示
-/// </summary>
-public class Demo_WayPoint : MonoBehaviour
+namespace KMToolDemo
 {
-    [SerializeField]
-    private GameObject goAnimTarget;
-
-    [SerializeField]
-    private List<WayController> ways;
-
-    private WayAnimator target;
-
-    void OnGUI()
+    /// <summary>
+    /// WayPoint 的Demo演示
+    /// </summary>
+    public class Demo_WayPoint : MonoBehaviour
     {
-        if (GUI.Button(new Rect(100, 100, 200, 60), "Play Way To Cube"))
+        [SerializeField]
+        private GameObject goAnimTarget;
+
+        [SerializeField]
+        private List<WayController> ways;
+
+        private WayAnimator target;
+
+        void OnGUI()
         {
-            PlayWay();
+            if (GUI.Button(new Rect(100, 100, 200, 60), "Play Way To Cube"))
+            {
+                PlayWay();
+            }
+
+            if (target && GUI.Button(new Rect(100, 200, 100, 60), "Pause"))
+            {
+                Pause();
+            }
+
+            if (target && GUI.Button(new Rect(100, 300, 100, 60), "Stop"))
+            {
+                Stop();
+            }
         }
 
-        if (target && GUI.Button(new Rect(100, 200, 100, 60), "Pause"))
+        void PlayWay()
         {
-            Pause();
+            if (target == null)
+            {
+                target = goAnimTarget.AddComponent<WayAnimator>();
+                target.SetParms(ways, WayAnimator.modes.once);
+            }
+
+            target.Play();
         }
 
-        if (target && GUI.Button(new Rect(100, 300, 100, 60), "Stop"))
+        void Pause()
         {
-            Stop();
-        }
-    }
-
-    void PlayWay()
-    {
-        if (target == null)
-        {
-            target = goAnimTarget.AddComponent<WayAnimator>();
-            target.SetParms(ways, WayAnimator.modes.once);
+            target.Pause();
         }
 
-        target.Play();
-    }
+        void Stop()
+        {
+            target.Stop();
+        }
 
-    void Pause()
-    {
-        target.Pause();
-    }
+        // Use this for initialization
+        void Start()
+        {
 
-    void Stop()
-    {
-        target.Stop();
-    }
+        }
 
-    // Use this for initialization
-    void Start()
-    {
+        // Update is called once per frame
+        void Update()
+        {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        }
     }
 }

@@ -8,26 +8,29 @@
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// 描述
-/// </summary>
-public class DemoSingetonItem : MonoBehaviour 
+namespace KMToolDemo
 {
-
-    void Awake()
+    /// <summary>
+    /// 描述
+    /// </summary>
+    public class DemoSingetonItem : MonoBehaviour 
     {
-        Debug.Log(DemoSingleton.instance.desc);
-    }
 
-	// Use this for initialization
-	void Start() 
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update() 
-	{
-	
-	}
+        void Awake()
+        {
+            Debug.Log(DemoSingleton.instance.desc);
+        }
+
+    	// Use this for initialization
+    	void Start() 
+    	{
+    	
+    	}
+    	
+    	// Update is called once per frame
+    	void Update() 
+    	{
+    	
+    	}
+    }
 }

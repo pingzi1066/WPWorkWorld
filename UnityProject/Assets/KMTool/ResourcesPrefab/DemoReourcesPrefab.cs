@@ -8,36 +8,39 @@ using KMTool;
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// 描述
-/// </summary>
-public class DemoReourcesPrefab :  ResourcesInstance<DemoReourcesPrefab>
+namespace KMToolDemo
 {
-    public string desc = "";
-
-    // Use this for initialization
-    void Start()
+    /// <summary>
+    /// 描述
+    /// </summary>
+    public class DemoReourcesPrefab :  ResourcesInstance<DemoReourcesPrefab>
     {
+        public string desc = "";
 
+        // Use this for initialization
+        void Start()
+        {
+
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        #region 测试
+
+        public void KMDebug()
+        {
+            Debug.Log(" ---------KMDebug----------", gameObject);
+        }
+
+        public void KMEditor()
+        {
+            Debug.Log(" ---------KMEditor----------", gameObject);
+        }
+
+        #endregion
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    #region 测试
-
-    public void KMDebug()
-    {
-        Debug.Log(" ---------KMDebug----------", gameObject);
-    }
-
-    public void KMEditor()
-    {
-        Debug.Log(" ---------KMEditor----------", gameObject);
-    }
-
-    #endregion
 }

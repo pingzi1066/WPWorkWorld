@@ -8,21 +8,24 @@
 using UnityEngine;
 using System.Collections;
 
-/// <summary>
-/// Demo_MealtimeReward
-/// </summary>
-public class Demo_MealtimeReward : MonoBehaviour 
+namespace KMToolDemo
 {
+    /// <summary>
+    /// Demo_MealtimeReward
+    /// </summary>
+    public class Demo_MealtimeReward : MonoBehaviour 
+    {
 
-	// Use this for initialization
-	void Start() 
-	{
-        MealtimeRewardManager.Begin();
-	}
-	
-	// Update is called once per frame
-	void Update() 
-	{
-	
-	}
+    	// Use this for initialization
+    	void Start() 
+    	{
+            MealtimeRewardManager.Begin();
+    	}
+    	
+    	// Update is called once per frame
+    	void Update() 
+    	{
+    	
+    	}
+    }
 }

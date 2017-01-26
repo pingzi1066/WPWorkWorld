@@ -9,15 +9,18 @@ using UnityEngine;
 using System.Collections;
 using KMTool;
 
-public enum DemoListEnum
+namespace KMToolDemo
 {
-    CharIds,
-    CIds,
-}
-/// <summary>
-/// 描述
-/// </summary>
-public class Demo_ListIntData : LocalListInt<Demo_ListIntData, DemoListEnum> 
-{
+    public enum DemoListEnum
+    {
+        CharIds,
+        CIds,
+    }
+    /// <summary>
+    /// 描述
+    /// </summary>
+    public class Demo_ListIntData : LocalListInt<Demo_ListIntData, DemoListEnum> 
+    {
 
+    }
 }

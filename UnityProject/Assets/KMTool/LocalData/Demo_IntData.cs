@@ -9,16 +9,19 @@ using UnityEngine;
 using System.Collections.Generic;
 using KMTool;
 
-public enum DemoEnum
-{ 
-    Coin,
-    Gem,
-}
-
-/// <summary>
-/// 数据保存描述
-/// </summary>
-public class Demo_IntData : LocalInt<Demo_IntData,DemoEnum>
+namespace KMToolDemo
 {
-    
+    public enum DemoEnum
+    { 
+        Coin,
+        Gem,
+    }
+
+    /// <summary>
+    /// 数据保存描述
+    /// </summary>
+    public class Demo_IntData : LocalInt<Demo_IntData,DemoEnum>
+    {
+        
+    }
 }
