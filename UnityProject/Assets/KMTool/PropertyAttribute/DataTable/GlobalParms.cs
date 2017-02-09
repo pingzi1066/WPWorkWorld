@@ -212,6 +212,24 @@ public class GlobalParms : MonoBehaviour
 
     private int GetIntParm(string name)
     {
+#if UNITY_EDITOR
+        for (int i = 0; i < intScriptableObjects.Count; i++)
+        {
+            ScriptableObjectIntParms so = intScriptableObjects[i];
+
+            if (so == null)
+                continue;
+            if (so.listParms == null)
+                continue;
+
+            for (int j = 0; j < so.listParms.Count; j++)
+            {
+                if (name == so.listParms[j].name)
+                    return so.listParms[j].value;
+            }
+        }
+#endif
+
         if (intParms.ContainsKey(name))
         {
             return intParms[name];
@@ -232,6 +250,24 @@ public class GlobalParms : MonoBehaviour
 
     private float GetFloatParm(string name)
     {
+#if UNITY_EDITOR
+        for (int i = 0; i < floatScriptableObjects.Count; i++)
+        {
+            ScriptableObjectFloatParms so = floatScriptableObjects[i];
+
+            if (so == null)
+                continue;
+            if (so.listParms == null)
+                continue;
+
+            for (int j = 0; j < so.listParms.Count; j++)
+            {
+                if (name == so.listParms[j].name)
+                    return so.listParms[j].value;
+            }
+        }
+#endif
+
         if (floatParms.ContainsKey(name))
         {
             return floatParms[name];
@@ -251,6 +287,24 @@ public class GlobalParms : MonoBehaviour
 
     private string GetStringParm(string name)
     {
+#if UNITY_EDITOR
+        for (int i = 0; i < stringScriptableObjects.Count; i++)
+        {
+            ScriptableObjectStringParms so = stringScriptableObjects[i];
+
+            if (so == null)
+                continue;
+            if (so.listParms == null)
+                continue;
+
+            for (int j = 0; j < so.listParms.Count; j++)
+            {
+                if (name == so.listParms[j].name)
+                    return so.listParms[j].value;
+            }
+        }
+#endif
+
         if (stringParms.ContainsKey(name))
         {
             return stringParms[name];

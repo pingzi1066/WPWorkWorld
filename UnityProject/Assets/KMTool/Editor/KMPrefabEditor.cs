@@ -47,7 +47,7 @@ namespace KMTool
             Debug.Log("save ----------------");
 
             AssetDatabase.SaveAssets();
-            EditorApplication.SaveAssets();
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 
