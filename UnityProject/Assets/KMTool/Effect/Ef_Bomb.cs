@@ -19,6 +19,30 @@ public class Ef_Bomb : MonoBehaviour
     [SerializeField]
     private AudioSource audioSource;
 
+    [SerializeField]
+    private bool ignoreForceX = false;
+    [SerializeField]
+    private bool ignoreForceY = false;
+    [SerializeField]
+    private bool ignoreForceZ = false;
+    [SerializeField]
+    [Range(0.01f, 5f)]
+    private float forceFactorX = 1;
+    [SerializeField]
+    [Range(0.01f, 5f)]
+    private float forceFactorY = 1;
+    [SerializeField]
+    [Range(0.01f, 5f)]
+    private float forceFactorZ = 1;
+
+
+
+    public delegate void DelOnFinished(Ef_Bomb ef);
+    /// <summary>
+    /// 当Finished之后会重置
+    /// </summary>
+    public DelOnFinished eventOnFinished;
+
     // Use this for initialization
     void Start()
     {
@@ -41,6 +65,61 @@ public class Ef_Bomb : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 在设置这个值之前，请确定自身的坐标已经设置好不会改变。
+    /// </summary>
+    /// <param name="worldPos"></param>
+    public void SetBombCenter(Vector3 worldPos)
+    {
+        center = worldPos - transform.position;
+    }
+
+    public void StartDeadEffect(float disableTime = 3)
+    {
+        gameObject.SetActive(true);
+
+        KMTool.SoundManager.PlaySound(audioSource);
+
+        Vector3 explosionPos = transform.position + center;
+
+        foreach (Rigidbody rb in rbs)
+        {
+            if (rb)
+            {
+                rb.mass = Random.Range(0.1f, 0.4f);
+                rb.isKinematic = false;
+                Vector3 rbPos = rb.transform.position;
+
+                float disX = Mathf.Clamp(Mathf.Abs(rbPos.x - explosionPos.x), 1, 10);
+                float disY = Mathf.Clamp(Mathf.Abs(rbPos.y - explosionPos.z), 1, 10);
+                float disZ = Mathf.Clamp(Mathf.Abs(rbPos.y - explosionPos.z), 1, 10);
+
+                Vector3 force = (rbPos - explosionPos).normalized;
+                if (ignoreForceX)
+                    force.x = 0;
+                else
+                    force.x *= forceFactorX / disX;
+
+                if (ignoreForceY)
+                    force.y = 0;
+                else
+                    force.y *= forceFactorY / disY;
+
+                if (ignoreForceZ)
+                    force.z = 0;
+                else
+                    force.z *= forceFactorZ / disZ;
+
+                rb.AddForce((force) * power, ForceMode.Impulse);
+            }
+        }
+
+        if (disableTime <= 0)
+            disableTime = .5f;
+
+        Invoke("InvokeDisable", disableTime);
+    }
+
     public void StartDeadEffect(Color[] colors, float disableTime = 3, float power = 1.5f)
     {
         gameObject.SetActive(true);
@@ -48,8 +127,6 @@ public class Ef_Bomb : MonoBehaviour
         KMTool.SoundManager.PlaySound(audioSource);
 
         this.power = power;
-
-        Vector3 explosionPos = transform.position + center;
 
         foreach (Rigidbody rb in rbs)
         {
@@ -61,14 +138,9 @@ public class Ef_Bomb : MonoBehaviour
                     Color color = colors[Random.Range(0, colors.Length)];
                     rb.gameObject.GetComponent<Renderer>().material.color = color;
                 }
-                rb.mass = Random.Range(0.1f, 0.4f);
-                rb.isKinematic = false;
-                rb.AddForce((rb.transform.position - explosionPos) * power, ForceMode.Impulse);
             }
         }
-
-        if (disableTime > 0)
-            Invoke("InvokeDisable", disableTime);
+        StartDeadEffect(disableTime);
     }
 
     void InvokeDisable()
@@ -77,6 +149,12 @@ public class Ef_Bomb : MonoBehaviour
         gameObject.SetActive(false);
         Reset();
         //EffectCtrl.instance.AddBombEfToGC(this);
+
+        if (eventOnFinished != null)
+        {
+            eventOnFinished(this);
+            eventOnFinished = null;
+        }
     }
 
     void Reset()
@@ -91,6 +169,9 @@ public class Ef_Bomb : MonoBehaviour
 
     void KMDebug()
     {
+        rbs = null;
+        localPositions = null;
+
         Start();
 
         Reset();
