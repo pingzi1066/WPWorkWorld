@@ -5,6 +5,7 @@
  * 
  * *****************************************************************************/
 
+using KMTool;
 using UnityEngine;
 using System.Collections;
 

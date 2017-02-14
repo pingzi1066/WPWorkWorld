@@ -1,0 +1,14 @@
+{
+	"100001":{
+		"name":"1号角色",
+		"info":"初",
+		"ui_res":"char01",
+		"game_res":"char01",
+	},
+	"100002":{
+		"name":"2号角色",
+		"info":"次",
+		"ui_res":"char02",
+		"game_res":"char02",
+	},
+}
