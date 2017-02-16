@@ -5,102 +5,117 @@
  * 
  * *****************************************************************************/
 
+using KMTool;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace KMTool
+public class StaticAvatar : StaticJson<StaticAvatar> { }
+
+public class ModelAvatar : ModelBase<StaticAvatar>
 {
-    public class StaticAvatar : StaticJson<StaticAvatar> { }
-
-    public class ModelAvatar : ModelBase<StaticAvatar>
+    public string Name
     {
-        public string Name
+        get
         {
-            get
-            {
-                return GetStr("name");
-            }
-        }
-
-        public string Info
-        {
-            get
-            {
-                return GetStr("info");
-            }
-        }
-
-        public GameObject GetUIPrefab()
-        {
-            string path = "Avatar/UI/" + GetStr("ui_res");
-
-            GameObject go = Resources.Load(path, typeof(GameObject)) as GameObject;
-
-            return go;
-        }
-
-        public GameObject GetGamePrefab()
-        {
-            string path = "Avatar/UI/" + GetStr("game_res");
-
-            GameObject go = Resources.Load(path, typeof(GameObject)) as GameObject;
-
-            return go;
+            return GetStr("name");
         }
     }
 
-    public enum E_AvatarData
+    public string Info
     {
-        /// <summary>
-        /// 当前选择的角色 的ID
-        /// </summary>
-        curAvatarId,
+        get
+        {
+            return GetStr("info");
+        }
     }
 
     /// <summary>
-    /// 用于角色表数据
+    /// UI 中展示用
     /// </summary>
-    public class AvatarData : LocalInt<AvatarData, E_AvatarData>
+    /// <returns></returns>
+    public GameObject GetUIPrefab()
     {
-        protected override int GetDefaultValue(E_AvatarData e)
-        {
-            switch (e)
-            {
-                case E_AvatarData.curAvatarId:
-                    return AvatarListData.instance.GetData(E_AvatarList.UnlockIds)[0];
-                default:
-                    Debug.Log("the AvatarData isn't unknow value " + e);
-                    break;
-            }
+        string path = "Avatar/UI/" + GetStr("ui_res");
 
-            return 0;
-        }
-    }
+        GameObject go = Resources.Load(path, typeof(GameObject)) as GameObject;
 
-    public enum E_AvatarList
-    {
-        UnlockIds,
+        return go;
     }
 
     /// <summary>
-    /// 当前已经解锁的角色
+    /// 游戏之中用
     /// </summary>
-    public class AvatarListData : LocalListInt<AvatarListData, E_AvatarList>
+    /// <returns></returns>
+    public GameObject GetGamePrefab()
     {
-        protected override List<int> GetDefaultValue(E_AvatarList e)
-        {
-            List<int> list = new List<int>();
-            switch (e)
-            {
-                case E_AvatarList.UnlockIds:
-                    list.Add(StaticAvatar.Instance().allID[0]);
-                    break;
-                default:
-                    Debug.Log("the AvatarData isn't unknow value " + e);
-                    break;
-            }
+        string path = "Avatar/UI/" + GetStr("game_res");
 
-            return list;
+        GameObject go = Resources.Load(path, typeof(GameObject)) as GameObject;
+
+        return go;
+    }
+
+    /// <summary>
+    /// 是否已经解锁
+    /// </summary>
+    /// <returns></returns>
+    public bool IsUnlock()
+    {
+        return AvatarListData.instance.GetData(E_AvatarList.UnlockIds).Contains(templateID);
+    }
+}
+
+public enum E_AvatarData
+{
+    /// <summary>
+    /// 当前选择的角色 的ID
+    /// </summary>
+    curAvatarId,
+}
+
+/// <summary>
+/// 用于角色表数据
+/// </summary>
+public class AvatarData : LocalInt<AvatarData, E_AvatarData>
+{
+    protected override int GetDefaultValue(E_AvatarData e)
+    {
+        switch (e)
+        {
+            case E_AvatarData.curAvatarId:
+                return AvatarListData.instance.GetData(E_AvatarList.UnlockIds)[0];
+            default:
+                Debug.Log("the AvatarData isn't unknow value " + e);
+                break;
         }
+
+        return 0;
+    }
+}
+
+public enum E_AvatarList
+{
+    UnlockIds,
+}
+
+/// <summary>
+/// 当前已经解锁的角色
+/// </summary>
+public class AvatarListData : LocalListInt<AvatarListData, E_AvatarList>
+{
+    protected override List<int> GetDefaultValue(E_AvatarList e)
+    {
+        List<int> list = new List<int>();
+        switch (e)
+        {
+            case E_AvatarList.UnlockIds:
+                list.Add(StaticAvatar.Instance().allID[0]);
+                break;
+            default:
+                Debug.Log("the AvatarData isn't unknow value " + e);
+                break;
+        }
+
+        return list;
     }
 }

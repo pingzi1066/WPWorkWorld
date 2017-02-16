@@ -11,4 +11,34 @@
 		"ui_res":"char02",
 		"game_res":"char02",
 	},
+	"100003":{
+		"name":"3号角色",
+		"info":"初",
+		"ui_res":"char03",
+		"game_res":"char03",
+	},
+	"100004":{
+		"name":"4号角色",
+		"info":"次",
+		"ui_res":"char04",
+		"game_res":"char04",
+	},
+	"100005":{
+		"name":"5号角色",
+		"info":"初",
+		"ui_res":"char05",
+		"game_res":"char05",
+	},
+	"100006":{
+		"name":"6号角色",
+		"info":"次",
+		"ui_res":"char06",
+		"game_res":"char06",
+	},
+	"100007":{
+		"name":"7号角色",
+		"info":"初",
+		"ui_res":"char07",
+		"game_res":"char07",
+	},
 }

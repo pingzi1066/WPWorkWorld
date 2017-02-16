@@ -1,7 +1,7 @@
 /****************************************************************************** 
  * 
  * Maintaince Logs: 
- * 2017-02-14     WP      Initial version
+ * 2017-02-15     WP      Initial version
  * 
  * *****************************************************************************/
 
@@ -10,29 +10,34 @@ using System.Collections;
 
 namespace KMTool
 {
+
     /// <summary>
-    /// 用于角色的UI展示、解锁、选择等入口
+    /// ren tex 的控制器的编辑开发脚本
     /// </summary>
-    public class UIAvatarCtrl : MonoBehaviour
+    public partial class UIRTAvatarCtrl
     {
-        public static UIAvatarCtrl instance;
+#if UNITY_EDITOR
 
-        void Awake()
+        private float exPind;
+
+        void OnDrawGizmos()
         {
-            instance = this;
+            if (parent == null) return;
+
+            if (exPind != xPind)
+            {
+                exPind = xPind;
+
+                Vector3 pos = parent.position;
+                for (int i = 0; i < parent.childCount; i++)
+                {
+                    parent.GetChild(i).position = pos;
+                    pos.x += xPind;
+                }
+            }
         }
 
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+#endif
 
         #region 测试
 
