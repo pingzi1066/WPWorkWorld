@@ -16,21 +16,11 @@ namespace KMTool
     /// </summary>
     public class UIAvatarItem : MonoBehaviour
     {
-        //public enum ShowType
-        //{
-        //    ModelInUI,
-        //    UI,
-        //}
+        public Vector3 worldPos { get { return transform.position; } }
 
-        //[SerializeField]
-        //private ShowType showType = ShowType.UI;
-
-        [SerializeField]
-        private Text textName;
-        [SerializeField]
-        private Text textInfo;
-        [SerializeField]
-        private GameObject mParentRes;
+        [SerializeField] private Text textName;
+        [SerializeField] private Text textInfo;
+        [SerializeField] private GameObject mParentRes;
         private GameObject parentRes
         {
             get
@@ -40,17 +30,34 @@ namespace KMTool
             }
         }
 
-        [SerializeField]
-        private Button button;
+        [SerializeField] private Button button;
 
         /// <summary>
         /// 3D资源或者2D资源，用于角色的展示
         /// </summary>
-        [SerializeField]
-        [DisableEdit]
-        private GameObject curRes;
+        [SerializeField][DisableEdit] private GameObject curRes;
+        [SerializeField][DisableEdit] private Texture resTexture;
+        [SerializeField][DisableEdit] private Renderer mRedRend;
+        private Renderer resRend
+        {
+            get
+            {
+                if(mRedRend) return mRedRend;
+                if (curRes)
+                {
+                    mRedRend = curRes.GetComponentInChildren<Renderer>();
+                    if (mRedRend)
+                    {
+                        resTexture = mRedRend.material.mainTexture;
+                    }
+                }
+                return mRedRend;
+            }
+        }
 
-        private ModelAvatar mModel;
+        public ModelAvatar mModel;
+        const string DefaultShader = "Standard";
+        const string GrayShader = "Custom/Gray";
 
         public void Init(ModelAvatar model)
         {
@@ -68,12 +75,18 @@ namespace KMTool
                 }
                 KMUITools.SetText(textName, model.Name);
                 KMUITools.SetText(textInfo, model.Info);
-                SetUnlock(model.IsUnlock());
+                Refresh();
             }
             else
             {
                 SetNull();
             }
+        }
+
+        public void Refresh()
+        {
+            if(mModel != null)
+                SetUnlock(mModel.IsUnlock());
         }
 
         protected virtual void SetNull()
@@ -87,7 +100,12 @@ namespace KMTool
 
         protected virtual void SetUnlock(bool isUnlock)
         {
-            Debug.Log("set unlock todo this!");
+            if (UIAvatarCtrl.instance.isUnlockEffect && resRend)
+            {
+                resRend.material.shader = Shader.Find(isUnlock ? DefaultShader : GrayShader);
+                if(resRend.material.mainTexture == null && resTexture)
+                    resRend.material.mainTexture = resTexture;
+            }
         }
 
         /// <summary>
@@ -96,7 +114,7 @@ namespace KMTool
         public virtual void SetCurrent()
         {
             //set to current 
-            Debug.Log("todo set current ", gameObject);
+            //Debug.Log("todo set current ", gameObject);
         }
 
         /// <summary>
@@ -105,16 +123,49 @@ namespace KMTool
         public virtual void ResetCurrent()
         {
             //reset to current
-            Debug.Log("todo reset current ", gameObject);
+            //Debug.Log("todo reset current ", gameObject);
         }
 
         public virtual void BtnEvent()
         {
             if (mModel != null)
             {
-                Debug.Log("click me!!", gameObject);
-                UIAvatarCtrl.instance.ScorllToItem(this);
+                UIAvatarCtrl.instance.SetShowItem(this);
             }
+        }
+
+        public void SetResScale(float size)
+        {
+            if(parentRes)
+            {
+                parentRes.transform.localScale = new Vector3(size,size, size);
+            }
+        }
+
+        /// <summary>
+        /// 是否已经解锁
+        /// </summary>
+        /// <returns></returns>
+        public bool IsUnlock()
+        {
+            if (mModel != null)
+                return mModel.IsUnlock();
+
+            return false;
+        }
+
+        /// <summary>
+        /// 是否当前选择
+        /// </summary>
+        /// <returns></returns>
+        public bool IsCurrentSelect()
+        {
+            if(mModel != null)
+            {
+                return AvatarData.instance.GetData(E_AvatarData.curAvatarId) == mModel.templateID;
+            }
+
+            return false;
         }
 
         // Use this for initialization
