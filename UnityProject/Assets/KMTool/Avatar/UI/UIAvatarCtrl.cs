@@ -57,6 +57,8 @@ namespace KMTool
             }
         }
 
+        [SerializeField] private UIAvatarItem templateItem;
+
         /// <summary>
         /// 当前所展示的物品
         /// </summary>
@@ -73,6 +75,7 @@ namespace KMTool
                     mItem.SetCurrent();
 
                     RefreshByCurrItem();
+                    if(templateItem != null) templateItem.Init(mItem.mModel);
                 }
             }
         }
@@ -93,7 +96,7 @@ namespace KMTool
             for (int i = 0; i < models.Count; i++)
             {
                 UIAvatarItem item = KMTools.AddChild(parentContent.gameObject, prefabItem);
-                item.Init(models[i]);
+                item.Init(models[i],SetShowItem);
                 items.Add(item);
 
                 //scroll view to this model

@@ -20,7 +20,9 @@ namespace KMTool
 
         [SerializeField] private Text textName;
         [SerializeField] private Text textInfo;
+        [SerializeField] private bool showRes = true;
         [SerializeField] private GameObject mParentRes;
+
         private GameObject parentRes
         {
             get
@@ -59,19 +61,27 @@ namespace KMTool
         const string DefaultShader = "Standard";
         const string GrayShader = "Custom/Gray";
 
-        public void Init(ModelAvatar model)
+        public delegate void DelOnClick(UIAvatarItem item);
+        private DelOnClick eventOnClick;
+
+        public void Init(ModelAvatar model, DelOnClick onClick = null)
         {
             mModel = model;
+            eventOnClick = onClick;
 
             if (mModel != null)
             {
                 gameObject.name = "Avatar_" + model.templateID + model.Name;
 
                 if (curRes) Destroy(curRes);
-                GameObject prefab = model.GetUIPrefab();
-                if (prefab)
+
+                if (showRes)
                 {
-                    curRes = KMTools.AddGameObj(parentRes, prefab, true);
+                    GameObject prefab = model.GetUIPrefab();
+                    if (prefab)
+                    {
+                        curRes = KMTools.AddGameObj(parentRes, prefab, true);
+                    }
                 }
                 KMUITools.SetText(textName, model.Name);
                 KMUITools.SetText(textInfo, model.Info);
@@ -83,7 +93,10 @@ namespace KMTool
             }
         }
 
-        public void Refresh()
+        /// <summary>
+        /// 这刷新 一般和本地持久数据挂接
+        /// </summary>
+        public virtual void Refresh()
         {
             if(mModel != null)
                 SetUnlock(mModel.IsUnlock());
@@ -128,10 +141,7 @@ namespace KMTool
 
         public virtual void BtnEvent()
         {
-            if (mModel != null)
-            {
-                UIAvatarCtrl.instance.SetShowItem(this);
-            }
+            if(eventOnClick!= null) eventOnClick(this);
         }
 
         public void SetResScale(float size)
