@@ -28,6 +28,7 @@ namespace KMTool
         [SerializeField]private AnimationCurve scrollKey;
 
         [SerializeField]private float minDelta = 0.05f;
+        [SerializeField][Range(0.005f, 1)]private float minScrollDis = 0.01f;
         [SerializeField][DisableEdit]private bool isScrolling;
         [SerializeField][DisableEdit]private float moveDelta;
         [SerializeField][DisableEdit]private Vector2 preScrollPos;
@@ -179,6 +180,7 @@ namespace KMTool
 
         public void SetShowItem(UIAvatarItem item)
         {
+            if(isScrolling) return;
             curShowItem = item;
             ScrollToCurItem();
         }
@@ -193,8 +195,17 @@ namespace KMTool
             keyParam = 0;
             fromPosX = parentContent.position.x;
             toPosX = fromPosX + centerPos.x - item.transform.position.x;
-
-            StartCoroutine(ScrollToPos());
+            
+            float moveDis = toPosX - fromPosX;
+            if (Mathf.Abs(moveDis) < minScrollDis)
+            {
+                parentContent.Translate(moveDis, 0, 0);
+                scroll.StopMovement();
+            }
+            else
+            {
+                StartCoroutine(ScrollToPos());
+            }
         }
 
         private IEnumerator ScrollToPos()
@@ -209,13 +220,16 @@ namespace KMTool
             float time = scrollKey[length - 1].time;
 
             float moveDis  = toPosX - fromPosX;
+            //记录开始的位置 移动的方向
+            Vector3 startPos = parentContent.position;
+            Vector3 dir = parentContent.right;
 
             while (keyParam < time)
             {
                 keyParam += Time.deltaTime;
                 float factor = scrollKey.Evaluate(keyParam);
-                Vector3 toPos = parentContent.transform.position;
-                toPos.x = fromPosX + moveDis * factor;
+                Vector3 toPos = startPos;
+                toPos += (moveDis * factor) * dir;
 
                 parentContent.transform.position = toPos;//Vector3.Lerp(fromPos, toPos, factor);
                 yield return new WaitForEndOfFrame();
