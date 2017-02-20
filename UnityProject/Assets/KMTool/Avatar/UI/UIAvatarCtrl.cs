@@ -142,23 +142,23 @@ namespace KMTool
 
                 if(moveDelta < minDelta)
                 {
-                    Stick();
+                    ToCenter();
                 }
             }
         }
 
-        public virtual void StickByDragEnd(float dis)
+        public virtual void OnCenterByDragEnd(float dis)
         {
             if(dis < 1.5f && !isScrolling)
             {
-                Stick();
+                ToCenter();
             }
         }
 
         /// <summary>
         /// 吸附
         /// </summary>
-        protected virtual void Stick()
+        protected virtual void ToCenter()
         {
             float minDis = 1000;
             UIAvatarItem item = null;

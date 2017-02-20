@@ -34,7 +34,7 @@ namespace KMTool
             isDraging = false;
 
             float dis = Vector2.Distance(Vector2.zero, velocity);
-            UIAvatarCtrl.instance.StickByDragEnd(dis);
+            UIAvatarCtrl.instance.OnCenterByDragEnd(dis);
         }
 
         #region 测试
