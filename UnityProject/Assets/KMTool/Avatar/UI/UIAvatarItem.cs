@@ -18,12 +18,12 @@ namespace KMTool
     {
         public Vector3 worldPos { get { return transform.position; } }
 
-        [SerializeField] private Text textName;
-        [SerializeField] private Text textInfo;
-        [SerializeField] private bool showRes = true;
-        [SerializeField] private GameObject mParentRes;
+        [SerializeField] protected Text textName;
+        [SerializeField] protected Text textInfo;
+        [SerializeField] protected bool showRes = true;
+        [SerializeField] protected GameObject mParentRes;
 
-        private GameObject parentRes
+        protected GameObject parentRes
         {
             get
             {
@@ -32,15 +32,15 @@ namespace KMTool
             }
         }
 
-        [SerializeField] private Button button;
+        [SerializeField] protected Button button;
 
         /// <summary>
         /// 3D资源或者2D资源，用于角色的展示
         /// </summary>
-        [SerializeField][DisableEdit] private GameObject curRes;
-        [SerializeField][DisableEdit] private Texture resTexture;
-        [SerializeField][DisableEdit] private Renderer mRedRend;
-        private Renderer resRend
+        [SerializeField][DisableEdit] protected GameObject curRes;
+        [SerializeField][DisableEdit] protected Texture resTexture;
+        [SerializeField][DisableEdit] protected Renderer mRedRend;
+        protected Renderer resRend
         {
             get
             {
@@ -62,9 +62,9 @@ namespace KMTool
         const string GrayShader = "Custom/Gray";
 
         public delegate void DelOnClick(UIAvatarItem item);
-        private DelOnClick eventOnClick;
+        protected DelOnClick eventOnClick;
 
-        public void Init(ModelAvatar model, DelOnClick onClick = null)
+        public virtual void Init(ModelAvatar model, DelOnClick onClick = null)
         {
             mModel = model;
             eventOnClick = onClick;
@@ -156,7 +156,7 @@ namespace KMTool
         /// 是否已经解锁
         /// </summary>
         /// <returns></returns>
-        public bool IsUnlock()
+        public virtual bool IsUnlock()
         {
             if (mModel != null)
                 return mModel.IsUnlock();
@@ -168,7 +168,7 @@ namespace KMTool
         /// 是否当前选择
         /// </summary>
         /// <returns></returns>
-        public bool IsCurrentSelect()
+        public virtual bool IsCurrentSelect()
         {
             if(mModel != null)
             {
@@ -179,7 +179,7 @@ namespace KMTool
         }
 
         // Use this for initialization
-        void Start()
+        protected virtual void Start()
         {
             if (button) button.onClick.AddListener(BtnEvent);
         }

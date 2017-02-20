@@ -23,14 +23,14 @@ namespace KMTool
     /// </summary>
     public class UIAvatarCtrl : MonoBehaviour
     {
-        [SerializeField]private ScrollRect scroll;
+        [SerializeField]private UIAvatarScroll scroll;
         [SerializeField]private UIAvatarItem prefabItem;
         [SerializeField]private AnimationCurve scrollKey;
 
         [SerializeField]private float minDelta = 0.05f;
         [SerializeField][DisableEdit]private bool isScrolling;
         [SerializeField][DisableEdit]private float moveDelta;
-        [SerializeField][DisableEdit]private Vector3 preScrollPos;
+        [SerializeField][DisableEdit]private Vector2 preScrollPos;
 
         [SerializeField][DisableEdit]private UIAvatarItem mItem;
         [SerializeField][DisableEdit]private float fromPosX;
@@ -135,29 +135,45 @@ namespace KMTool
             }
 
             //move speed 
-            if(!isScrolling)
+            if(!isScrolling && !scroll.isDraging)
             {
-                moveDelta = Vector3.Distance(preScrollPos, parentContent.position);
-                preScrollPos = parentContent.position;
+                moveDelta = Vector3.Distance(preScrollPos, pos);
+                preScrollPos = pos;
 
                 if(moveDelta < minDelta)
                 {
-                    float minDis = 1000;
-                    UIAvatarItem item = null;
-                    for (int i = 0; i < items.Count; i++)
-                    {
-                        float curDis = Vector3.Distance(items[i].worldPos, centerPos);
-                        if (curDis < minDis)
-                        {
-                            minDis = curDis;
-                            item = items[i];
-                        }
-                    }
-                    if (item != null)
-                    {
-                        SetShowItem(item);
-                    }
+                    Stick();
                 }
+            }
+        }
+
+        public virtual void StickByDragEnd(float dis)
+        {
+            if(dis < 1.5f && !isScrolling)
+            {
+                Stick();
+            }
+        }
+
+        /// <summary>
+        /// 吸附
+        /// </summary>
+        protected virtual void Stick()
+        {
+            float minDis = 1000;
+            UIAvatarItem item = null;
+            for (int i = 0; i < items.Count; i++)
+            {
+                float curDis = Vector3.Distance(items[i].worldPos, centerPos);
+                if (curDis < minDis)
+                {
+                    minDis = curDis;
+                    item = items[i];
+                }
+            }
+            if (item != null)
+            {
+                SetShowItem(item);
             }
         }
 
