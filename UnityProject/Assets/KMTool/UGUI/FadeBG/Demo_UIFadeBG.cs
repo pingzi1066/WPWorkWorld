@@ -36,13 +36,13 @@ namespace KMToolDemo
         public void BtnToGame()
         {
             isGame = true;
-            UIFadeBG.BeginFade(FadeFinish);
+            UIFadeBG.BeginCurrent(FadeFinish);
         }
 
         public void BtnToMenu()
         {
             isGame = false;
-            UIFadeBG.BeginFade(FadeFinish);
+            UIFadeBG.BeginCurrent(FadeFinish);
         }
 
         private void FadeFinish()

@@ -16,22 +16,28 @@ namespace KMTool
     /// </summary>
     public class UIFadeBG : MonoBehaviour
     {
-        [SerializeField] protected Image imgBG;
+        [SerializeField] protected Image imgFadeBg;
         [SerializeField][Range(0.1f, 3f)] protected float inTime = 1f;
         [SerializeField][Range(0, 2f)] protected float stayTime = .1f;
         [SerializeField][Range(0.1f, 3f)] protected float outTime = 1f;
+        [SerializeField][DisableEdit] protected Color startCol;
+        [SerializeField][DisableEdit] protected Color outCol;
+
+        [SerializeField] protected Image imgFill;
         [SerializeField] protected bool setClockwise = true;
+        protected bool isClockwise { get { return setClockwise; } }
 
         [SerializeField][DisableEdit] protected bool isFadding = false;
 
         public delegate void DelFinished();
         protected DelFinished finishedFadeIn;
         protected DelFinished finishedFadeOut;
-        protected static UIFadeBG instance;
+        protected static UIFadeBG curFadBG;
 
         void Awake()
         {
-            instance = this;
+            SetColr(imgFadeBg.color);
+            imgFadeBg.enabled = false;
         }
 
         // Use this for initialization
@@ -40,12 +46,23 @@ namespace KMTool
 
         }
 
-        static public void BeginFade(DelFinished methodIn = null, DelFinished methodOut = null)
+        void OnEnable()
         {
-            if(instance)
-                instance.Fade(methodIn,methodOut);
+            curFadBG = this;
+        }
+
+        static public void BeginCurrent(DelFinished methodIn = null, DelFinished methodOut = null)
+        {
+            if(curFadBG)
+                curFadBG.Fade(methodIn,methodOut);
             else
                 Debug.Log("Don't find ui fade bg mono!!!");
+        }
+
+        public virtual void SetColr(Color col)
+        {
+            startCol = col;
+            outCol = new Color(startCol.r, startCol.g, startCol.b, 0);
         }
 
         public virtual void Fade(DelFinished methodIn = null, DelFinished methodOut = null)
@@ -55,11 +72,17 @@ namespace KMTool
 
             finishedFadeIn = methodIn;
             finishedFadeOut = methodOut;
+            
+            imgFadeBg.color = outCol;
+            imgFadeBg.enabled = true;
 
-            imgBG.fillAmount = 0;
-            if(setClockwise)
-                imgBG.fillClockwise = true;
-            imgBG.enabled = true;
+            if (imgFill)
+            {
+                imgFill.fillAmount = 0;
+                if (isClockwise)
+                    imgFill.fillClockwise = true;
+                imgFill.enabled = true;
+            }
 
             KMTime.AddTimeCount(inTime, FadeIn);
         }
@@ -67,7 +90,8 @@ namespace KMTool
         // show the bg
         protected virtual void FadeIn(float cur, float sum)
         {
-            imgBG.fillAmount = Mathf.Lerp(0, 1, cur / sum);
+            if(imgFill) imgFill.fillAmount = Mathf.Lerp(0, 1, cur / sum);
+            imgFadeBg.color = Color.Lerp(outCol, startCol, cur / sum);
 
             if (cur == sum)
                 FadeInFinished();
@@ -93,15 +117,16 @@ namespace KMTool
 
         protected virtual void FadeStayFinished()
         {
-            if(setClockwise)
-                imgBG.fillClockwise = false;
+            if(imgFill && isClockwise)
+                imgFill.fillClockwise = false;
             KMTime.AddTimeCount(outTime, FadeOut);
         }
 
         // hide the bg
         protected virtual void FadeOut(float cur, float sum)
         {
-            imgBG.fillAmount = Mathf.Lerp(1, 0, cur / sum);
+            if(imgFill) imgFill.fillAmount = Mathf.Lerp(1, 0, cur / sum);
+            imgFadeBg.color = Color.Lerp(startCol, outCol, cur / sum);
 
             if(cur == sum)
                 FadeOutFinished();
@@ -111,7 +136,11 @@ namespace KMTool
         {
             if(finishedFadeOut != null) finishedFadeOut();
 
-            imgBG.enabled = false;
+            if(imgFill)
+                imgFill.enabled = false;
+
+            imgFadeBg.enabled = false;
+
             isFadding = false;
         }
 
