@@ -234,6 +234,13 @@ namespace KMTool
                 parentContent.transform.position = toPos;//Vector3.Lerp(fromPos, toPos, factor);
                 yield return new WaitForEndOfFrame();
             }
+
+            //强制移动
+            fromPosX = parentContent.position.x;
+            toPosX = fromPosX + centerPos.x - curShowItem.transform.position.x;
+            moveDis = toPosX - fromPosX;
+            parentContent.Translate(moveDis, 0, 0);
+
             isScrolling = false;
             scroll.StopMovement();
         }
