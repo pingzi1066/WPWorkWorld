@@ -45,22 +45,19 @@ namespace KMTool
             public AudioClip[] sounds;
         }
 
-        [SerializeField]
-        private AudioClip[] sounds;
+        [SerializeField] private AudioClip[] sounds;
 
-        [SerializeField]
-        private AudioClip[] musics;
+        [SerializeField] private AudioClip[] musics;
 
-        [SerializeField]
-        private List<RandomSound> rangeSounds = new List<RandomSound>();
+        [SerializeField] private List<RandomSound> rangeSounds = new List<RandomSound>();
 
         public int limitCount = 20;
 
-        private AudioSource music;
+        [SerializeField][DisableEdit] private AudioSource music;
 
-        private List<SoundPlay> gcAudios = new List<SoundPlay>();
+        [SerializeField][DisableEdit] private List<SoundPlay> gcAudios = new List<SoundPlay>();
 
-        private List<SoundPlay> existingAudios = new List<SoundPlay>();
+        [SerializeField][DisableEdit] private List<SoundPlay> existingAudios = new List<SoundPlay>();
 
         public static SoundManager instance;
 
@@ -99,19 +96,33 @@ namespace KMTool
             {
                 existingAudios.Remove(soundPlay);
                 gcAudios.Add(soundPlay);
+                soundPlay.name = "gc_" + soundPlay.name;
             }
+        }
+
+        public SoundPlay GetSoundPlay()
+        {
+            if (gcAudios.Count > 0)
+            {
+                SoundPlay sp = instance.gcAudios[0];
+                instance.gcAudios.RemoveAt(0);
+                instance.existingAudios.Add(sp);
+                return sp;
+            }
+            else
+            {
+                Debug.Log(" sound exceed limit count   ");
+            }
+            return null;
         }
 
         public static void PlaySound(string name, Vector3 pos)
         {
             if (instance)
             {
-                if (instance.gcAudios.Count > 0)
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
                 {
-                    SoundPlay sp = instance.gcAudios[0];
-                    instance.gcAudios.RemoveAt(0);
-                    instance.existingAudios.Add(sp);
-
                     sp.Play(instance.GetSound(name), pos);
                 }
                 else
@@ -125,9 +136,26 @@ namespace KMTool
         {
             if (audio)
             {
-                audio.volume = volume;
+                //这里的音量设置：
+                //audio.volume = volume;
                 audio.Stop();
                 audio.Play();
+            }
+        }
+
+        public static void PlaySound(AudioClip clip, Vector3 pos)
+        {
+            if (instance)
+            {
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
+                {
+                    sp.Play(clip, pos);
+                }
+                else
+                {
+                    Debug.LogError(" sound exceed limit count   ");
+                }
             }
         }
 
@@ -159,12 +187,9 @@ namespace KMTool
         {
             if (instance)
             {
-                if (instance.gcAudios.Count > 0)
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
                 {
-                    SoundPlay sp = instance.gcAudios[0];
-                    instance.gcAudios.RemoveAt(0);
-                    instance.existingAudios.Add(sp);
-
                     sp.Play(instance.GetRange(name), pos);
                 }
                 else
@@ -178,14 +203,11 @@ namespace KMTool
         {
             if (instance)
             {
-                if (instance.gcAudios.Count > 0)
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
                 {
                     instance.StopAllAndPauseMusic();
-
-                    SoundPlay sp = instance.gcAudios[0];
-                    instance.gcAudios.RemoveAt(0);
-                    instance.existingAudios.Add(sp);
-
+                    
                     sp.Play(instance.GetSound(name), pos);
 
                     if (instance.waitForPlay != null)
