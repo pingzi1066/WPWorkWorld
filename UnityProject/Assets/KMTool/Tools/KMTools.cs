@@ -673,4 +673,16 @@ static public class KMTools
 
         return minDis;
     }
+    
+	/// <summary>
+	/// Convenience function that converts Class + Function combo into Class.Function representation.
+	/// </summary>
+	static public string GetFuncName (object obj, string method)
+	{
+		if (obj == null) return "<null>";
+		string type = obj.GetType().ToString();
+		int period = type.LastIndexOf('/');
+		if (period > 0) type = type.Substring(period + 1);
+		return string.IsNullOrEmpty(method) ? type : type + "/" + method;
+	}
 }
