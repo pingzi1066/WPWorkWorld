@@ -9,6 +9,8 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
+#if UNITY_EDITOR || UNITY_IOS
+
 /// <summary>
 /// 负责 IOS 端的推送工作
 /// </summary>
@@ -126,3 +128,5 @@ public class IOS_Notification : MonoBehaviour
 
     }
 }
+
+#endif
