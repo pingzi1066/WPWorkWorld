@@ -9,7 +9,7 @@
   - UIWordPos： 在Canvas为 ScreenSpace - Camera 的时候，坐标对应不正确、在主摄像机为透视的情况下坐标出现问题，现已解决，但在透视下的距离没有掌握好
   - UIWordPos：当透视时，每次取的Z值都在变换。
   - ListLocalInt : CreateDefaultData方法里不能返回值，  SetData 的创建默认数据时不走CreateDefaultData
-  
+  - UIWorldPos : Awake()函数前加入 if(!Application.isEditor) AddToDict(posName, this); 这个，不然场景加载会次都会提示保存
 ------
 #可以设计或者更新的：
   - Transform 相关的东西：缩放等，可以直接挂上脚本使用
