@@ -139,6 +139,13 @@ namespace KMTool
                 EditorGUILayout.HelpBox("The last control point does not have easing options as there is no following curve.", MessageType.Info);
             }
 
+            //FOVEditor
+            GUILayout.Space(7);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Field of View");
+            bezierControlPoint.FOV = EditorGUILayout.Slider(bezierControlPoint.FOV, 1, 180);
+            EditorGUILayout.EndHorizontal();
+
             GUILayout.Space(10);
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent("Smooth",

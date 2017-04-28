@@ -15,7 +15,7 @@ namespace KMTool
     /// <summary>
     /// 主要用于摄像机震动的脚本
     /// </summary>
-    public class CameraCtrl : MonoBehaviour
+    public class CameraShakeCtrl : MonoBehaviour
     {
         [System.Serializable]
         public class ShakeParams

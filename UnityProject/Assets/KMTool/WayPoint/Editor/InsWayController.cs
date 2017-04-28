@@ -144,11 +144,12 @@ namespace KMTool
                     //Render the camera preview
                     GameObject go = new GameObject("Point Preview");
                     go.transform.parent = bezier.transform;
-                    go.AddComponent<Camera>();
+                    //临时用的Camera
+                    Camera cam = go.AddComponent<Camera>();
                     //Retreive camera settings from the main camera
                     if (sceneCamera != null)
                     {
-                        go.GetComponent<Camera>().backgroundColor = sceneCamera.backgroundColor;
+                        cam.backgroundColor = sceneCamera.backgroundColor;
                         if (sceneCameraSkybox != null)
                             go.AddComponent<Skybox>().material = sceneCameraSkybox.material;
                         else
@@ -158,9 +159,12 @@ namespace KMTool
                     go.transform.position = inScenePos;
                     go.transform.rotation = inSceneRot;
 
-                    go.GetComponent<Camera>().targetTexture = pointPreviewTexture;
-                    go.GetComponent<Camera>().Render();
-                    go.GetComponent<Camera>().targetTexture = null;
+                    //Field of view 
+                    cam.fieldOfView = bezier.GetPathFOV(usePercentage);
+
+                    cam.targetTexture = pointPreviewTexture;
+                    cam.Render();
+                    cam.targetTexture = null;
                     DestroyImmediate(go);
 
                     //Display the camera preview

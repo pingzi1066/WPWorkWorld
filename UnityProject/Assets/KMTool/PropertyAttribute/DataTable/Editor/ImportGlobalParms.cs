@@ -71,6 +71,9 @@ namespace KMTool
                                 else
                                     AddStrFile(so as ScriptableObjectStringParms);
                             }
+
+                            //设置更改
+                            EditorUtility.SetDirty(GlobalParms.instance);
                         }
                         else
                         {
