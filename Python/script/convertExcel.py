@@ -102,9 +102,8 @@ def convertAllSheet(excelPath, exportPath, recordPath, exportNewPath):
 				if curMd5 != preMd5 or str(inputStr) == 'yes':
 					#导出第一个表格
 					outputFilePath = exportPath + "Static" 
-							+ fname[0:1].upper() + fname[1:] 
-							+ sheetName[0:1].upper() + sheetName[1:]
-							+ ".json"
+					outputFilePath += fname[0:1].upper() + fname[1:]
+					outputFilePath += ".json"
 
 					outputFile = open(outputFilePath,'w')
 
@@ -119,9 +118,9 @@ def convertAllSheet(excelPath, exportPath, recordPath, exportNewPath):
 						sheetName = sheet.name
 
 						outputFilePath = exportPath + "Static" 
-							+ fname[0:1].upper() + fname[1:] 
-							+ sheetName[0:1].upper() + sheetName[1:]
-							+ ".json"
+						outputFilePath += fname[0:1].upper() + fname[1:] 
+						outputFilePath += sheetName[0:1].upper() + sheetName[1:]
+						outputFilePath += ".json"
 						outputFile = open(outputFilePath,'w')
 
 						excel2json.sheetToJson(sheet, outputFile, [2], True)

@@ -8,6 +8,7 @@ Maintaince Logs:
 2015-08-02	1.0版本 添加两种导入方式
 2015-08-03	修复一个错误
 2017-04-30	取值类型进行封装、对sheet转Json进行了封装
+			修复了之前最后一行逗号也加入的BUG
 
 '''
 
@@ -106,7 +107,7 @@ def sheetToJson(sheet, outputFile, ignoreRows, isDict):
 	valueTypeList = getListTypeBySheet(sheet, ignoreRows)
 
 	#------写入头
-	outputFile.write('[\n')
+	outputFile.write('{\n')
 
 	#循环写入
 	for row in range(sumByRow):
@@ -118,7 +119,7 @@ def sheetToJson(sheet, outputFile, ignoreRows, isDict):
 			continue
 
 		#行开头
-		outputFile.write('\t{\n')
+		#outputFile.write('\t{\n')
 
 		#取每一列  写入 key : value 
 		for col in range(sumByCol):
@@ -140,20 +141,20 @@ def sheetToJson(sheet, outputFile, ignoreRows, isDict):
 				outputFile.write(keyList[col] + '\"' + str(value) + '\"')
 
 			#若非最后一列，则加入逗号
-			if col != sumByCol:
+			if col != sumByCol - 1:
 				outputFile.write(',\n')
 			#最后一个，加入结尾标记
 			else:
 				outputFile.write('\n')
 
 		#行结尾
-		if row != sumByRow:
+		if row != sumByRow - 1:
 			outputFile.write('\t},\n')
 		else:
 			outputFile.write('\t}\n')
 
 	#------写入尾
-	outputFile.write(']')
+	outputFile.write('}')
 	(filepath,filename)=os.path.split(outputFile.name)
 	print  " -export succeed!!!!- " + str(filename)
 	return outputFile
