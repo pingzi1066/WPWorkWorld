@@ -9,6 +9,7 @@ Maintaince Logs:
 2015-08-03	修复一个错误
 2017-04-30	取值类型进行封装、对sheet转Json进行了封装
 			修复了之前最后一行逗号也加入的BUG
+			修复行首不为Int类型时的报错
 
 '''
 
@@ -128,7 +129,7 @@ def sheetToJson(sheet, outputFile, ignoreRows, isDict):
 			#提出ID在最前，适用于 dictionary
 			if col == 0 and isDict:
 				#行开头
-				outputFile.write('\t\"' + str(int(value)) + '\":{\n')
+				outputFile.write('\t\"' + str((value)) + '\":{\n')
 				continue
 
 			if valueTypeList[col] == 0 or valueTypeList[col] == 2: 
