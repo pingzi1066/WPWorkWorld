@@ -34,11 +34,11 @@ namespace KMTool
             float handlesize = HandleUtility.GetHandleSize(newPosition) * 0.6f;
 
             Handles.color = new Color(0.99f, 0.50f, 0.35f);
-            newPosition = Handles.Slider(newPosition, Vector3.right, handlesize, Handles.ArrowCap, 1);
+            newPosition = Handles.Slider(newPosition, Vector3.right, handlesize, Handles.ArrowHandleCap, 1);
             Handles.color = new Color(0.30f, 0.85f, 0.99f);
-            newPosition = Handles.Slider(newPosition, Vector3.forward, handlesize, Handles.ArrowCap, 1);
+            newPosition = Handles.Slider(newPosition, Vector3.forward, handlesize, Handles.ArrowHandleCap, 1);
             Handles.color = new Color(0.85f, 0.95f, 0.30f);
-            newPosition = Handles.Slider(newPosition, Vector3.up, handlesize, Handles.ArrowCap, 1);
+            newPosition = Handles.Slider(newPosition, Vector3.up, handlesize, Handles.ArrowHandleCap, 1);
 
             //Tilting draw function for follow path
             if (bezier.mode == WayBezier.viewmodes.followpath || bezier.mode == WayBezier.viewmodes.reverseFollowpath)
@@ -68,7 +68,7 @@ namespace KMTool
                 , handleName);
 
             Handles.color = (Color.white - bezier.lineColour) + new Color(0, 0, 0, 1);
-            Handles.ArrowCap(0, previewCamPos, previewCamRot, handlesize * 1.5f);
+            Handles.ArrowHandleCap(0, previewCamPos, previewCamRot, handlesize * 1.5f, EventType.Repaint);
 
             if (GUI.changed)
             {

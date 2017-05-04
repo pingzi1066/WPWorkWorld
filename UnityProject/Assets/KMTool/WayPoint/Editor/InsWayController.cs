@@ -44,7 +44,7 @@ namespace KMTool
                 Handles.DrawLine(inScenePos, inScenePos + Vector3.forward * 0.5f);
                 Handles.DrawLine(inScenePos, inScenePos + Vector3.back * 0.5f);
 
-                Handles.ArrowCap(0, inScenePos, inSceneRot, handleSize);
+                Handles.ArrowHandleCap(0, inScenePos, inSceneRot, handleSize, EventType.Repaint);
                 Handles.Label(inScenePos, "LookAt");
             }
 
