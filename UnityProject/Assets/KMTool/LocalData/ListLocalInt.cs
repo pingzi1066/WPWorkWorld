@@ -154,30 +154,35 @@ namespace KMTool
             {
                 string jsonText = LocalTools.GetString(key);
 
-                JSONNode data = JSON.Parse(jsonText);
-                JSONArray array = data.AsArray;
-                if (array != null)
-                {
-                    for (int i = 0; i < array.Count; i++)
-                    {
-                        JSONClass obj = array[i].AsObject;
-
-                        Type tp = typeof(U);
-                        Array arr = Enum.GetValues(tp);
-
-                        LocalIntByList localInt = new LocalIntByList();
-                        foreach (U e in arr)
-                        {
-                            localInt.SetData(e, obj[e.ToString()].AsInt);
-                        }
-                        dict.Add(localInt.GetData(HeadKey()), localInt);
-                    }
-                }
+                LoadData(jsonText);
             }
             else
             {
                 CreateDefaultData();
                 SaveData();
+            }
+        }
+
+        public virtual void LoadData(string jsonText)
+        {
+            JSONNode data = JSON.Parse(jsonText);
+            JSONArray array = data.AsArray;
+            if (array != null)
+            {
+                for (int i = 0; i < array.Count; i++)
+                {
+                    JSONClass obj = array[i].AsObject;
+
+                    Type tp = typeof(U);
+                    Array arr = Enum.GetValues(tp);
+
+                    LocalIntByList localInt = new LocalIntByList();
+                    foreach (U e in arr)
+                    {
+                        localInt.SetData(e, obj[e.ToString()].AsInt);
+                    }
+                    dict.Add(localInt.GetData(HeadKey()), localInt);
+                }
             }
         }
 

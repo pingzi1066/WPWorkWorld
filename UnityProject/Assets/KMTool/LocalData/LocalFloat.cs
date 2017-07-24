@@ -93,13 +93,13 @@ namespace KMTool
         /// <typeparam name="K">The 1st type parameter.</typeparam>
         public float GetData(U eKey)
         {
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (!dict.ContainsKey(eKey))
             {
                 Debug.Log("Don't fount key " + eKey.ToString());
                 return 0;
             }
-    #endif
+#endif
 
             return dict[eKey];
         }
@@ -114,24 +114,29 @@ namespace KMTool
             {
                 string jsonText = LocalTools.GetString(key);
 
-                JSONNode data = JSON.Parse(jsonText);
-                JSONClass obj = data.AsObject;
-
-                Type tp = typeof(U);
-                Array arr = Enum.GetValues(tp);
-                foreach (U e in arr)
-                {
-                    if (obj.HasKey(e.ToString()))
-                    {
-                        SetData(e, obj[e.ToString()].AsFloat);
-                    }
-                    else SetData(e, GetDefaultValue(e));
-                }
+                LoadData(jsonText);
             }
             else
             {
                 CreateDefaultData();
                 SaveData();
+            }
+        }
+
+        public virtual void LoadData(string jsonText)
+        {
+            JSONNode data = JSON.Parse(jsonText);
+            JSONClass obj = data.AsObject;
+
+            Type tp = typeof(U);
+            Array arr = Enum.GetValues(tp);
+            foreach (U e in arr)
+            {
+                if (obj.HasKey(e.ToString()))
+                {
+                    SetData(e, obj[e.ToString()].AsFloat);
+                }
+                else SetData(e, GetDefaultValue(e));
             }
         }
 
@@ -199,9 +204,9 @@ namespace KMTool
         {
             CreateDefaultData();
             SaveData();
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
             Debug.Log("Clear Data " + typeof(T).Name);
-    #endif
+#endif
         }
 
         public string ToDebug()

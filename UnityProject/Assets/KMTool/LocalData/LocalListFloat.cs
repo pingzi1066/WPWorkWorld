@@ -13,7 +13,7 @@ using SimpleJSON;
 
 namespace KMTool
 {
-    
+
     /// <summary>
     /// Float 数组 类型保存
     /// </summary>
@@ -122,13 +122,13 @@ namespace KMTool
         /// <typeparam name="K">The 1st type parameter.</typeparam>
         public List<float> GetData(U eKey)
         {
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (!dict.ContainsKey(eKey))
             {
                 Debug.Log("Don't fount key " + eKey.ToString());
                 return null;
             }
-    #endif
+#endif
 
             return dict[eKey];
         }
@@ -142,33 +142,36 @@ namespace KMTool
             if (LocalTools.HasKey(key))
             {
                 string jsonText = LocalTools.GetString(key);
-
-                JSONNode data = JSON.Parse(jsonText);
-                JSONClass obj = data.AsObject;
-
-                Type tp = typeof(U);
-                Array arr = Enum.GetValues(tp);
-                foreach (U e in arr)
-                {
-                    //读取的时候用新数组
-                    List<float> newList = new List<float>();
-                    if (obj.HasKey(e.ToString()))
-                    {
-                        JSONArray jsonArray = obj[e.ToString()].AsArray;
-
-                        for (int i = 0; i < jsonArray.Count; i++)
-                        {
-                            newList.Add(jsonArray[i].AsFloat);
-                        }
-                    }
-                    SetData(e, newList);
-
-                }
+                LoadData(jsonText);
             }
             else
             {
                 CreateDefaultData();
                 SaveData();
+            }
+        }
+
+        public virtual void LoadData(string jsonText)
+        {
+            JSONNode data = JSON.Parse(jsonText);
+            JSONClass obj = data.AsObject;
+
+            Type tp = typeof(U);
+            Array arr = Enum.GetValues(tp);
+            foreach (U e in arr)
+            {
+                //读取的时候用新数组
+                List<float> newList = new List<float>();
+                if (obj.HasKey(e.ToString()))
+                {
+                    JSONArray jsonArray = obj[e.ToString()].AsArray;
+
+                    for (int i = 0; i < jsonArray.Count; i++)
+                    {
+                        newList.Add(jsonArray[i].AsFloat);
+                    }
+                }
+                SetData(e, newList);
             }
         }
 
@@ -261,9 +264,9 @@ namespace KMTool
         {
             CreateDefaultData();
             SaveData();
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
             Debug.Log("Clear Data " + typeof(T).Name);
-    #endif
+#endif
         }
 
         public string ToDebug()
