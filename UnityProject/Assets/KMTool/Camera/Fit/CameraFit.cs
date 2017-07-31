@@ -41,12 +41,13 @@ public class CameraFit : MonoBehaviour
     void Start()
     {
         if(mCam == null) mCam = GetComponent<Camera>();
+        else Calc();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Application.isEditor && !Application.isPlaying) Calc();
+        if(Application.isEditor) Calc();
     }
 
     void Calc()
