@@ -57,7 +57,7 @@ namespace ThinksquirrelSoftware.Utilities
 		public bool multiplyByTimeScale									= true;
 		
 		// Shake rect (for GUI)
-		private Rect shakeRect;
+		private Rect shakeRect = new Rect();
 		
 		// States
 		private bool shaking											= false;

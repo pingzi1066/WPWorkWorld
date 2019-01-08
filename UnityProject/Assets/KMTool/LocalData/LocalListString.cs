@@ -138,33 +138,36 @@ namespace KMTool
             if (LocalTools.HasKey(key))
             {
                 string jsonText = LocalTools.GetString(key);
-
-                JSONNode data = JSON.Parse(jsonText);
-                JSONClass obj = data.AsObject;
-
-                Type tp = typeof(U);
-                Array arr = Enum.GetValues(tp);
-                foreach (U e in arr)
-                {
-                    //读取的时候用新数组
-                    List<string> newList = new List<string>();
-                    if (obj.HasKey(e.ToString()))
-                    {
-                        JSONArray jsonArray = obj[e.ToString()].AsArray;
-
-                        for (int i = 0; i < jsonArray.Count; i++)
-                        {
-                            newList.Add(jsonArray[i].Value);
-                        }
-                    }
-                    SetData(e, newList);
-
-                }
+                LoadData(jsonText);
             }
             else
             {
                 CreateDefaultData();
                 SaveData();
+            }
+        }
+
+        public virtual void LoadData(string jsonText)
+        {
+            JSONNode data = JSON.Parse(jsonText);
+            JSONClass obj = data.AsObject;
+
+            Type tp = typeof(U);
+            Array arr = Enum.GetValues(tp);
+            foreach (U e in arr)
+            {
+                //读取的时候用新数组
+                List<string> newList = new List<string>();
+                if (obj.HasKey(e.ToString()))
+                {
+                    JSONArray jsonArray = obj[e.ToString()].AsArray;
+
+                    for (int i = 0; i < jsonArray.Count; i++)
+                    {
+                        newList.Add(jsonArray[i].Value);
+                    }
+                }
+                SetData(e, newList);
             }
         }
 

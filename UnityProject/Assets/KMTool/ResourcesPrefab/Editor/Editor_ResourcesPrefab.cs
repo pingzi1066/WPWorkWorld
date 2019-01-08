@@ -63,7 +63,7 @@ namespace KMTool
                                     // Do this
                                     string pt = path.Replace("Assets/Resources/","").Replace(file,"");
                                     Add(all[i].GetType().FullName, pt);
-
+                                    
                                     break;
                                 }
                             }
@@ -77,8 +77,9 @@ namespace KMTool
 
         static void Add(string key,string path)
         {
-//            Debug.Log(path);
             ResourcesManager.AddItem(key, path);
+            EditorUtility.SetDirty(ResourcesManager.instance);
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 

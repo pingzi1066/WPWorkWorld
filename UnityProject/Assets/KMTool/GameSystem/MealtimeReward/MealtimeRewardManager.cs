@@ -165,8 +165,10 @@ public class MealtimeRewardManager : MonoBehaviour
 
                 if (isAddPush)
                 {
+#if UNITY_EDITOR || UNITY_IOS
                     //加入推送
                     IOS_Notification.instance.AddNotificationMessage(temp.desc, temp.hour, temp.minute, true);
+#endif
                 }
             }
         }

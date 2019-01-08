@@ -187,8 +187,10 @@ namespace KMTool
 
         //Add a new control point specified by the index of where you want to place it.
         public GameObject AddNewPoint(int index)
-        {
+        { 
+
             GameObject newPoint = KMTools.AddGameObj(gameObject); //new GameObject("Control Point");
+            WayPoint cpScript = newPoint.AddComponent<WayPoint>();
             newPoint.name = "Control Point"; //.transform.parent = transform;
 
             if (numberOfControlPoints == 0)
@@ -216,16 +218,23 @@ namespace KMTool
                     Quaternion a = _controlPoints[Mathf.Clamp(index, 0, numberOfUseablePoints)].transform.rotation;
                     Quaternion b = _controlPoints[Mathf.Clamp(index + 1, 0, numberOfUseablePoints)].transform.rotation;
                     newPoint.transform.rotation = CalculateCubicRotation(p, a, b, q, 0.5f);
+
+                    //设置FOV
+                    float FOVA = pointA.FOV;
+                    float FOVB = pointB.FOV;
+
+                    cpScript.FOV = Mathf.Lerp(FOVA, FOVB, CalculateHermite(.5f));
                 }
                 else
-                {//place point at the end of the path
+                {
+                    //place point at the end of the path
                     Vector3 endDirection = (GetPathPosition(1.0f) - GetPathPosition(0.95f)).normalized;
                     newPoint.transform.position = _controlPoints[index - 1].transform.position + endDirection * 5.0f;
                     newPoint.transform.rotation = _controlPoints[index - 1].transform.rotation;
+                    cpScript.FOV = _controlPoints[index - 1].FOV;
                 }
             }
 
-            WayPoint cpScript = newPoint.AddComponent<WayPoint>();
             cpScript.name = "bezier control point " + index;
             cpScript.bezier = this;
             List<WayPoint> rebuildList = new List<WayPoint>(_controlPoints);
@@ -324,6 +333,19 @@ namespace KMTool
             lastRotation = ret;
 
             return ret;
+        }
+
+       //Sample the FOV on the entire curve based on time (0-1)
+        public float GetPathFOV(float t)
+        {
+            float curveT = 1.0f / (float)numberOfUseablePoints;
+            int point = Mathf.FloorToInt(t / curveT);
+            float ct = Mathf.Clamp01((t - point * curveT) * numberOfUseablePoints);
+
+            float FOVA = GetPoint(point).FOV;
+            float FOVB = GetPoint(point + 1).FOV;
+
+            return Mathf.Lerp(FOVA, FOVB, CalculateHermite(ct));
         }
 
         //Sample the Tilt on the entire curve based on time (0-1) - only for followpath mode

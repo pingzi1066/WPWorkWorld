@@ -17,20 +17,20 @@ namespace KMToolDemo
     /// </summary>
     public class Demo_CameraShake : MonoBehaviour 
     {
-        public CameraCtrl.ShakeParams parms;
+        public CameraShakeCtrl.ShakeParams parms;
 
         [SerializeField] private Text textInfo;
 
         // Use this for initialization
         void Start()
         {
-            parms = new CameraCtrl.ShakeParams();
+            parms = new CameraShakeCtrl.ShakeParams();
             textInfo.text = "";
         }
 
         public void BtnShake()
         {
-            CameraCtrl.Shake(parms,ShakeFinished);
+            CameraShakeCtrl.Shake(parms,ShakeFinished);
             textInfo.text = "Shaking " + parms.name;
         }
 

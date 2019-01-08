@@ -17,8 +17,8 @@ namespace KMTool
     /// <summary>
     /// int数据保存基类 T 为此继承函数，U为枚举
     /// </summary>
-     public class LocalInt<T,U> 
-        where T : LocalInt<T,U>
+    public class LocalInt<T, U>
+       where T : LocalInt<T, U>
     {
 
         private bool isInit = false;
@@ -51,7 +51,7 @@ namespace KMTool
         public virtual string Key() { return typeof(T).Name; }
         protected string key { get { return Key(); } }
 
-        public delegate void DelOnValue(U key,int value);
+        public delegate void DelOnValue(U key, int value);
 
         /// <summary>
         /// 当值改变的方法监听
@@ -94,13 +94,13 @@ namespace KMTool
         /// <typeparam name="K">The 1st type parameter.</typeparam>
         public int GetData(U eKey)
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (!dict.ContainsKey(eKey))
             {
                 Debug.Log("Don't fount key " + eKey.ToString());
                 return 0;
             }
-            #endif
+#endif
 
             return dict[eKey];
         }
@@ -115,24 +115,29 @@ namespace KMTool
             {
                 string jsonText = LocalTools.GetString(key);
 
-                JSONNode data = JSON.Parse(jsonText);
-                JSONClass obj = data.AsObject;
-
-                Type tp = typeof(U);
-                Array arr = Enum.GetValues(tp);
-                foreach (U e in arr)
-                {
-                    if (obj.HasKey(e.ToString()))
-                    {
-                        SetData(e, obj[e.ToString()].AsInt);
-                    }
-                    else SetData(e, GetDefaultValue(e));
-                }
+                LoadData(jsonText);
             }
             else
             {
                 CreateDefaultData();
                 SaveData();
+            }
+        }
+
+        public virtual void LoadData(string jsonText)
+        {
+            JSONNode data = JSON.Parse(jsonText);
+            JSONClass obj = data.AsObject;
+
+            Type tp = typeof(U);
+            Array arr = Enum.GetValues(tp);
+            foreach (U e in arr)
+            {
+                if (obj.HasKey(e.ToString()))
+                {
+                    SetData(e, obj[e.ToString()].AsInt);
+                }
+                else SetData(e, GetDefaultValue(e));
             }
         }
 
@@ -188,7 +193,7 @@ namespace KMTool
         /// 取数组：值传递
         /// </summary>
         /// <returns>The dict.</returns>
-        public Dictionary<U,int> GetDict()
+        public Dictionary<U, int> GetDict()
         {
             return dict;
         }
@@ -200,9 +205,9 @@ namespace KMTool
         {
             CreateDefaultData();
             SaveData();
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             Debug.Log("Clear Data " + typeof(T).Name + "\n new Data :" + ToDebug());
-            #endif
+#endif
         }
 
         public string ToDebug()

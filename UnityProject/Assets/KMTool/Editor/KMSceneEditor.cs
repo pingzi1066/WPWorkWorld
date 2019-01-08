@@ -43,11 +43,11 @@ namespace KMTool
             float handlesize = HandleUtility.GetHandleSize(newPosition) * 0.6f;
 
             Handles.color = new Color(0.99f, 0.50f, 0.35f);
-            newPosition = Handles.Slider(newPosition, Vector3.right, handlesize, Handles.ArrowCap, 1);
+            newPosition = Handles.Slider(newPosition, Vector3.right, handlesize, Handles.ArrowHandleCap, 1);
             Handles.color = new Color(0.30f, 0.85f, 0.99f);
-            newPosition = Handles.Slider(newPosition, Vector3.forward, handlesize, Handles.ArrowCap, 1);
+            newPosition = Handles.Slider(newPosition, Vector3.forward, handlesize, Handles.ArrowHandleCap, 1);
             Handles.color = new Color(168/255.0f, 242/255.0f, 77/255.0f);
-            newPosition = Handles.Slider(newPosition, Vector3.up, handlesize, Handles.ArrowCap, 1);
+            newPosition = Handles.Slider(newPosition, Vector3.up, handlesize, Handles.ArrowHandleCap, 1);
 
             string handleName = target.name;
             float center = HandleUtility.GetHandleSize(newPosition);
@@ -82,11 +82,11 @@ namespace KMTool
                 float handlesize = HandleUtility.GetHandleSize(newPosition) * 0.6f;
 
                 Handles.color = new Color(0.99f, 0.50f, 0.35f);
-                newPosition = Handles.Slider(newPosition, Vector3.right, handlesize, Handles.ArrowCap, 1);
+                newPosition = Handles.Slider(newPosition, Vector3.right, handlesize, Handles.ArrowHandleCap, 1);
                 Handles.color = new Color(0.30f, 0.85f, 0.99f);
-                newPosition = Handles.Slider(newPosition, Vector3.forward, handlesize, Handles.ArrowCap, 1);
+                newPosition = Handles.Slider(newPosition, Vector3.forward, handlesize, Handles.ArrowHandleCap, 1);
                 Handles.color = new Color(168/255.0f, 242/255.0f, 77/255.0f);
-                newPosition = Handles.Slider(newPosition, Vector3.up, handlesize, Handles.ArrowCap, 1);
+                newPosition = Handles.Slider(newPosition, Vector3.up, handlesize, Handles.ArrowHandleCap, 1);
 
                 if (newPosition != target.position)
                 {

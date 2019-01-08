@@ -684,7 +684,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  isSelectOnEnable: 1
   minDelta: 0.002
+  minScrollDis: 0.01
   isScrolling: 0
   moveDelta: 0
   preScrollPos: {x: 0, y: 0}
@@ -698,9 +700,10 @@ MonoBehaviour:
   minDis: 5
   isUnlockEffect: 1
   templateItem: {fileID: 114822930676765156}
+  curSelectedItem: {fileID: 0}
   btnBuy: {fileID: 114370090662557500}
   btnSelect: {fileID: 114872325721787870}
-  goCurSelect: {fileID: 1326773806656330}
+  btnCurrent: {fileID: 114148253008685200}
 --- !u!114 &114256233696504478
 MonoBehaviour:
   m_ObjectHideFlags: 1

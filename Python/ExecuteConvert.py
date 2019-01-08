@@ -14,4 +14,4 @@ exportPath = mainPath + "/json/" #导出的所有的json目录
 recordPath = mainPath + "/record/" #文件导出记录
 exportNewPath = mainPath + "/new/" #当前导出已经改变过的json目录
 
-convert.convert(excelPath,exportPath,recordPath,exportNewPath)
+convert.convertAllSheet(excelPath,exportPath,recordPath,exportNewPath)

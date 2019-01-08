@@ -96,26 +96,29 @@ namespace KMTool
 
         protected virtual void DrawWireCube()
         {
-            Handles.RectangleCap(0,
+            Handles.RectangleHandleCap(0,
                 drawCenter,
                 transform.rotation,
-                size);
+                size,
+                EventType.Repaint);
         }
 
         protected virtual void DrawWireSphere()
         {
-            Handles.CircleCap(0,
+            Handles.CircleHandleCap(0,
                 drawCenter,
                 transform.rotation,
-                size);
+                size,
+                EventType.Repaint);
         }
 
         protected virtual void DrawArrow()
         {
-            Handles.ArrowCap(0,
+            Handles.ArrowHandleCap(0,
                 drawCenter,
                 transform.rotation,
-                size);
+                size,
+                EventType.Repaint);
         }
 
         protected virtual void DrawOther()

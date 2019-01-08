@@ -29,7 +29,17 @@ namespace KMTool
             }
         }
 
-        public void Play(AudioClip clip, Vector3 pos)
+        public string SoundName
+        {
+            get
+            {
+                if(audioSource && audioSource.clip)
+                    return audioSource.clip.name;
+                return "null";
+            }
+        }
+
+        public void Play(AudioClip clip, Vector3 pos, float time = 0)
         {
             if (clip != null)
             {
@@ -37,17 +47,29 @@ namespace KMTool
                 transform.position = pos;
                 audioSource.volume = SoundManager.volume;
                 audioSource.Stop();
-                audioSource.Play();
+
 
                 gameObject.name = "SoundPlay(" + clip.name + ")";
 
-                Invoke("SetDisable", clip.length);
+                if (time <= 0)
+                {
+                    audioSource.loop = false;
+                    Invoke("SetDisable", clip.length);
+                }
+                else
+                {
+                    audioSource.loop = true;
+                    Invoke("SetDisable", time);
+
+                }
+                audioSource.Play();
             }
             else SetDisable();
         }
 
         void SetDisable()
         {
+            audioSource.Stop();
             SoundManager.instance.AddToGC(this);
 
             if (eventFinish != null)
@@ -71,7 +93,7 @@ namespace KMTool
         {
             if (audioSource && audioSource.isPlaying)
             {
-                audioSource.Stop();
+                SetDisable();
             }
         }
 

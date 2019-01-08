@@ -16,6 +16,21 @@ namespace KMTool
     /// </summary>
     public class ResourcesManager : MonoBehaviour 
     {
+
+        static public ResourcesManager instance
+        {
+            get
+            {
+                GameObject go = Resources.Load(thisPrefab, typeof(GameObject)) as GameObject;
+                if (go != null)
+                {
+                    ResourcesManager rm = go.GetComponent<ResourcesManager>();
+                    return rm;
+                }
+                return null;
+            }
+        }
+
         [System.Serializable]
         public class PrefabItem
         {

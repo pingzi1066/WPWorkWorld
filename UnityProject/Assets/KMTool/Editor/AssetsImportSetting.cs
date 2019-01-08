@@ -9,7 +9,7 @@ namespace KMTool
         public void OnPreprocessModel()
         {
             ModelImporter modelImporte = (ModelImporter)assetImporter;
-            modelImporte.animationType = ModelImporterAnimationType.Legacy;
+            //modelImporte.animationType = ModelImporterAnimationType.Legacy;
 
             DeubgToConsole("model ", modelImporte);
         }

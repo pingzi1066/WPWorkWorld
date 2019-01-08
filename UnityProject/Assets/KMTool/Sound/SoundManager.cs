@@ -12,30 +12,58 @@ namespace KMTool
     /// <summary>
     public class SoundManager : MonoBehaviour
     {
-        private static float mVolume = 1;
+        [SerializeField][Range(0,1)] private float mVolume = 1;
         public static float volume
         {
             get
             {
-                return mVolume;
+                if(instance)
+                    return instance.mVolume;
+                return 0;
             }
             set
             {
-                if (mVolume != value)
+                if (instance.mVolume != value)
                 {
-                    mVolume = Mathf.Clamp01(value);
+                    instance.mVolume = Mathf.Clamp01(value);
 
                     if (instance)
                     {
                         foreach (SoundPlay sp in instance.existingAudios)
                         {
-                            sp.SetVolume(mVolume);
+                            sp.SetVolume(instance.mVolume);
                         }
-                        instance.music.volume = mVolume;
+
+                        if(value < musicVolume)
+                        {
+                            musicVolume = value;
+                        }
                     }
                 }
             }
         }
+
+        [SerializeField][Range(0,1)] private float mMusicVolume = .5f;
+        public static float musicVolume
+        {
+            get
+            {
+                if(instance)
+                    return instance.mMusicVolume;
+                return 0;
+            }
+            set
+            {
+                value = Mathf.Clamp(value,0,volume);
+                if(instance && value != instance.mMusicVolume)
+                {
+                    instance.mMusicVolume = value;
+                    instance.music.volume = value;
+                }
+            }
+        }
+
+        [SerializeField] private bool playMusicOnAwake = false;
 
         [System.Serializable]
         public class RandomSound
@@ -45,22 +73,33 @@ namespace KMTool
             public AudioClip[] sounds;
         }
 
-        [SerializeField]
-        private AudioClip[] sounds;
+        [SerializeField] private AudioClip[] sounds;
 
-        [SerializeField]
-        private AudioClip[] musics;
+        [SerializeField] private AudioClip[] musics;
 
-        [SerializeField]
-        private List<RandomSound> rangeSounds = new List<RandomSound>();
+        [SerializeField] private List<RandomSound> rangeSounds = new List<RandomSound>();
 
         public int limitCount = 20;
 
-        private AudioSource music;
+        [SerializeField][DisableEdit] private AudioSource music;
 
-        private List<SoundPlay> gcAudios = new List<SoundPlay>();
+        /// <summary>
+        /// 取当前Music
+        /// </summary>
+        /// <returns></returns>
+        public static AudioSource MusicSource
+        {
+            get
+            {
+                if (instance)
+                    return instance.music;
+                return null;
+            }
+        }
 
-        private List<SoundPlay> existingAudios = new List<SoundPlay>();
+        [SerializeField][DisableEdit] private List<SoundPlay> gcAudios = new List<SoundPlay>();
+
+        [SerializeField][DisableEdit] private List<SoundPlay> existingAudios = new List<SoundPlay>();
 
         public static SoundManager instance;
 
@@ -86,6 +125,14 @@ namespace KMTool
             GameObject goMusic = KMTools.AddGameObj(gameObject);
             goMusic.name = "Music";
             music = goMusic.AddComponent<AudioSource>();
+
+            if(playMusicOnAwake)
+            {
+                if(musics.Length > 0)
+                {
+                    PlayMusic(musics[0].name);
+                }
+            }
         }
 
         void Start()
@@ -99,20 +146,34 @@ namespace KMTool
             {
                 existingAudios.Remove(soundPlay);
                 gcAudios.Add(soundPlay);
+                soundPlay.name = "gc_" + soundPlay.name;
             }
         }
 
-        public static void PlaySound(string name, Vector3 pos)
+        public SoundPlay GetSoundPlay()
+        {
+            if (gcAudios.Count > 0)
+            {
+                SoundPlay sp = instance.gcAudios[0];
+                instance.gcAudios.RemoveAt(0);
+                instance.existingAudios.Add(sp);
+                return sp;
+            }
+            else
+            {
+                Debug.Log(" sound exceed limit count   ");
+            }
+            return null;
+        }
+
+        public static void PlaySound(string name, Vector3 pos, float playTime = 0)
         {
             if (instance)
             {
-                if (instance.gcAudios.Count > 0)
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
                 {
-                    SoundPlay sp = instance.gcAudios[0];
-                    instance.gcAudios.RemoveAt(0);
-                    instance.existingAudios.Add(sp);
-
-                    sp.Play(instance.GetSound(name), pos);
+                    sp.Play(instance.GetSound(name), pos, playTime);
                 }
                 else
                 {
@@ -125,9 +186,47 @@ namespace KMTool
         {
             if (audio)
             {
+                //这里的音量设置：
                 audio.volume = volume;
                 audio.Stop();
                 audio.Play();
+            }
+        }
+
+        /// <summary>
+        /// 播放一个音效
+        /// </summary>
+        /// <param name="clip"></param>
+        /// <param name="pos"></param>
+        /// <param name="playTime">此参数大于0的时候为播放时间，并置于循环播放</param>
+        public static void PlaySound(AudioClip clip, Vector3 pos, float playTime = 0)
+        {
+            if (instance)
+            {
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
+                {
+                    sp.Play(clip, pos, playTime);
+                }
+                else
+                {
+                    Debug.LogError(" sound exceed limit count   ");
+                }
+            }
+        }
+
+        public static void StopSound(string name)
+        {
+            if(instance)
+            {
+                for(int i = 0;i<instance.existingAudios.Count;i++)
+                {
+                    if(instance.existingAudios[i].SoundName == name)
+                    {
+                        instance.existingAudios[i].Stop();
+                        return;
+                    }
+                }
             }
         }
 
@@ -141,6 +240,7 @@ namespace KMTool
                     instance.music.clip = clip;
                     instance.music.loop = isLoop;
                     instance.music.Play();
+                    instance.music.volume = musicVolume;
 
                     instance.music.name = "Music(" + clip.name + ")";
                 }
@@ -159,12 +259,9 @@ namespace KMTool
         {
             if (instance)
             {
-                if (instance.gcAudios.Count > 0)
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
                 {
-                    SoundPlay sp = instance.gcAudios[0];
-                    instance.gcAudios.RemoveAt(0);
-                    instance.existingAudios.Add(sp);
-
                     sp.Play(instance.GetRange(name), pos);
                 }
                 else
@@ -178,14 +275,11 @@ namespace KMTool
         {
             if (instance)
             {
-                if (instance.gcAudios.Count > 0)
+                SoundPlay sp = instance.GetSoundPlay();
+                if (sp)
                 {
                     instance.StopAllAndPauseMusic();
-
-                    SoundPlay sp = instance.gcAudios[0];
-                    instance.gcAudios.RemoveAt(0);
-                    instance.existingAudios.Add(sp);
-
+                    
                     sp.Play(instance.GetSound(name), pos);
 
                     if (instance.waitForPlay != null)
@@ -237,7 +331,9 @@ namespace KMTool
 
         private void StopAllAndPauseMusic()
         {
-            foreach (SoundPlay ps in existingAudios)
+            List<SoundPlay> sps = new List<SoundPlay>(existingAudios.ToArray());
+
+            foreach (SoundPlay ps in sps)
             {
                 ps.Stop();
             }

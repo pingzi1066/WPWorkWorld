@@ -10,7 +10,7 @@
 		"drop_type1":1,
 		"drop_min1":2,
 		"drop_max1":2,
-		"drop_count1":2,
+		"drop_count1":2
 	},
 	"300002":{
 		"name":"爬行蝎",
@@ -23,7 +23,7 @@
 		"drop_type1":1,
 		"drop_min1":2,
 		"drop_max1":2,
-		"drop_count1":2,
+		"drop_count1":2
 	},
 	"300003":{
 		"name":"爬行蝎",
@@ -36,7 +36,7 @@
 		"drop_type1":1,
 		"drop_min1":2,
 		"drop_max1":2,
-		"drop_count1":2,
+		"drop_count1":2
 	},
 	"300004":{
 		"name":"爬行蝎",
@@ -49,7 +49,7 @@
 		"drop_type1":1,
 		"drop_min1":2,
 		"drop_max1":2,
-		"drop_count1":2,
+		"drop_count1":2
 	},
 	"300005":{
 		"name":"爬行蝎",
@@ -62,7 +62,7 @@
 		"drop_type1":1,
 		"drop_min1":2,
 		"drop_max1":2,
-		"drop_count1":2,
+		"drop_count1":2
 	},
 	"300006":{
 		"name":"爬行蝎",
@@ -75,7 +75,7 @@
 		"drop_type1":1,
 		"drop_min1":2,
 		"drop_max1":2,
-		"drop_count1":2,
+		"drop_count1":2
 	},
 	"300011":{
 		"name":"土狼",
@@ -88,7 +88,7 @@
 		"drop_type1":1,
 		"drop_min1":3,
 		"drop_max1":5,
-		"drop_count1":3,
+		"drop_count1":3
 	},
 	"300012":{
 		"name":"土狼",
@@ -101,7 +101,7 @@
 		"drop_type1":1,
 		"drop_min1":3,
 		"drop_max1":5,
-		"drop_count1":3,
+		"drop_count1":3
 	},
 	"300013":{
 		"name":"土狼",
@@ -114,7 +114,7 @@
 		"drop_type1":1,
 		"drop_min1":3,
 		"drop_max1":5,
-		"drop_count1":3,
+		"drop_count1":3
 	},
 	"300014":{
 		"name":"土狼",
@@ -127,7 +127,7 @@
 		"drop_type1":1,
 		"drop_min1":3,
 		"drop_max1":5,
-		"drop_count1":3,
+		"drop_count1":3
 	},
 	"300015":{
 		"name":"土狼",
@@ -140,7 +140,7 @@
 		"drop_type1":1,
 		"drop_min1":3,
 		"drop_max1":5,
-		"drop_count1":3,
+		"drop_count1":3
 	},
 	"300016":{
 		"name":"土狼",
@@ -153,7 +153,7 @@
 		"drop_type1":1,
 		"drop_min1":3,
 		"drop_max1":5,
-		"drop_count1":3,
+		"drop_count1":3
 	},
 	"300021":{
 		"name":"眼镜蛇",
@@ -166,7 +166,7 @@
 		"drop_type1":1,
 		"drop_min1":6,
 		"drop_max1":9,
-		"drop_count1":4,
+		"drop_count1":4
 	},
 	"300022":{
 		"name":"眼镜蛇",
@@ -179,7 +179,7 @@
 		"drop_type1":1,
 		"drop_min1":6,
 		"drop_max1":9,
-		"drop_count1":4,
+		"drop_count1":4
 	},
 	"300023":{
 		"name":"眼镜蛇",
@@ -192,7 +192,7 @@
 		"drop_type1":1,
 		"drop_min1":6,
 		"drop_max1":9,
-		"drop_count1":4,
+		"drop_count1":4
 	},
 	"300024":{
 		"name":"眼镜蛇",
@@ -205,7 +205,7 @@
 		"drop_type1":1,
 		"drop_min1":6,
 		"drop_max1":9,
-		"drop_count1":4,
+		"drop_count1":4
 	},
 	"300025":{
 		"name":"眼镜蛇",
@@ -218,7 +218,7 @@
 		"drop_type1":1,
 		"drop_min1":6,
 		"drop_max1":9,
-		"drop_count1":4,
+		"drop_count1":4
 	},
 	"300026":{
 		"name":"眼镜蛇",
@@ -231,7 +231,7 @@
 		"drop_type1":1,
 		"drop_min1":6,
 		"drop_max1":9,
-		"drop_count1":4,
+		"drop_count1":4
 	},
 	"300031":{
 		"name":"木乃伊苦工",
@@ -244,7 +244,7 @@
 		"drop_type1":1,
 		"drop_min1":8,
 		"drop_max1":11,
-		"drop_count1":5,
+		"drop_count1":5
 	},
 	"300032":{
 		"name":"木乃伊苦工",
@@ -257,7 +257,7 @@
 		"drop_type1":1,
 		"drop_min1":8,
 		"drop_max1":11,
-		"drop_count1":5,
+		"drop_count1":5
 	},
 	"300033":{
 		"name":"木乃伊苦工",
@@ -270,7 +270,7 @@
 		"drop_type1":1,
 		"drop_min1":8,
 		"drop_max1":11,
-		"drop_count1":5,
+		"drop_count1":5
 	},
 	"300034":{
 		"name":"木乃伊苦工",
@@ -283,7 +283,7 @@
 		"drop_type1":1,
 		"drop_min1":8,
 		"drop_max1":11,
-		"drop_count1":5,
+		"drop_count1":5
 	},
 	"300035":{
 		"name":"木乃伊苦工",
@@ -296,7 +296,7 @@
 		"drop_type1":1,
 		"drop_min1":8,
 		"drop_max1":11,
-		"drop_count1":5,
+		"drop_count1":5
 	},
 	"300036":{
 		"name":"木乃伊苦工",
@@ -309,7 +309,7 @@
 		"drop_type1":1,
 		"drop_min1":8,
 		"drop_max1":11,
-		"drop_count1":5,
+		"drop_count1":5
 	},
 	"300041":{
 		"name":"木乃伊祭祀",
@@ -322,7 +322,7 @@
 		"drop_type1":1,
 		"drop_min1":12,
 		"drop_max1":16,
-		"drop_count1":6,
+		"drop_count1":6
 	},
 	"300042":{
 		"name":"木乃伊祭祀",
@@ -335,7 +335,7 @@
 		"drop_type1":1,
 		"drop_min1":12,
 		"drop_max1":16,
-		"drop_count1":6,
+		"drop_count1":6
 	},
 	"300043":{
 		"name":"木乃伊祭祀",
@@ -348,7 +348,7 @@
 		"drop_type1":1,
 		"drop_min1":12,
 		"drop_max1":16,
-		"drop_count1":6,
+		"drop_count1":6
 	},
 	"300044":{
 		"name":"木乃伊祭祀",
@@ -361,7 +361,7 @@
 		"drop_type1":1,
 		"drop_min1":12,
 		"drop_max1":16,
-		"drop_count1":6,
+		"drop_count1":6
 	},
 	"300045":{
 		"name":"木乃伊祭祀",
@@ -374,7 +374,7 @@
 		"drop_type1":1,
 		"drop_min1":12,
 		"drop_max1":16,
-		"drop_count1":6,
+		"drop_count1":6
 	},
 	"300046":{
 		"name":"木乃伊祭祀",
@@ -387,7 +387,7 @@
 		"drop_type1":1,
 		"drop_min1":12,
 		"drop_max1":16,
-		"drop_count1":6,
+		"drop_count1":6
 	},
 	"500001":{
 		"name":"木乃伊之王",
@@ -400,6 +400,6 @@
 		"drop_type1":1,
 		"drop_min1":40,
 		"drop_max1":50,
-		"drop_count1":10,
-	},
+		"drop_count1":10
+	}
 }

@@ -11,6 +11,7 @@
  * 2014-11-14   WP      Added string convert to Vector3
  * 2015-01-15   WP      Added Destroy Children by gameObject
  * 2016-06-24   WP      Added convert pos by cameras
+ * 2017-07-31   WP      Added isEmail 
  * 
  * *****************************************************************************/
 
@@ -672,5 +673,24 @@ static public class KMTools
         float minDis = cos * disPosToTrans;
 
         return minDis;
+    }
+    
+	/// <summary>
+	/// Convenience function that converts Class + Function combo into Class.Function representation.
+	/// </summary>
+	static public string GetFuncName (object obj, string method)
+	{
+		if (obj == null) return "<null>";
+		string type = obj.GetType().ToString();
+		int period = type.LastIndexOf('/');
+		if (period > 0) type = type.Substring(period + 1);
+		return string.IsNullOrEmpty(method) ? type : type + "/" + method;
+	}
+
+    static public bool IsEmail(string emailAdd)
+    {
+        System.Text.RegularExpressions.Regex r = new System.Text.RegularExpressions.Regex("^\\s*([A-Za-z0-9_-]+(\\.\\w+)*@(\\w+\\.)+\\w{2,5})\\s*$");  
+ 
+        return (r.IsMatch(emailAdd));
     }
 }

@@ -26,6 +26,10 @@ namespace KMTool
         [SerializeField]private UIAvatarScroll scroll;
         [SerializeField]private UIAvatarItem prefabItem;
         [SerializeField]private AnimationCurve scrollKey;
+        /// <summary>
+        /// 当启用时选择到当前
+        /// </summary>
+        [SerializeField]private bool isSelectOnEnable = true;
 
         [SerializeField]private float minDelta = 0.05f;
         [SerializeField][Range(0.005f, 1)]private float minScrollDis = 0.01f;
@@ -80,10 +84,14 @@ namespace KMTool
                 }
             }
         }
+        /// <summary>
+        /// 当前所选择的对象
+        /// </summary>
+        [SerializeField][DisableEdit]private UIAvatarItem curSelectedItem;
 
         [SerializeField]private Button btnBuy;
         [SerializeField]private Button btnSelect;
-        [SerializeField]private GameObject goCurSelect;
+        [SerializeField]private Button btnCurrent;
 
         public static UIAvatarCtrl instance;
 
@@ -96,7 +104,7 @@ namespace KMTool
 
             for (int i = 0; i < models.Count; i++)
             {
-                UIAvatarItem item = KMTools.AddChild(parentContent.gameObject, prefabItem);
+                UIAvatarItem item = KMTools.AddChild(parentContent.gameObject, prefabItem, false);
                 item.Init(models[i],SetShowItem);
                 items.Add(item);
 
@@ -116,8 +124,17 @@ namespace KMTool
 
             if (btnBuy) btnBuy.onClick.AddListener(BtnBuy);
             if (btnSelect) btnSelect.onClick.AddListener(BtnSelect);
+            if (btnCurrent) btnCurrent.onClick.AddListener(BtnCurrent);
 
             //scroll.movementType = ScrollRect.MovementType.Unrestricted;
+        }
+
+        void OnEnable()
+        {
+            if(isSelectOnEnable && curSelectedItem)
+            {
+                SetShowItem(curSelectedItem);
+            }
         }
 
         private void OnScroll(Vector2 pos)
@@ -249,19 +266,21 @@ namespace KMTool
         {
             if (mItem.IsCurrentSelect())
             {
-                if (goCurSelect) goCurSelect.SetActive(true);
+                curSelectedItem = mItem;
+
+                if (btnCurrent) btnCurrent.gameObject.SetActive(true);
                 if (btnBuy) btnBuy.gameObject.SetActive(false);
                 if (btnSelect) btnSelect.gameObject.SetActive(false);
             }
             else if (mItem.IsUnlock())
             {
-                if (goCurSelect) goCurSelect.SetActive(false);
+                if (btnCurrent) btnCurrent.gameObject.SetActive(false);
                 if (btnBuy) btnBuy.gameObject.SetActive(false);
                 if (btnSelect) btnSelect.gameObject.SetActive(true);
             }
             else
             {
-                if (goCurSelect) goCurSelect.SetActive(false);
+                if (btnCurrent) btnCurrent.gameObject.SetActive(false);
                 if (btnBuy) btnBuy.gameObject.SetActive(true);
                 if (btnSelect) btnSelect.gameObject.SetActive(false);
             }
@@ -304,6 +323,13 @@ namespace KMTool
                 RefreshByCurrItem();
             }
         }
+
+        public void BtnCurrent()
+        {
+            //TODO: you code
+
+        }
+
         private void BuySuccess(ModelAvatar model)
         {
             Debug.Log("Buy Success!!!");

@@ -155,25 +155,29 @@ namespace KMTool
             if (LocalTools.HasKey(key))
             {
                 string jsonText = LocalTools.GetString(key);
-
-                JSONNode data = JSON.Parse(jsonText);
-                JSONClass obj = data.AsObject;
-
-                Type tp = typeof(U);
-                Array arr = Enum.GetValues(tp);
-                foreach (U e in arr)
-                {
-                    if (obj.HasKey(e.ToString()))
-                    {
-                        SetData(e, obj[e.ToString()].Value);
-                    }
-                    else SetData(e, GetDefaultValue(e));
-                }
+                LoadData(jsonText);
             }
             else
             {
                 CreateDefaultData();
                 SaveData();
+            }
+        }
+
+        public virtual void LoadData(string jsonText)
+        {
+            JSONNode data = JSON.Parse(jsonText);
+            JSONClass obj = data.AsObject;
+
+            Type tp = typeof(U);
+            Array arr = Enum.GetValues(tp);
+            foreach (U e in arr)
+            {
+                if (obj.HasKey(e.ToString()))
+                {
+                    SetData(e, obj[e.ToString()].Value);
+                }
+                else SetData(e, GetDefaultValue(e));
             }
         }
 

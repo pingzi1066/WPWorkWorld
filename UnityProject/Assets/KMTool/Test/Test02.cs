@@ -17,7 +17,7 @@ namespace KMToolDemo
 
         public HideFlags hf1;
         public HideFlags hf2;
-    //    [System.Flags]
+        //[System.Flags]
         public HideFlags hf;
 
         public Light l;
@@ -65,6 +65,14 @@ namespace KMToolDemo
         void TestMethod()
         {
             Debug.Log("Test method", gameObject);
+        }
+
+        public string email = "@163.com";
+
+        [ContextMenu("测试邮箱地址")]
+        public void TestEmail()
+        {
+            Debug.Log(email + " - email " + KMTools.IsEmail(email));
         }
 
     }

@@ -36,14 +36,33 @@ namespace KMTool
         private animationEase _ease = animationEase.flat;
         public AnimationCurve _curve;
 
-        //public float FOV = 60;
+        private float mFov;
+        public float FOV
+        {
+            get
+            {
+                if(mFov == 0) mFov = Camera.main.fieldOfView;
+                return mFov;
+            }
+            set
+            {
+                mFov = value;
+            }
+        }
 
         public DELAY_MODES delayMode = DELAY_MODES.none;
         public float delayTime = 0;
 
         //variables to define the fustrum boxes displaed in the editor
         private float directionLineLength = 1.0f;
-        private float focusBoxLength = 0.25f;
+        private float focusBoxLength
+        {
+            get
+            {
+                return .008f * FOV;
+            }
+        }
+
         [SerializeField]
         private float _tilt = 0;
 

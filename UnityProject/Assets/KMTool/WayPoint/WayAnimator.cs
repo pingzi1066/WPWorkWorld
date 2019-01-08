@@ -27,6 +27,9 @@ namespace KMTool
 
         public bool normalised = true;
 
+        public Camera cam;
+
+
         /// <summary>
         /// 路线
         /// </summary>
@@ -46,10 +49,27 @@ namespace KMTool
         private float _percentage = 0;
         private float usePercentage;
 
+        private WayController mCWay;
         /// <summary>
         /// 当前路线
         /// </summary>
-        private WayController curWay;
+        private WayController curWay
+        {
+            get { return mCWay; }
+            set
+            {
+                if(value != mCWay)
+                {
+                    if(mCWay != null)
+                        mCWay.Logout(this);
+
+                    mCWay = value;
+                    if(mCWay != null)
+                        mCWay.Login(this);
+                }
+            }
+        }
+
 
         private WayBezier bezier { get { return curWay.bezier; } }
 
@@ -70,10 +90,18 @@ namespace KMTool
         void Start()
         {
             LoginoutRecursion();
+
+            cam = GetComponent<Camera>();
         }
 
         public void SetParms(List<WayController> ways, modes mode)
         {
+            //如果之前有设置过，这里必须清空
+            LogoutRecursion();
+            curWay = null;
+
+            curIndex = 0;
+
             wayList = ways;
             this.mode = mode;
             LoginoutRecursion();
@@ -207,13 +235,34 @@ namespace KMTool
             get { return (mode == modes.reverse || mode == modes.reverseLoop || pingPongDirection < 0); }
         }
 
+        //设置到当前的显示与坐标
+        public void SetToCurrent()
+        {
+            UpdateAnimation();
+        }
+
+        /// <summary>
+        /// 设置动画到0 ~ 1
+        /// </summary>
+        /// <param name="v"></param>
+        public void Seek(float v)
+        {
+            v = Mathf.Clamp01(v);
+            if(curWay != null)
+            {
+                curWay.RecalculatePercentage(v);
+            }
+            usePercentage = v;
+            _percentage = v;
+            UpdateAnimation();
+        }
+
         private void UpdateAnimation()
         {
-
-            if (!playing)
-                return;
-
             transform.position = bezier.GetPathPosition(usePercentage);
+
+            if (cam)
+                cam.fieldOfView = bezier.GetPathFOV(usePercentage);
 
             Vector3 minusPoint, plusPoint;
             switch (bezier.mode)
@@ -393,17 +442,10 @@ namespace KMTool
         }
 
         /// <summary>
-        /// 注册事件注销递归
+        /// 通常由切换list 时用到。
         /// </summary>
-        private void LoginoutRecursion()
+        private void LogoutRecursion()
         {
-            //无路可选
-            if (wayList.Count < 1 || curIndex > (wayList.Count - 1))
-            {
-//                Debug.Log("way list Finished----------------", gameObject);
-                return;
-            }
-
             //登出
             if (curWay != null)
             {
@@ -429,9 +471,22 @@ namespace KMTool
                         }
                         break;
                 }
-                curWay.Logout(this);
                 curWay = null;
             }
+        }
+
+        /// <summary>
+        /// 注册事件注销递归
+        /// </summary>
+        private void LoginoutRecursion()
+        {
+            //无路可选
+            if (wayList.Count < 1 || curIndex > (wayList.Count - 1))
+            {
+                return;
+            }
+
+            LogoutRecursion();
 
             //设置
             curWay = wayList[curIndex];
@@ -439,7 +494,6 @@ namespace KMTool
 
             if (curWay != null) //注册
             {
-                curWay.Login(this);
                 //下一事件
                 curIndex++;
                 //下一动画
@@ -458,8 +512,6 @@ namespace KMTool
                             curIndex = 0;
                         }
                         break;
-
-
                     case modes.pingPong:
                         AnimPingPong += LoginoutRecursion;
                         //重复
@@ -469,9 +521,6 @@ namespace KMTool
                         }
                         break;
                 }
-
-                //Debug.Log("Login event ", curWay);
-                //Debug.Log("next index is : " + curIndex);
             }
             else
             {

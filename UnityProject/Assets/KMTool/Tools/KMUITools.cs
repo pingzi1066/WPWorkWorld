@@ -5,12 +5,12 @@
  * 
  * *****************************************************************************/
 
-using UnityEngine;
+
 using UnityEngine.UI;
-using System.Collections;
+using UnityEngine.Events;
 
 /// <summary>
-/// 描述
+/// 给Ugui 提供的一系列的方法。
 /// </summary>
 public static class KMUITools
 {
@@ -18,5 +18,24 @@ public static class KMUITools
     {
         if (text)
             text.text = str;
+    }
+
+    static public void AddMethodToIntInput(InputField inputF, UnityAction<string> method)
+    {
+        AddMethodToInput(inputF, method, InputField.CharacterValidation.Integer);
+    }
+
+    static public void AddMethodToFloatInput(InputField inputF, UnityAction<string> method)
+    {
+        AddMethodToInput(inputF, method, InputField.CharacterValidation.Decimal);
+    }
+
+    static public void AddMethodToInput(InputField inputF, UnityAction<string> method, InputField.CharacterValidation inputType)
+    {
+        if (inputF)
+        {
+            inputF.characterValidation = inputType;
+            inputF.onEndEdit.AddListener(method);
+        }
     }
 }
